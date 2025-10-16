@@ -25,6 +25,8 @@ df = pd.read_excel('uloha26/uloha_26.xlsx', sheet_name='List2', skiprows=1, usec
 print(df)
 print(df.to_latex(index=False))
 
+#####################################################
+
 x = unp.uarray([1.34, 134.5544, 24.4455, 24.4455, 24.4455], [0.001, 0.0785, 0.025, 0.035, 0.04])
 y = unp.uarray([1.34, 134.5544, 24.4455, 24.4455, 24.4455], [0.001, 0.01, 0.025, 0.075, 0.06])
 z = x + y
@@ -44,5 +46,30 @@ print('std manually:', np.sqrt(np.sum((unp.nominal_values(x2) - np.mean(unp.nomi
 
 print(''.join(str(x) for x in [1,2,'ab','c'] if str(x).isalpha()))
 
+##############################################
+n = 20
+x = np.linspace(0,10,n)
+y = 0.1 * x
+
+data = y + np.random.normal(0,0.1, size=n)
+errors = 0.1
+
+
+plt.figure(4)
+plt.plot(x,y,label='model')
+#plt.plot(x,data)
+
+plt.errorbar(x,data,errors,fmt='rs',capsize=7,label='experiment')
+plt.xlabel(r'x [cm]')
+plt.ylabel('A [cm$^{-1}$]')
+plt.legend()
+##############################################
+
+x = ufloat(12, 0.02859)
+print(f'{x:.3uP}')
+print(f'{x:.3uL}')
+print(f'{x:.3ueL}')
+
+##############################################
 
 print('All done!')
