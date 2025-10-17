@@ -13,10 +13,15 @@ class Var:
         self.err = unp.std_devs(self.unc)
         self.name = name
         self.unit = unit
-        self.long_name = f'${self.name} ({self.unit})$' if self.unit else f'${self.name}$'
+        self.long_name = f'${self.name}\\, (\\mathrm{{{self.unit}}})$' if self.unit else f'${self.name}$'
+    
+    def set_lname(self, name, unit=None):
+        self.name = name
+        self.unit = unit
+        self.long_name = f'${self.name}\\, (\\mathrm{{{self.unit}}})$' if self.unit else f'${self.name}$'
 
     def __repr__(self):
-        return f'{self.name} = ({", ".join(x.format(".uL") for x in self.unc)}) \\times {self.unit}'
+        return f'{self.name} = ({", ".join(ufmt(x) for x in self.unc)}) \\times {self.unit}'
     
     def __add__(self, other):
         if isinstance(other, Var):
@@ -65,6 +70,10 @@ class Var:
     def __pow__(self, power):
         new_unc = self.unc ** power
         return Var(unp.nominal_values(new_unc), unp.std_devs(new_unc), self.name, self.unit)
+    
+    def ufmt(self, apx='L'):
+        '''Formats all values in the Var instance using ufmt function.'''
+        return [ufmt(x, apx=apx) for x in self.unc]
 
 ########################################################
 def read_excel(file_path, sheet_name='List2', cells='A1:Z100', header = 0):
@@ -105,11 +114,30 @@ class F:
         return a * np.log(b * x)
 
 ########################################################
-def to_table(*args):
-    '''Converts Var instances to a formatted LaTeX table.'''
+def ufmt(x, apx='L'):
+    '''Rounds value and error of an ufloat number to appropriate significant figures.
+    Returns formatted string. If first significant figure of error is 1 (k <= 1.9), uses two significant digits.
+    Appendix (apx) sets formatting options: e for scientific notation,
+    L for LaTeX.'''
+
+    if x.std_dev == 0:
+        return f'{x:.2u{apx}}'
+    
+    # assume error = k * 10^mag
+    mag = int(np.floor(np.log10(x.std_dev)))
+    k = x.std_dev / (10 ** mag)
+    sig_fig = 2 if k <= 1.9 else 1
+
+    return f'{x:.{sig_fig}u{apx}}'
+
+########################################################
+def to_table(*args, apx='L'):
+    '''Converts Var instances to a formatted LaTeX table. Uses ufmt for formatting, 
+    defaultly writes uncertainties in LaTeX format.'''
     df = pd.DataFrame()
     for var in args:
-        df[var.name] = [x.format('.uL') for x in var.unc]
+        df[var.name] = [ufmt(x, apx=apx) for x in var.unc]
+
     return df.to_latex(index=False)
 
 ########################################################
@@ -152,7 +180,12 @@ if __name__ == "__main__":
     
     plt.close('all')
 
-
+    print(ufmt(ufloat(4.965,0.08)))
+    print(ufmt(ufloat(5.334,0.00134)))
+    print(ufmt(ufloat(4.222,0.00190)))
+    print(ufmt(ufloat(149.5,56.6)))
+    print(ufmt(ufloat(0.001495,0.000566), 'eL'))
+    print(ufmt(ufloat(14.95,0.566), 'L'))
 
     
 

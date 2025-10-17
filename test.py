@@ -70,6 +70,8 @@ print(f'{x:.3uP}')
 print(f'{x:.3L}')
 print(f'{x:.3uL}')
 print(f'{x:.3ueL}')
+z = ufloat(0.144,0)
+print(f'{z:.2uL}')
 
 y = unp.uarray([1.2345, 2.3456, 3.4567], [0.045, 0.056, 0.067])
 print(y)
