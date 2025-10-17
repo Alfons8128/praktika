@@ -76,6 +76,26 @@ class Var:
         return [ufmt(x, apx=apx) for x in self.unc]
 
 ########################################################
+class F:
+    '''A collection of common fitting functions.'''
+    def linear(x, a, b):
+        return a * x + b
+    
+    def polynomial(x, *coeffs):
+        '''coeffs are in increasing order, i.e., coeffs[0] + coeffs[1]*x + coeffs[2]*x^2 + ...'''
+        p = Polynomial(coeffs)
+        return p(x)
+
+    def power(x, a, p):
+        return a * x ** p
+
+    def exp(x, a, b):
+        return a * np.exp(b * x)
+
+    def log(x, a, b):
+        return a * np.log(b * x)
+
+########################################################
 def read_excel(file_path, sheet_name='List2', cells='A1:Z100', header = 0):
     '''Reads an Excel file and returns a pandas DataFrame.
     Defautly, header on the first line.'''
@@ -97,21 +117,6 @@ def read_excel(file_path, sheet_name='List2', cells='A1:Z100', header = 0):
     df = pd.read_excel(file_path, sheet_name=sheet_name, skiprows=skiprows, nrows=nrows, usecols=cols, header=header)
 
     return df
-
-########################################################
-class F:
-    '''A collection of common fitting functions.'''
-    def linear(x, a, b):
-        return a * x + b
-
-    def power(x, a, p):
-        return a * x ** p
-
-    def exp(x, a, b):
-        return a * np.exp(b * x)
-
-    def log(x, a, b):
-        return a * np.log(b * x)
 
 ########################################################
 def ufmt(x, apx='L'):
@@ -139,6 +144,8 @@ def to_table(*args, apx='L'):
         df[var.name] = [ufmt(x, apx=apx) for x in var.unc]
 
     return df.to_latex(index=False)
+
+########################################################
 
 ########################################################
 if __name__ == "__main__":

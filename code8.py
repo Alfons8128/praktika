@@ -73,8 +73,8 @@ if errorbar:
 else:
     ax.scatter(c2.val, w2.val, marker='o', s=25, color='brown', linewidth=1, label='cívka B')
 
-combined_handle = Line2D([0], [0], color='green', marker='s', linestyle=':', label='cívka A')
-combined_handle2 = Line2D([0], [0], color='brown', marker='o', linestyle=':', label='cívka B')
+combined_handle = Line2D([], [], color='green', marker='s', linestyle=':', label='cívka A')
+combined_handle2 = Line2D([], [], color='brown', marker='o', linestyle=':', label='cívka B')
 
 ax.legend(handles=[combined_handle, combined_handle2])
 ax.set_xlabel(c.long_name)
