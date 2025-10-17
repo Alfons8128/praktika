@@ -4,7 +4,69 @@ import pandas as pd
 from uncertainties import ufloat, unumpy as unp, umath as um
 import matplotlib.pyplot as plt
 from scipy.optimize import curve_fit
+from functools import partial
 
+class Var:
+    def __init__(self, values, errors=0, name='', unit=None):
+        self.unc = unp.uarray(values, errors)
+        self.val = unp.nominal_values(self.unc)
+        self.err = unp.std_devs(self.unc)
+        self.name = name
+        self.unit = unit
+        self.long_name = f'${self.name} ({self.unit})$' if self.unit else f'${self.name}$'
+
+    def __repr__(self):
+        return f'{self.name} = ({", ".join(x.format(".uL") for x in self.unc)}) \\times {self.unit}'
+    
+    def __add__(self, other):
+        if isinstance(other, Var):
+            new_unc = self.unc + other.unc
+        else:
+            new_unc = self.unc + other
+
+        return Var(unp.nominal_values(new_unc), unp.std_devs(new_unc), self.name, self.unit)
+    
+    def __radd__(self, other):
+        return self.__add__(other)
+    
+    def __sub__(self, other):
+        if isinstance(other, Var):
+            new_unc = self.unc - other.unc
+        else:
+            new_unc = self.unc - other
+
+        return Var(unp.nominal_values(new_unc), unp.std_devs(new_unc), self.name, self.unit)
+
+    def __rsub__(self, other):
+        return self.__sub__(other)
+    
+    def __mul__(self, other):
+        if isinstance(other, Var):
+            new_unc = self.unc * other.unc
+        else:
+            new_unc = self.unc * other
+
+        return Var(unp.nominal_values(new_unc), unp.std_devs(new_unc), self.name, self.unit)
+    
+    def __rmul__(self, other):
+        return self.__mul__(other)
+    
+    def __truediv__(self, other):
+        if isinstance(other, Var):
+            new_unc = self.unc / other.unc
+        else:
+            new_unc = self.unc / other
+
+        return Var(unp.nominal_values(new_unc), unp.std_devs(new_unc), self.name, self.unit)
+    
+    def __rtruediv__(self, other):
+        return self.__truediv__(other)
+    
+    def __pow__(self, power):
+        new_unc = self.unc ** power
+        return Var(unp.nominal_values(new_unc), unp.std_devs(new_unc), self.name, self.unit)
+
+########################################################
 def read_excel(file_path, sheet_name='List2', cells='A1:Z100', header = 0):
     '''Reads an Excel file and returns a pandas DataFrame.
     Defautly, header on the first line.'''
@@ -27,18 +89,30 @@ def read_excel(file_path, sheet_name='List2', cells='A1:Z100', header = 0):
 
     return df
 
-def linear_f(x, a, b):
-    return a * x + b
+########################################################
+class F:
+    '''A collection of common fitting functions.'''
+    def linear(x, a, b):
+        return a * x + b
 
-def power_f(x, a, p):
-    return a * x ** p
+    def power(x, a, p):
+        return a * x ** p
 
-def exp_f(x, a, b):
-    return a * np.exp(b * x)
+    def exp(x, a, b):
+        return a * np.exp(b * x)
 
-def log_f(x, a, b):
-    return a * np.log(b * x)
+    def log(x, a, b):
+        return a * np.log(b * x)
 
+########################################################
+def to_table(*args):
+    '''Converts Var instances to a formatted LaTeX table.'''
+    df = pd.DataFrame()
+    for var in args:
+        df[var.name] = [x.format('.uL') for x in var.unc]
+    return df.to_latex(index=False)
+
+########################################################
 if __name__ == "__main__":
     # Example usage of read_excel function
 
@@ -66,7 +140,7 @@ if __name__ == "__main__":
     dy = 5 * np.ones_like(x)
     dx = 0.7 * np.ones_like(x)
 
-    fit, cov = curve_fit(linear_f, x, y, sigma=dy, absolute_sigma=True)
+    fit, cov = curve_fit(F.linear, x, y, sigma=dy, absolute_sigma=True)
     inter = fit[0]
     slp = fit[1]
     di = np.sqrt(cov[0][0])
@@ -74,7 +148,7 @@ if __name__ == "__main__":
 
     fig, ax = plt.subplots()
     ax.errorbar(x, y, yerr=dy, xerr=dx, fmt='rs', lw=1, ms=3, label='Experiment')
-    ax.plot(x, linear_f(x, *fit), 'b--', label='Fit')
+    ax.plot(x, F.linear(x, *fit), 'b--', label='Fit')
     
     plt.close('all')
 
