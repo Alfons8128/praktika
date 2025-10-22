@@ -94,6 +94,9 @@ class F:
 
     def log(x, a, b):
         return a * np.log(b * x)
+    
+    def resonance(x, d):
+        return (d * d) / (d*d + (x - 1/x)**2)
 
 ########################################################
 def read_excel(file_path, sheet_name='List2', cells='A1:Z100', header = 0):

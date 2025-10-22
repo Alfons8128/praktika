@@ -55,12 +55,12 @@ print('Done table2', pr.to_table(c2, f12, f22, fr2, w2))
 fit, cov  = curve_fit(pr.F.linear, c.val, w.val, sigma=w.err, absolute_sigma=True)
 d_fit = np.sqrt(np.diag(cov))
 a, b = unp.uarray([*fit],[*d_fit])
-print('Fit parameters:', pr.ufmt(a, 'eL'), pr.ufmt(b, 'eL'))
+print('Fit parameters:', pr.ufmt(a, 'eP'), pr.ufmt(b, 'eP'), pr.ufmt(b/a, 'eP'))
 
 fit2, cov2  = curve_fit(pr.F.linear, c2.val, w2.val, sigma=w2.err, absolute_sigma=True)
 d_fit2 = np.sqrt(np.diag(cov2))
 a2, b2 = unp.uarray([*fit2],[*d_fit2])
-print('Fit parameters:', pr.ufmt(a2, 'eL'), pr.ufmt(b2, 'eL'))
+print('Fit parameters:', pr.ufmt(a2, 'eP'), pr.ufmt(b2, 'eP'), pr.ufmt(b2/a2, 'eP'))
 
 fig, ax = plt.subplots()
 ax.plot(c.val, pr.F.linear(c.val, *fit), 'g:', linewidth=1.5, label='fitovaná přímka')
@@ -134,12 +134,19 @@ print('Done table2', pr.to_table(c4, f14, f24, fr4, w4))
 fit3, cov3  = curve_fit(pr.F.linear, c3.val, w3.val, sigma=w3.err, absolute_sigma=True)
 d_fit3 = np.sqrt(np.diag(cov3))
 a3, b3 = unp.uarray([*fit3],[*d_fit3])
-print('Fit parameters:', pr.ufmt(a3, 'eL'), pr.ufmt(b3, 'eL'))
+print('Fit parameters:', pr.ufmt(a3, 'eP'), pr.ufmt(b3, 'eP'), pr.ufmt(b3/a3, 'eP'))
 
 fit4, cov4  = curve_fit(pr.F.linear, c4.val, w4.val, sigma=w4.err, absolute_sigma=True)
 d_fit4 = np.sqrt(np.diag(cov4))
 a4, b4 = unp.uarray([*fit4],[*d_fit4])
-print('Fit parameters:', pr.ufmt(a4, 'eL'), pr.ufmt(b4, 'eL'))
+print('Fit parameters:', pr.ufmt(a4, 'eP'), pr.ufmt(b4, 'eP'), pr.ufmt(b4/a4, 'eP'))
+l1 = a3 * 1e4
+l2 = a4 * 1e4
+m = (l1-l2) / 4
+print('vzájemná indukčnost:', pr.ufmt(m, 'eP'))
+ll1 = a * 1e4 + a2 * 1e4 + 2 * m
+ll2 = a * 1e4 + a2 * 1e4 - 2 * m
+print('l1, l2', pr.ufmt(ll1,'P'), pr.ufmt(ll2,'P'))
 
 fig4, ax4 = plt.subplots()
 ax4.plot(c3.val, pr.F.linear(c3.val, *fit3), 'g:', linewidth=1.5, label='fitovaná přímka')
@@ -165,8 +172,52 @@ ax4.legend(handles=[combined_handle, combined_handle2])
 ax4.set_xlabel(c3.long_name)
 ax4.set_ylabel(w3.long_name)
 fig4.savefig('uloha8/doubleAandB.png', dpi=300)
+plt.close('all')
 #plt.show()
 
+dff = pr.read_excel('uloha8/uloha8.xlsx', sheet_name='List1', cells='S2:U31')
+dff.columns = ['freq', 'flfr', 'z']
+freqq = Var(dff['freq'].to_numpy(), errors=0.1, name='f', unit='kHz')
+z = Var(dff['z'].to_numpy(), errors=0.5, name='z', unit=None)
+x = freqq / fr3.unc[4]
+x.set_lname('x')
+zr = ufloat(max(z.val), 0.5)
+y2 = z / zr
+y2.set_lname('y^2')
+for xs in x.unc:
+    print(f'{xs:.1uP}')
+print(min(x.val), max(x.val))
+
+fit5, cov5  = curve_fit(pr.F.resonance, x.val, y2.val, sigma=y2.err, absolute_sigma=True, p0=[0.036])
+d_fit5 = np.sqrt(np.diag(cov5))
+print(d_fit5)
+print(fit5, cov5)
+d5, = unp.uarray([*fit5],[*d_fit5])
+print(d5)
+print('Fit parameters:', pr.ufmt(d5, 'P'))
+
+fig5, ax5 = plt.subplots()
+ax5.plot(x.val, pr.F.resonance(x.val, *fit5), ':', color='black', linewidth=1.5, label='teoretická závislost')
+errorbar = True
+if errorbar:
+    ax5.errorbar(x.val, y2.val, yerr=y2.err, color='black',fmt='s', linewidth=1, markersize=3, capsize=3, label='naměřené hodnoty')
+else:
+    ax5.scatter(x.val, y2.val, marker='s', s=15, color='black', linewidth=1, label='poměr výchylek galvanometru')
+
+ax5.plot([min(x.val),max(x.val)],[0.5,0.5], label='$y^2=0,5$', linewidth=0.5)
+ax5.legend()
+ax5.set_xlabel(x.long_name)
+ax5.set_ylabel(y2.long_name)
+fig5.savefig('uloha8/resonance.png', dpi=300)
+#plt.show()
+plt.close('all')
+
+q = 1 / d5
+rs = d5 * 2 * np.pi * (fr3.unc[4] * 1000) * (a3 / 100)
+print(a3)
+print('d:', pr.ufmt(d5,'P'))
+print('q:', pr.ufmt(q,'P'))
+print('rs:', pr.ufmt(rs,'P'))
 
 
 print('All done!')
