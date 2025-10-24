@@ -5,6 +5,7 @@ from uncertainties import ufloat, unumpy as unp, umath as um
 import matplotlib.pyplot as plt
 from scipy.optimize import curve_fit
 from functools import partial
+from matplotlib.lines import Line2D
 
 class Var:
     def __init__(self, values, errors=0, name='', unit=None):
@@ -149,6 +150,44 @@ def to_table(*args, apx='L'):
     return df.to_latex(index=False)
 
 ########################################################
+def fit_curve(x, y, func=F.linear, p0=None):
+    coeff_values, cov_matrix  = curve_fit(func, x.val, y.val, sigma=y.err, absolute_sigma=True)
+    coeff_errors = np.sqrt(np.diag(cov_matrix))
+    fitted_coeffs = unp.uarray([*coeff_values],[*coeff_errors])
+
+    return fitted_coeffs
+
+########################################################
+def plot(fig, ax, x, y, fit_coeffs=None, func=F.linear, err=True, fit_curve=True, 
+         data_label='naměřené hodnoty', fit_label='teoretická závislost', save_as=None, show=False, equation=False):
+
+    '''Plots data y over x (both Var instances) with optional error bars, fit line and equation.
+    Optionally show the plot.'''
+
+    if fit_curve:
+        ax.plot(x.val, func(x.val, *fit_coeffs), 'k:', linewidth=1.5, label=fit_label)
+
+    if err:
+        ax.errorbar(x.val, y.val, yerr=y.err, xerr=x.err, fmt='ks', linewidth=1, markersize=5, capsize=3, label=data_label)
+    else:
+        ax.scatter(x.val, y.val, marker='s', s=25, color='black', linewidth=1, label=data_label)
+    
+    if equation:
+        eq_string = f'${y.name} = {fit_coeffs[1]:.3f} \\cdot {x.name} + {fit_coeffs[0]:.3f}$'
+        combined_handle = Line2D([], [], color='black', marker='s', linestyle=':', label=eq_string)
+
+    ax.legend(handles=[combined_handle])
+    ax.set_xlabel(x.long_name)
+    ax.set_ylabel(y.long_name)
+
+    if show:
+        plt.show()
+
+    if save_as is not None:
+        fig.savefig(save_as, dpi=300)
+
+
+########################################################
 
 ########################################################
 if __name__ == "__main__":
@@ -177,18 +216,23 @@ if __name__ == "__main__":
     y = 3*x**2 + 2*x + 1 + np.random.randn(30)
     dy = 5 * np.ones_like(x)
     dx = 0.7 * np.ones_like(x)
+    x = Var(x, dx, 'artificial x', 'm')
+    y = Var(y, dy, 'artificial y', 'J')
 
-    fit, cov = curve_fit(F.linear, x, y, sigma=dy, absolute_sigma=True)
+    fit, cov = curve_fit(F.linear, x.val, y.val, sigma=dy, absolute_sigma=True)
     inter = fit[0]
     slp = fit[1]
     di = np.sqrt(cov[0][0])
     ds = np.sqrt(cov[1][1])
 
     fig, ax = plt.subplots()
-    ax.errorbar(x, y, yerr=dy, xerr=dx, fmt='rs', lw=1, ms=3, label='Experiment')
-    ax.plot(x, F.linear(x, *fit), 'b--', label='Fit')
+    ax.errorbar(x.val, y.val, yerr=dy, xerr=dx, fmt='rs', lw=1, ms=3, label='Experiment')
+    ax.plot(x.val, F.linear(x.val, *fit), 'b--', label='Fit')
+    eq_string = f'${y.name} = {fit[1]:.3f} \\cdot {x.name} + {fit[0]:.3f}$'
+    ax.text(0.4, 0.6, eq_string, transform=ax.transAxes)
     
-    plt.close('all')
+    #plt.close('all')
+    plot(fig, ax, x, y, show=True, equation=True, fit_coeffs=fit)
 
     print(ufmt(ufloat(4.965,0.08)))
     print(ufmt(ufloat(5.334,0.00134)))

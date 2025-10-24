@@ -71,6 +71,7 @@ else:
     ax.scatter(c.val, w.val, marker='s', s=25, color='green', linewidth=1, label='cívka A')
 
 ax.plot(c2.val, pr.F.linear(c2.val, *fit2), ':', color='brown', linewidth=1.5, label='fitovaná přímka')
+ax.text(0.05, 0.5, 'sem se to vykresli', transform=ax.transAxes)
 errorbar = False
 if errorbar:
     ax.errorbar(c2.val, w2.val, yerr=w2.err, xerr=c2.err, color='brown',fmt='s', linewidth=1, markersize=5, capsize=3, label='naměřené hodnoty')
@@ -85,8 +86,8 @@ combined_handle2 = Line2D([], [], color='brown', marker='o', linestyle=':',
 ax.legend(handles=[combined_handle, combined_handle2])
 ax.set_xlabel(c.long_name)
 ax.set_ylabel(w.long_name)
-fig.savefig('uloha8/singleAandB.png', dpi=300)
-#plt.show()
+#fig.savefig('uloha8/singleAandB.png', dpi=300)
+plt.show()
 #plt.close('all')
 
 ##############################
