@@ -6,6 +6,7 @@ import matplotlib.pyplot as plt
 from scipy.optimize import curve_fit
 from functools import partial
 from matplotlib.lines import Line2D
+from scipy.stats.distributions import t
 
 class Var:
     def __init__(self, values, errors=0, short_name='', unit=None):
@@ -29,8 +30,15 @@ class Var:
         self.long_name = f'${self.short_name}\\, (\\mathrm{{{self.unit}}})$' if self.unit else f'${self.short_name}$'
 
     def __repr__(self):
-        return f'{self.short_name} = ({", ".join(ufmt(x) for x in self.unc)}) \\times {self.unit}'
-    
+        try: # assume array
+            if self.unit:
+                return f'{self.short_name} = ({", ".join(ufmt(x, 'P') for x in self.unc)}) \\times {self.unit}'
+            return f'{self.short_name} = ({", ".join(ufmt(x, 'P') for x in self.unc)})'
+        except: # scalar, single value
+            if self.unit:
+                return f'{self.short_name} = {ufmt(self.unc, "P")} \\times {self.unit}'
+            return f'{self.short_name} = {ufmt(self.unc, "P")}'
+
     def __add__(self, other):
         if isinstance(other, Var):
             new_unc = self.unc + other.unc
@@ -51,7 +59,8 @@ class Var:
         return Var(unp.nominal_values(new_unc), unp.std_devs(new_unc), self.short_name, self.unit)
 
     def __rsub__(self, other):
-        return self.__sub__(other)
+        result_unc = other - self.unc
+        return Var(unp.nominal_values(result_unc), unp.std_devs(result_unc), self.short_name, self.unit)
     
     def __mul__(self, other):
         if isinstance(other, Var):
@@ -73,7 +82,8 @@ class Var:
         return Var(unp.nominal_values(new_unc), unp.std_devs(new_unc), self.short_name, self.unit)
     
     def __rtruediv__(self, other):
-        return self.__truediv__(other)
+        result_unc = other / self.unc
+        return Var(unp.nominal_values(result_unc), unp.std_devs(result_unc), self.short_name, self.unit)
     
     def __pow__(self, power):
         new_unc = self.unc ** power
@@ -87,7 +97,7 @@ class Var:
 class F:
     '''A collection of common fitting functions.'''
     def const(x, a):
-        return a
+        return a * np.ones_like(x)
     
     def direct(x, a):
         return a * x
@@ -178,16 +188,17 @@ def to_table(*args, apx='L'):
 def fit_curve(x: Var, y: Var, func=F.linear, p0: list =None):
     '''Fits y over x (both Var instances) using the provided function (default linear).
     Returns the fitted coefficients as uarray.'''
-
-    coeff_values, cov_matrix  = curve_fit(func, x.val, y.val, sigma=y.err, absolute_sigma=True)
-    coeff_errors = np.sqrt(np.diag(cov_matrix))
-    fitted_coeffs = unp.uarray([*coeff_values],[*coeff_errors])
+    #alpha = 0.05  # 95% confidence interval
+    coeff_values, cov_matrix  = curve_fit(func, x.val, y.val, sigma=y.err, absolute_sigma=True, p0=p0)
+    #t_val = t.ppf(1.0-alpha/2, max(0, len(x.val)-len(coeff_values)))
+    coeff_errors = np.sqrt(np.diag(cov_matrix)) #* np.abs(t_val)
+    fitted_coeffs = Var([*coeff_values],[*coeff_errors], short_name='fit_coeffs')
 
     return fitted_coeffs
 
 ########################################################
-def plot(fig, ax, x, y, fit_coeffs=None, func=F.linear, err=True, fit_curve=True, 
-         data_label='naměřené hodnoty', fit_label='teoretická závislost', save_as=None, show=False, equation=False):
+def plot(fig, ax, x, y, fit_coeffs=None, func=F.linear, xerr=True, yerr=True, fit_curve=True, 
+         data_label='naměřené hodnoty', fit_label='teoretická závislost', equation=False):
 
     '''Plots data y over x (both Var instances) with optional error bars, fit line and equation.
     Optionally show the plot.'''
@@ -195,24 +206,25 @@ def plot(fig, ax, x, y, fit_coeffs=None, func=F.linear, err=True, fit_curve=True
     if fit_curve:
         ax.plot(x.val, func(x.val, *fit_coeffs), 'k:', linewidth=1.5, label=fit_label)
 
-    if err:
-        ax.errorbar(x.val, y.val, yerr=y.err, xerr=x.err, fmt='ks', linewidth=1, markersize=5, capsize=3, label=data_label)
-    else:
-        ax.scatter(x.val, y.val, marker='s', s=25, color='black', linewidth=1, label=data_label)
+    match (xerr, yerr):
+        case (True, True):
+                ax.errorbar(x.val, y.val, xerr=x.err, yerr=y.err, fmt='ks', linewidth=1, markersize=5, capsize=3, label=data_label)
+        case (True, False):
+                ax.errorbar(x.val, y.val, xerr=x.err, fmt='ks', linewidth=1, markersize=5, capsize=3, label=data_label)
+        case (False, True):
+                ax.errorbar(x.val, y.val, yerr=y.err, fmt='ks', linewidth=1, markersize=5, capsize=3, label=data_label)
+        case (False, False):
+            ax.scatter(x.val, y.val, marker='s', s=25, color='black', linewidth=1, label=data_label)
     
     if equation:
         eq_string = f'${y.short_name} = {fit_coeffs[1]:.3f} \\cdot {x.short_name} + {fit_coeffs[0]:.3f}$'
         combined_handle = Line2D([], [], color='black', marker='s', linestyle=':', label=eq_string)
-
-    ax.legend(handles=[combined_handle])
+        ax.legend(handles=[combined_handle])
+    else:
+        ax.legend()
+    
     ax.set_xlabel(x.long_name)
     ax.set_ylabel(y.long_name)
-
-    if show:
-        plt.show()
-
-    if save_as is not None:
-        fig.savefig(save_as, dpi=300)
 
 
 ########################################################
@@ -241,11 +253,13 @@ if __name__ == "__main__":
 
     np.random.seed(0)
     x = np.linspace(0, 10, 30)
-    y = 3*x**2 + 2*x + 1 + np.random.randn(30)
-    dy = 5 * np.ones_like(x)
-    dx = 0.7 * np.ones_like(x)
+    y = 3*x**2 + 2*x + 1 + np.random.randn(30)/1000
+    dy = 0.5 * np.ones_like(x)
+    dx = 0.1 * np.ones_like(x)
     x = Var(x, dx, 'artificial x', 'm')
     y = Var(y, dy, 'artificial y', 'J')
+    print('x:', x)
+    print('y:', y)
 
     fit, cov = curve_fit(F.linear, x.val, y.val, sigma=dy, absolute_sigma=True)
     inter = fit[0]
@@ -260,7 +274,8 @@ if __name__ == "__main__":
     ax.text(0.4, 0.6, eq_string, transform=ax.transAxes)
     
     #plt.close('all')
-    plot(fig, ax, x, y, show=True, equation=True, fit_coeffs=fit)
+    plot(fig, ax, x, y, equation=True, fit_coeffs=fit)
+    plt.show()
 
     print(ufmt(ufloat(4.965,0.08)))
     print(ufmt(ufloat(5.334,0.00134)))
@@ -269,5 +284,6 @@ if __name__ == "__main__":
     print(ufmt(ufloat(0.001495,0.000566), 'eL'))
     print(ufmt(ufloat(14.95,0.566), 'L'))
 
-    
+    cff = fit_curve(x, y, func=F.polynomial, p0=[1,2,3])
+    print('Fitted coeffs:', cff)
 

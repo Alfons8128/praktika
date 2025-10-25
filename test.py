@@ -2,6 +2,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 import pandas as pd
 from uncertainties import ufloat, unumpy as unp, umath as um
+import praktika as pr
 
 x = np.linspace(0, 5, 100)
 y = x**3
@@ -77,6 +78,12 @@ y = unp.uarray([1.2345, 2.3456, 3.4567], [0.045, 0.056, 0.067])
 print(y)
 
 
+##############################################
+rrr = pr.Var(1.08, 0.01, 'R', '\\Omega')
+xxx = rrr - 1
+yyy = 2 - rrr
+print(xxx.unc)
+print(yyy.unc)
 ##############################################
 
 print('All done!')
