@@ -8,21 +8,28 @@ from functools import partial
 from matplotlib.lines import Line2D
 
 class Var:
-    def __init__(self, values, errors=0, name='', unit=None):
+    def __init__(self, values, errors=0, short_name='', unit=None):
+        if isinstance(errors, str):
+            if errors.endswith('%'):
+                errors = float(errors[:-1]) / 100.0
+            else:
+                errors = float(errors)
+            errors = np.abs(values) * errors
+        
         self.unc = unp.uarray(values, errors)
         self.val = unp.nominal_values(self.unc)
         self.err = unp.std_devs(self.unc)
-        self.name = name
+        self.short_name = short_name
         self.unit = unit
-        self.long_name = f'${self.name}\\, (\\mathrm{{{self.unit}}})$' if self.unit else f'${self.name}$'
-    
-    def set_lname(self, name, unit=None):
-        self.name = name
+        self.long_name = f'${self.short_name}\\, (\\mathrm{{{self.unit}}})$' if self.unit else f'${self.short_name}$'
+
+    def set_lname(self, short_name, unit=None):
+        self.short_name = short_name
         self.unit = unit
-        self.long_name = f'${self.name}\\, (\\mathrm{{{self.unit}}})$' if self.unit else f'${self.name}$'
+        self.long_name = f'${self.short_name}\\, (\\mathrm{{{self.unit}}})$' if self.unit else f'${self.short_name}$'
 
     def __repr__(self):
-        return f'{self.name} = ({", ".join(ufmt(x) for x in self.unc)}) \\times {self.unit}'
+        return f'{self.short_name} = ({", ".join(ufmt(x) for x in self.unc)}) \\times {self.unit}'
     
     def __add__(self, other):
         if isinstance(other, Var):
@@ -30,7 +37,7 @@ class Var:
         else:
             new_unc = self.unc + other
 
-        return Var(unp.nominal_values(new_unc), unp.std_devs(new_unc), self.name, self.unit)
+        return Var(unp.nominal_values(new_unc), unp.std_devs(new_unc), self.short_name, self.unit)
     
     def __radd__(self, other):
         return self.__add__(other)
@@ -41,7 +48,7 @@ class Var:
         else:
             new_unc = self.unc - other
 
-        return Var(unp.nominal_values(new_unc), unp.std_devs(new_unc), self.name, self.unit)
+        return Var(unp.nominal_values(new_unc), unp.std_devs(new_unc), self.short_name, self.unit)
 
     def __rsub__(self, other):
         return self.__sub__(other)
@@ -52,7 +59,7 @@ class Var:
         else:
             new_unc = self.unc * other
 
-        return Var(unp.nominal_values(new_unc), unp.std_devs(new_unc), self.name, self.unit)
+        return Var(unp.nominal_values(new_unc), unp.std_devs(new_unc), self.short_name, self.unit)
     
     def __rmul__(self, other):
         return self.__mul__(other)
@@ -63,14 +70,14 @@ class Var:
         else:
             new_unc = self.unc / other
 
-        return Var(unp.nominal_values(new_unc), unp.std_devs(new_unc), self.name, self.unit)
+        return Var(unp.nominal_values(new_unc), unp.std_devs(new_unc), self.short_name, self.unit)
     
     def __rtruediv__(self, other):
         return self.__truediv__(other)
     
     def __pow__(self, power):
         new_unc = self.unc ** power
-        return Var(unp.nominal_values(new_unc), unp.std_devs(new_unc), self.name, self.unit)
+        return Var(unp.nominal_values(new_unc), unp.std_devs(new_unc), self.short_name, self.unit)
     
     def ufmt(self, apx='L'):
         '''Formats all values in the Var instance using ufmt function.'''
@@ -79,6 +86,12 @@ class Var:
 ########################################################
 class F:
     '''A collection of common fitting functions.'''
+    def const(x, a):
+        return a
+    
+    def direct(x, a):
+        return a * x
+    
     def linear(x, a, b):
         return a * x + b
     
@@ -145,12 +158,27 @@ def to_table(*args, apx='L'):
     defaultly writes uncertainties in LaTeX format.'''
     df = pd.DataFrame()
     for var in args:
-        df[var.name] = [ufmt(x, apx=apx) for x in var.unc]
+        df[var.long_name] = [ufmt(x, apx=apx) for x in var.unc]
 
-    return df.to_latex(index=False)
+    #return df.to_latex(index=False, column_format=len(args)*'c')
+    print('\\begin{table}[hbt]')
+    print('\\centering')
+    print('\\caption{NAZEV}')
+    print('\\begin{tabular}{cccc}')
+    print(' \\toprule')
+    print(' ' +' & '.join(arg.long_name for arg in args) + ' \\\\')
+    print(' \\midrule')
+    for i in range(len(args[0].unc)):
+        print(' $' + '$ & $'.join(ufmt(arg.unc[i], apx=apx) for arg in args) + '$ \\\\')
+    print(' \\bottomrule')
+    print('\\end{tabular}')
+    print('\\end{table}')
 
 ########################################################
-def fit_curve(x, y, func=F.linear, p0=None):
+def fit_curve(x: Var, y: Var, func=F.linear, p0: list =None):
+    '''Fits y over x (both Var instances) using the provided function (default linear).
+    Returns the fitted coefficients as uarray.'''
+
     coeff_values, cov_matrix  = curve_fit(func, x.val, y.val, sigma=y.err, absolute_sigma=True)
     coeff_errors = np.sqrt(np.diag(cov_matrix))
     fitted_coeffs = unp.uarray([*coeff_values],[*coeff_errors])
@@ -173,7 +201,7 @@ def plot(fig, ax, x, y, fit_coeffs=None, func=F.linear, err=True, fit_curve=True
         ax.scatter(x.val, y.val, marker='s', s=25, color='black', linewidth=1, label=data_label)
     
     if equation:
-        eq_string = f'${y.name} = {fit_coeffs[1]:.3f} \\cdot {x.name} + {fit_coeffs[0]:.3f}$'
+        eq_string = f'${y.short_name} = {fit_coeffs[1]:.3f} \\cdot {x.short_name} + {fit_coeffs[0]:.3f}$'
         combined_handle = Line2D([], [], color='black', marker='s', linestyle=':', label=eq_string)
 
     ax.legend(handles=[combined_handle])
@@ -228,7 +256,7 @@ if __name__ == "__main__":
     fig, ax = plt.subplots()
     ax.errorbar(x.val, y.val, yerr=dy, xerr=dx, fmt='rs', lw=1, ms=3, label='Experiment')
     ax.plot(x.val, F.linear(x.val, *fit), 'b--', label='Fit')
-    eq_string = f'${y.name} = {fit[1]:.3f} \\cdot {x.name} + {fit[0]:.3f}$'
+    eq_string = f'${y.short_name} = {fit[1]:.3f} \\cdot {x.short_name} + {fit[0]:.3f}$'
     ax.text(0.4, 0.6, eq_string, transform=ax.transAxes)
     
     #plt.close('all')
