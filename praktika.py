@@ -17,7 +17,10 @@ class Var:
                 errors = float(errors)
             errors = np.abs(values) * errors
         
-        self.unc = unp.uarray(values, errors)
+        if np.shape(values) == ():
+            self.unc = unp.uarray([values], [errors])
+        else:
+            self.unc = unp.uarray(values, errors)
         self.val = unp.nominal_values(self.unc)
         self.err = unp.std_devs(self.unc)
         self.short_name = short_name
@@ -30,14 +33,9 @@ class Var:
         self.long_name = f'${self.short_name}\\, (\\mathrm{{{self.unit}}})$' if self.unit else f'${self.short_name}$'
 
     def __repr__(self):
-        try: # assume array
-            if self.unit:
-                return f'{self.short_name} = ({", ".join(ufmt(x, 'P') for x in self.unc)}) \\times {self.unit}'
-            return f'{self.short_name} = ({", ".join(ufmt(x, 'P') for x in self.unc)})'
-        except: # scalar, single value
-            if self.unit:
-                return f'{self.short_name} = {ufmt(self.unc, "P")} \\times {self.unit}'
-            return f'{self.short_name} = {ufmt(self.unc, "P")}'
+        if self.unit:
+            return f'{self.short_name} = ({", ".join(scalar_ufmt(x, 'L') for x in self.unc)}) \\times {self.unit}'
+        return f'{self.short_name} = ({", ".join(scalar_ufmt(x, 'L') for x in self.unc)})'
 
     def __add__(self, other):
         if isinstance(other, Var):
@@ -91,7 +89,7 @@ class Var:
     
     def ufmt(self, apx='L'):
         '''Formats all values in the Var instance using ufmt function.'''
-        return [ufmt(x, apx=apx) for x in self.unc]
+        return [scalar_ufmt(x, apx=apx) for x in self.unc]
 
 ########################################################
 class F:
@@ -146,8 +144,10 @@ def read_excel(file_path, sheet_name='List2', cells='A1:Z100', header = 0):
     return df
 
 ########################################################
-def ufmt(x, apx='L'):
-    '''Rounds value and error of an ufloat number to appropriate significant figures.
+def scalar_ufmt(x, apx='L'):
+    '''Work only for scalar values!
+    
+    Rounds value and error of an ufloat number to appropriate significant figures.
     Returns formatted string. If first significant figure of error is 1 (k <= 1.9), uses two significant digits.
     Appendix (apx) sets formatting options: e for scientific notation,
     L for LaTeX.'''
@@ -163,23 +163,31 @@ def ufmt(x, apx='L'):
     return f'{x:.{sig_fig}u{apx}}'
 
 ########################################################
+def nice_print(Var, apx='P'):
+    '''Prints ufloat number with nicely formatted value and error.'''
+    if Var.unit:
+        print(f'{Var.short_name} = ({", ".join(scalar_ufmt(x, apx) for x in Var.unc)}) \\times {Var.unit}')
+    else:
+        print(f'{Var.short_name} = ({", ".join(scalar_ufmt(x, apx) for x in Var.unc)})')
+
+########################################################
 def to_table(*args, apx='L'):
     '''Converts Var instances to a formatted LaTeX table. Uses ufmt for formatting, 
     defaultly writes uncertainties in LaTeX format.'''
-    df = pd.DataFrame()
-    for var in args:
-        df[var.long_name] = [ufmt(x, apx=apx) for x in var.unc]
+    # df = pd.DataFrame()
+    # for var in args:
+    #     df[var.long_name] = [scalar_ufmt(x, apx=apx) for x in var.unc]
+    # return df.to_latex(index=False, column_format=len(args)*'c')
 
-    #return df.to_latex(index=False, column_format=len(args)*'c')
     print('\\begin{table}[hbt]')
     print('\\centering')
     print('\\caption{NAZEV}')
-    print('\\begin{tabular}{cccc}')
+    print('\\begin{tabular}{' + 'c'*len(args) + '}', sep='')
     print(' \\toprule')
     print(' ' +' & '.join(arg.long_name for arg in args) + ' \\\\')
     print(' \\midrule')
     for i in range(len(args[0].unc)):
-        print(' $' + '$ & $'.join(ufmt(arg.unc[i], apx=apx) for arg in args) + '$ \\\\')
+        print(' $' + '$ & $'.join(scalar_ufmt(arg.unc[i], apx=apx) for arg in args) + '$ \\\\')
     print(' \\bottomrule')
     print('\\end{tabular}')
     print('\\end{table}')
@@ -275,15 +283,45 @@ if __name__ == "__main__":
     
     #plt.close('all')
     plot(fig, ax, x, y, equation=True, fit_coeffs=fit)
-    plt.show()
+    #plt.show()
 
-    print(ufmt(ufloat(4.965,0.08)))
-    print(ufmt(ufloat(5.334,0.00134)))
-    print(ufmt(ufloat(4.222,0.00190)))
-    print(ufmt(ufloat(149.5,56.6)))
-    print(ufmt(ufloat(0.001495,0.000566), 'eL'))
-    print(ufmt(ufloat(14.95,0.566), 'L'))
+    print(scalar_ufmt(ufloat(4.965,0.08)))
+    print(scalar_ufmt(ufloat(5.334,0.00134)))
+    print(scalar_ufmt(ufloat(4.222,0.00190)))
+    print(scalar_ufmt(ufloat(149.5,56.6)))
+    print(scalar_ufmt(ufloat(0.001495,0.000566), 'eL'))
+    print(scalar_ufmt(ufloat(14.95,0.566), 'L'))
 
     cff = fit_curve(x, y, func=F.polynomial, p0=[1,2,3])
     print('Fitted coeffs:', cff)
+
+    hhh = unp.uarray(1.02,0.03)
+    print('hhh:', hhh)
+    print(type(hhh))
+    print(np.shape(hhh))
+    #print('hhhh:', hhh.std_dev)
+    print('hhh ufmt:', unp.std_devs(hhh))
+    # for x in hhh:
+    #     print(x) # will not work, 0-d array is not iterable
+
+    fff = unp.uarray([1.02], [0.03])
+    print('fff:', fff)
+    print(type(fff))
+    print(np.shape(fff))
+    print('fff ufmt:', unp.std_devs(fff))
+    for x in fff:
+        print(x)
+
+    ggg = Var(1.02, 0.03)
+    print('type ggg:', type(ggg))
+    print('ggg val:', ggg.val)
+    print('ggg err:', ggg.err)
+    print('ggg:', ggg)
+    print(np.shape(ggg.unc))
+    print(ggg.unc, ggg.val, ggg.err)
+    print('ggg ufmt:', unp.std_devs(ggg.unc))
+
+    print('shape', np.shape(1.02))
+    if np.shape(1.02) == ():
+        print('scalar')
 
