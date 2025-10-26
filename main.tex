@@ -1,0 +1,189 @@
+\documentclass{../concepts/prepareprotokol} %všechny balíčky pro protokol + titulní strana
+\usepackage{graphicx}
+\usepackage{booktabs}
+\usepackage{siunitx}
+\sisetup{inter-unit-product =$\cdot$}
+\sisetup{separate-uncertainty=true}
+
+\praktikum{II} %číslo praktika (I, II nebo III)
+\autor{David Němec} %jméno autora
+\datum{20.\,10.\,2025} %datum měření
+\cislo{27} %číslo úlohy
+\nazev{Měření dielektrických vlastností materiálů} %název úlohy
+
+\begin{document}
+\maketitle
+
+% ========================== PRACOVNÍ ÚKOL =========================
+\section{Pracovní úkol}
+\begin{enumerate}
+    \item Změřte metodou přímou závislost kapacity deskového kondenzátoru na přiloženém napětí pro jednu vzdálenost desek kondenzátoru. K měření použijte generátor funkcí a osciloskop.
+    \item Pomocí LCR metru změřte závislost kapacity deskového kondenzátoru na vzdálenosti desek. Z naměřených hodnot určete permitivitu vakua.
+    \item Naměřená data zpracujte graficky přímo v praktiku.
+    \item Porovnejte hodnoty kapacity naměřené v bodech 1 a 2. Diskutujte rozdíly.
+    \item Pomocí LCR metru a deskového kondenzátoru změřte relativní permitivitu přiložených vzorků a srovnejte s tabulkovými hodnotami.
+\end{enumerate}
+
+% ============================= TEORIE ===============================
+\section{Teorie}
+\subsection{neco}
+
+\subsection{Metoda měření}
+Nejprve se určovala kapacita kondenzátoru metodou přímou, tj. změřením napětí
+na kondenzátoru a proudu procházejícím obvodem. K obojímu byl použit osciloskop,
+proud byl určen z Ohmova zákona změřením napětí na rezistoru o odporu 
+$R = \SI{100}{\Ohm}$. Kapacita byla v tomto úkole měřena jen pro jednu 
+konstatní vzdálenost desek $d = \SI{2}{mm}$.
+
+Ve druhém úkolu se pomocí LCR metru měřila závislost kapacity na vzdálenosti desek. 
+Jednotlivé vzdálenosti byly voleny tak, aby jejich převrácené hodnoty byly rovnoměrně 
+rozmístěné v měřeném rozsahu. Následně však bylo ještě doměřeno pár datových bodů pro
+větší vzdálenosti desek.
+
+Kapacita kondenzátoru vyplněného různými dielektriky byla určována také pomocí LCR 
+metru. Následně bylo dielektrikum z prostoru mezi deskami vyjmuto a byla změřena
+kapacita prázdného kondenzátoru. Pro jednoduchost se uvažuje relativní perimitivita
+vzduchu jako $\varepsilon_{r,vzduch} \approx 1$, tedy jako kdyby mezi deskami 
+kondenzátoru bylo vakuum.
+
+\subsection{Měřící přístroje a jejich nejistoty}
+\begin{enumerate}
+    \item Osciloskop Rigol DS1102E:
+    
+    Osciloskopem bylo během úkolu 1 měřeno napětí na kondenzátoru a napětí na připojeném 
+    odporu (viz schéma zapojení). Podle pokynů k měření ve fotodokumentaci [4] 
+    uvažuji nejistotu napětí jako 1\% z naměřené hodnoty.
+    
+    \item LCR metr GwINSTEK:
+
+    LCR metrem byla měřena kapacita kondenzátoru během úkolu 2. Nejistota kapacity
+    je podle pokynů k měření ve fotodokumentaci [4] 0.5\% z naměřené hodnoty.
+
+    \item Čítač frekvencí FC-7150U:
+
+    Čítačem byla ověřena hodnota frekvence nastavená na generátoru Siglent, její 
+    nejistota je podle [4] $\SI{0.1}{kHz}$.
+
+    \item Mikrometrický šroub s měřítkem PHYWE:
+
+    Otočný šroub sloužil k nastavení vzdálenosti desek kondenzátoru. Jejich 
+    vzdálenost se odečítala na stupnici s přesností $\SI{0.1}{mm}$ [4].
+    
+\end{enumerate}
+
+% ======================== VÝSLEDKY MĚŘENÍ ===========================
+\section{Výsledky měření}
+\subsection{Závislost kapacity na napětí}
+
+Obvod byl zapojen podle schématu na obrázku 1 a osciloskopem byla změřena napětí
+na kondenzátoru a k němu sériově připojenému rezistoru. Proud procházející 
+kondenzátorem je tedy stejný jako proud procházející rezistorem. Jeho hodnota 
+byla vypočtena podle vzorce \ref{eq:ohm}. Nejistota proudu byla určena podle [2]
+jako
+\begin{equation}
+    \sigma_{I_0} = I_0 \sqrt{\frac{\s}}
+Měřena byla hodnota střídavého napětí peak-to-peak, 
+přepočet na efektivní hodnotu je však pro napětí i proud stejný (násobení faktorem
+$\frac{\sqrt(2)}{2})$, ve výpočtu kapacity podle vzorce (\ref{eq:cfromosc}) se
+tedy faktory zkrátí a není nutné provádět přepočet na efektivní hodnoty.
+
+\begin{table}[hbt]
+\centering
+\caption{kapacita v závislosti na generovaném napětí}
+\begin{tabular}{cccc}
+ \toprule
+ $U_0\, (\mathrm{V})$ & $U_r\, (\mathrm{mV})$ & $I_0\, (\mathrm{mA})$ & $C\, (\mathrm{pF})$ \\  
+ \midrule
+ $10.40 \pm 0.10$ & $152.0 \pm 1.5$ & $1.520 \pm 0.015$ & $233 \pm 3$ \\
+ $11.20 \pm 0.11$ & $164.0 \pm 1.6$ & $1.640 \pm 0.016$ & $233 \pm 3$ \\
+ $12.20 \pm 0.12$ & $180.0 \pm 1.8$ & $1.800 \pm 0.018$ & $235 \pm 3$ \\
+ $13.20 \pm 0.13$ & $194 \pm 2$ & $1.94 \pm 0.02$ & $234 \pm 3$ \\
+ $14.20 \pm 0.14$ & $208 \pm 2$ & $2.08 \pm 0.02$ & $233 \pm 3$ \\
+ $15.20 \pm 0.15$ & $224 \pm 2$ & $2.24 \pm 0.02$ & $235 \pm 3$ \\
+ $16.20 \pm 0.16$ & $238 \pm 2$ & $2.38 \pm 0.02$ & $234 \pm 3$ \\
+ $17.40 \pm 0.17$ & $254 \pm 3$ & $2.54 \pm 0.03$ & $232 \pm 3$ \\
+ $18.60 \pm 0.19$ & $268 \pm 3$ & $2.68 \pm 0.03$ & $229 \pm 3$ \\
+ $19.6 \pm 0.2$ & $284 \pm 3$ & $2.84 \pm 0.03$ & $231 \pm 3$ \\
+ $20.4 \pm 0.2$ & $298 \pm 3$ & $2.98 \pm 0.03$ & $232 \pm 3$ \\
+ \bottomrule
+\end{tabular}
+\end{table}
+
+\subsection{LCR metr}
+
+\begin{table}[hbt]
+\centering
+\caption{závislost kapacity kondenzátoru na vzdálenosti desek}
+\begin{tabular}{cccc}
+ \toprule
+ $d\, (\mathrm{mm})$ & $d^{-1}\, (\mathrm{mm^{-1}})$ & $C\, (\mathrm{pF})$ \\
+ \midrule
+ $1.00 \pm 0.10$ & $1.00 \pm 0.10$ & $487 \pm 2$ \\
+ $1.10 \pm 0.10$ & $0.91 \pm 0.08$ & $442 \pm 2$ \\
+ $1.23 \pm 0.10$ & $0.81 \pm 0.07$ & $383 \pm 2$ \\
+ $1.39 \pm 0.10$ & $0.72 \pm 0.05$ & $353.2 \pm 1.8$ \\
+ $1.60 \pm 0.10$ & $0.62 \pm 0.04$ & $313.0 \pm 1.6$ \\
+ $1.89 \pm 0.10$ & $0.53 \pm 0.03$ & $260.7 \pm 1.3$ \\
+ $2.30 \pm 0.10$ & $0.435 \pm 0.019$ & $215.2 \pm 1.1$ \\
+ $2.93 \pm 0.10$ & $0.341 \pm 0.012$ & $166.4 \pm 0.8$ \\
+ $4.05 \pm 0.10$ & $0.247 \pm 0.006$ & $121.0 \pm 0.6$ \\
+ $6.00 \pm 0.10$ & $0.167 \pm 0.003$ & $93.2 \pm 0.5$ \\
+ $7.00 \pm 0.10$ & $0.143 \pm 0.002$ & $81.8 \pm 0.4$ \\
+ $10.00 \pm 0.10$ & $0.1000 \pm 0.0010$ & $61.4 \pm 0.3$ \\
+ $17.00 \pm 0.10$ & $0.0588 \pm 0.0003$ & $41.4 \pm 0.2$ \\
+ $25.00 \pm 0.10$ & $0.04000 \pm 0.00016$ & $32.00 \pm 0.16$ \\
+ $35.00 \pm 0.10$ & $0.02857 \pm 0.00008$ & $26.20 \pm 0.13$ \\
+ \bottomrule
+\end{tabular}
+\end{table}
+
+\subsection{Relativní permitivity dielektrik}
+
+\begin{table}[hbt]
+\centering
+\caption{kapacita kondenzátoru s dielektrikem a bez něj a relativní permitivita pro různá dielektrika}
+\begin{tabular}{ccccc}
+ \toprule
+ dielektrikum & $d\, (\mathrm{mm})$ & $C\, (\mathrm{pF})$ & $C_{vac}\, (\mathrm{pF})$ & $\varepsilon_r$ \\
+ \midrule
+ sklo & $5.75 \pm 0.10$ & $599 \pm 3$ & $100.8 \pm 0.5$ & $5.94 \pm 0.04$ \\
+ plexisklo & $4.20 \pm 0.10$ & $357.4 \pm 1.8$ & $126.1 \pm 0.6$ & $2.83 \pm 0.02$ \\
+ polyethylen & $7.60 \pm 0.10$ & $164.7 \pm 0.8$ & $77.5 \pm 0.4$ & $2.125 \pm 0.015$ \\        
+ polypropylen & $7.90 \pm 0.10$ & $152.1 \pm 0.8$ & $74.2 \pm 0.4$ & $2.050 \pm 0.014$ \\       
+ PVC & $7.90 \pm 0.10$ & $155.4 \pm 0.8$ & $74.7 \pm 0.4$ & $2.080 \pm 0.015$ \\
+ \bottomrule
+\end{tabular}
+\end{table}
+
+% ============================ DISKUZE ===============================
+\section{Diskuze}
+
+% ============================= ZÁVĚR ================================
+\section{Závěr}
+
+Kapacita válcového kondenzátoru o průměru $D = \SI{26.0\pm0.1}{cm}$ se vzdáleností desek $d = \SI{2.0\pm0.1}{mm}$ se ukázala být nezávislá na připojeném napětí a vychází $C = \SI{233\pm1}{pF}$.
+
+Závislost kapacity deskového kondenzátoru (s plochou desek $A$) na vzdálenosti desek byla změřena jako lineární se směrnicí $k = \varepsilon_0 \cdot A$. 
+
+% =========================== LITERATURA =============================
+\section*{Literatura}
+\begin{itemize}
+\item 
+
+[1] Kolektiv ZFP KVOF MFF UK: Měření dielektrických vlastností materiálů [online]. [cit. 26.10.2025], dostupné z https://physics.mff.cuni.cz/vyuka/zfp/\_media/zadani/texty/txt\_227.pdf
+
+\item 
+
+[2] J. Englich: Úvod do praktické fyziky I: Zpracování výsledků měření. 1. vyd. Praha: Matfyzpress, 2006
+
+
+
+\item 
+
+[3] Kolektiv ZFP KVOF MFF UK: Měření dielektrických vlastností materiálů - pokyny k měření [online]. [cit. 26.10.2025], dostupné z https://physics.mff.cuni.cz/vyuka/zfp/\_media/zadani/pokyny/mereni\_227.pdf
+
+\item 
+
+[4] Kolektiv ZFP KVOF MFF UK: Měření dielektrických vlastností materiálů - fotodokumentace [online]. [cit. 26.10.2025], dostupné z https://physics.mff.cuni.cz/vyuka/zfp/\_media/zadani/foto/foto\_227.pdf
+\end{itemize}
+\end{document}

@@ -17,7 +17,9 @@ df.columns = ['u0','ur','i0','c']
 u0 = Var(df['u0'].to_numpy(), errors='1%', short_name='U_0', unit='V')
 ur = Var(df['ur'].to_numpy(), errors='1%', short_name='U_r', unit='mV')
 R = Var(100, short_name='R', unit='\\Omega')
-w = Var(2 * np.pi * 100000, short_name='\\omega', unit='s^{-1}')
+f = Var(100000, 100, short_name='f', unit='Hz')
+w = 2 * np.pi * f
+w.set_lname(short_name='\\omega', unit='s^{-1}')
 i0 = ur / R
 i0.set_lname('I_0', 'mA')
 c = i0 / 1000 / (w * u0) * 1e12
@@ -64,11 +66,17 @@ pr.nice_print(teor_eps0)
 d = Var(26, 0.1, short_name='D', unit='cm')
 A = np.pi * d**2 / 4
 A.set_lname('A', 'cm^{2}')
+print(A)
 eps0 = coeffs2.val[0] * 1e-15 / (A / 1e4)  # přepočet pF/cm² na F/m²
 eps0.set_lname('\\varepsilon_0', 'F/m')
 
 print(eps0)
 pr.nice_print(eps0)
+
+d = Var(2, 0.1, short_name='d', unit='mm')
+C = coeffs2.val[0] * (1 / d) + coeffs2.val[1]
+C.set_lname('C', 'pF')
+print(C)
 
 ######################## relativní permitivita dielektrik ###############
 apx = 'L'
@@ -98,3 +106,7 @@ print('\\end{tabular}')
 print('\\end{table}')
 
 
+for i in range(len(mats)):
+    print('\\begin{equation*}')
+    print(f"  \\varepsilon_{{r,{mats[i]}}} = {pr.scalar_ufmt(eps_r.unc[i], apx=apx)}")
+    print('\\end{equation*}')
