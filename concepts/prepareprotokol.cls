@@ -3,6 +3,7 @@
 \LoadClass[10pt,a4paper]{article}
 
 %Balíčky pro celý dokument
+\usepackage{booktabs}
 \usepackage[utf8]{inputenc}
 \usepackage[czech]{babel}
 \usepackage[T1]{fontenc}
@@ -50,7 +51,7 @@
 \end{minipage}
 \begin{minipage}{0.4\textwidth}
 \begin{center}
-\includegraphics[width=4.5cm]{ZFP.pdf}
+\includegraphics[width=4.5cm]{concepts/ZFP.pdf}
 \end{center}
 \end{minipage}\\\\
 

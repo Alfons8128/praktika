@@ -1,0 +1,363 @@
+
+\documentclass{../concepts/prepareprotokol} %všechny balíčky pro protokol + titulní strana
+\usepackage{graphicx}
+\usepackage{booktabs}
+\usepackage{amsmath}
+\usepackage{siunitx}
+\sisetup{inter-unit-product =$\cdot$}
+\sisetup{separate-uncertainty=true}
+
+\praktikum{II} %číslo praktika (I, II nebo III)
+\autor{David Němec} %jméno autora
+\datum{20.\,10.\,2025} %datum měření
+\cislo{27} %číslo úlohy
+\nazev{Měření dielektrických vlastností materiálů} %název úlohy
+
+\begin{document}
+\maketitle
+
+% ========================== PRACOVNÍ ÚKOL =========================
+\section{Pracovní úkol}
+\begin{enumerate}
+    \item Změřte metodou přímou závislost kapacity deskového kondenzátoru na přiloženém napětí pro jednu vzdálenost desek kondenzátoru. K měření použijte generátor funkcí a osciloskop.
+    \item Pomocí LCR metru změřte závislost kapacity deskového kondenzátoru na vzdálenosti desek. Z naměřených hodnot určete permitivitu vakua.
+    \item Naměřená data zpracujte graficky přímo v praktiku.
+    \item Porovnejte hodnoty kapacity naměřené v bodech 1 a 2. Diskutujte rozdíly.
+    \item Pomocí LCR metru a deskového kondenzátoru změřte relativní permitivitu přiložených vzorků a srovnejte s tabulkovými hodnotami.
+\end{enumerate}
+
+% ============================= TEORIE ===============================
+\section{Teorie}
+\subsection{Kapacita deskového kondenzátoru}
+
+Kapacita deskového kondenzátoru ve vakuu s plochou desek $A$ a vzdáleností desek $d$ je podle [1] daná vztahem
+\begin{equation} \label{eq:cdesky}
+    C_{vac} = \frac{\varepsilon_0 A}{d} ,
+\end{equation}
+kde $\varepsilon_0$ je elektrická permitivita vakua. Pokud je prostor mezi deskami vyplněn dielektrikem, zvětší se hodnota kapacity oproti stavu bez dielektrika podle vzorce [1]
+\begin{equation} \label{eq:cdielektrikum}
+    C = \frac{\varepsilon_0 \varepsilon_r A}{d} = \varepsilon_r C_{vac},
+\end{equation}
+kde $\varepsilon_r \geq 1$ je relativní permitivita dielektrika. Pro vzduch přibližně platí $\varepsilon_{r, vzduch} \approx 1$.
+
+\subsection{Měření kapacity kondenzátoru}
+
+Přivedeme-li na kondenzátor harmonické střídavé napětí, jehož okamžitá hodnota je daná vztahem \\
+$U = U_0 \sin{\omega t}$, kde $\omega = 2\pi f$ je úhlová frekvence a $f$ frekvence harmonických kmitů, bude pro hodnotu kapacity platit vztah (odvozeno podle rovnice
+(11) v [1])
+\begin{equation} \label{eq:oscilator}
+    C = \frac{I_0}{\omega U_0} ,
+\end{equation}
+kde $I_0$ je amplituda harmonického proudu procházejícího kondenzátorem.
+
+Proud lze měřit osciloskopem přes úbytek napětí $U_0$ na rezistoru o odporu $R$. Hodnota proudu $I_0$ pak podle [2] (Ohmův zákon) bude
+\begin{equation} \label{eq:ohm}
+    I_0 = \frac{U_0}{R} .
+\end{equation}
+
+\subsection{Experimentální uspořádání}
+
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=0.5\linewidth]{uloha27/schema.png}
+    \caption{Schéma zapojení pro měření kapacity deskového kondenzátoru metodou přímou [3]}
+    \label{fig:schema}
+\end{figure}
+Obvod byl zapojen podle schématu na obrázku \ref{fig:schema}. Osciloskopem se v kanálu 1 měřilo celkové napětí na generátoru a v kanálu 2 úbytek napětí na rezistoru. Napětí na rezistoru bylo oproti celkovému napětí zanedbatelné a lze tedy uvažovat, že kanál 1 ukazoval přímo napětí na kondenzátoru.
+
+\subsection{Metoda měření}
+Nejprve se určovala kapacita kondenzátoru metodou přímou, tj. změřením napětí na kondenzátoru a proudu procházejícím obvodem. K obojímu byl použit osciloskop, proud byl určen z Ohmova zákona (\ref{eq:ohm}) změřením napětí na rezistoru o odporu 
+$R = \SI{100}{\ohm}$. Kapacita byla v tomto úkole měřena jen pro jednu 
+konstatní vzdálenost desek $d = \SI{2}{mm}$.
+
+Ve druhém úkolu se pomocí LCR metru měřila závislost kapacity na vzdálenosti desek. Jednotlivé vzdálenosti byly voleny tak, aby jejich převrácené hodnoty byly rovnoměrně rozmístěné v měřeném rozsahu. Následně však bylo ještě doměřeno pár datových bodů pro větší vzdálenosti desek.
+
+Kapacita kondenzátoru vyplněného různými dielektriky byla určována také pomocí LCR metru. Po odečtení hodnoty bylo dielektrikum z prostoru mezi deskami vyjmuto a byla změřena kapacita prázdného kondenzátoru. Pro jednoduchost se uvažuje relativní perimitivita vzduchu jako $\varepsilon_{r,vzduch} \approx 1$, tedy jako kdyby mezi deskami 
+kondenzátoru bylo vakuum. Při tomto měření bylo nutné zajistit, aby zaprvé obě desky kondenzátoru přiléhaly těsně k dielektriku, a za druhé aby během vyjmutí dielektrika nedošlo ke změně vzdálenosti desek.
+
+\subsection{Měřicí přístroje a jejich nejistoty}
+\begin{enumerate}
+    \item Osciloskop Rigol DS1102E:
+    
+    Osciloskopem bylo během úkolu 1 měřeno napětí na kondenzátoru a napětí na připojeném 
+    odporu (viz schéma zapojení). Podle pokynů k měření ve fotodokumentaci [4] 
+    uvažuji nejistotu napětí jako 1\,\% z naměřené hodnoty.
+    
+    \item LCR metr GwINSTEK:
+
+    LCR metrem byla měřena kapacita kondenzátoru během úkolu 2. Nejistota kapacity
+    je podle pokynů k měření ve fotodokumentaci [4] 0.5\,\% z naměřené hodnoty.
+
+    \item Čítač frekvencí FC-7150U:
+
+    Čítačem byla ověřena hodnota frekvence nastavená na generátoru Siglent, její 
+    nejistota je podle [4] $\SI{0.1}{kHz}$.
+
+    \item Mikrometrický šroub s měřítkem PHYWE:
+
+    Otočný šroub sloužil k nastavení vzdálenosti desek kondenzátoru. Jejich 
+    vzdálenost se odečítala na stupnici s přesností $\SI{0.1}{mm}$ [4].
+    
+\end{enumerate}
+%\def\figurename{Obr\’azek}%
+\def\figurename{Graf}%
+\setcounter{figure}{0}
+
+% ======================== VÝSLEDKY MĚŘENÍ ===========================
+\section{Výsledky měření}
+\subsection{Závislost kapacity na napětí}
+
+Obvod byl zapojen podle schématu na obrázku 1, vzdálenost desek byla nastavena na \SI{2}{mm}. Osciloskopem byla změřena napětí na kondenzátoru a k němu sériově připojenému rezistoru. Proud procházející kondenzátorem je tedy stejný jako proud procházející rezistorem. Jeho hodnota byla vypočtena podle vzorce (\ref{eq:ohm}). Nejistota proudu byla určena podle [5] jako
+\begin{equation} \label{eq:sigmai0}
+    \sigma_{I_0} = I_0 \sqrt{\left(\frac{\sigma_{U_0}}{U_0}\right)^2 + 
+    \left(\frac{\sigma_R}{R}\right)^2} .
+\end{equation}
+
+Nejistoty napětí byly vzaty z nejistoty osciloskopu jako 1\,\% změřené hodnoty. Pro výpočty byly použity hodnoty střídavého napětí tzv. peak-to-peak, tedy dvojnásobek amplitudy příslušné harmonické vlny, 
+přepočet na efektivní hodnotu je však pro napětí i proud stejný (násobení faktorem $\frac{\sqrt{2}}{2})$, ve výpočtu kapacity podle vzorce (\ref{eq:oscilator}) se tedy faktory zkrátí a není nutné provádět přepočet na efektivní hodnoty. Nejistota kapacity byla vypočtena ze vzorce (\ref{eq:oscilator}) podle [5] jako
+\begin{equation}
+    \sigma_C = C \sqrt{\left(\frac{\sigma_{I_0}}{I_0}\right)^2 + 
+    \left(\frac{\sigma_\omega}{\omega}\right)^2 + \left(\frac{\sigma_{U_0}}{U_0}\right)^2} ,
+\end{equation}
+kde nejistota úhlové frekvence $\omega = 2\pi f$ byla vypočtena podle 
+\begin{equation}
+    \sigma_\omega = \omega \frac{\sigma_f}{f} ,
+\end{equation}
+kde $\sigma_f = \SI{0.1}{kHz}$ je nejistota frekvence daná přesností generátoru funkcí.
+
+Vypočtenou kapacitu kondenzátoru v závislosti na napětí na kondenzátoru shrnuje tabulka \ref{tab:osciloskop}. Závislost kapacity na napětí pak ukazuje graf \ref{fig:osciloskop}.
+
+Závislost byla proložena konstantní funkcí, střední hodnota kapacity vychází jako $C = \SI{233 \pm 1}{pF}$.
+
+\begin{table}[hbt]
+\centering
+\caption{kapacita v závislosti na generovaném napětí}
+\begin{tabular}{cccc}
+ \toprule
+ $U_0\, (\mathrm{V})$ & $U_R\, (\mathrm{mV})$ & $I_0\, (\mathrm{mA})$ & $C\, (\mathrm{pF})$ \\  
+ \midrule
+ $10.40 \pm 0.10$ & $152.0 \pm 1.5$ & $1.520 \pm 0.015$ & $233 \pm 3$ \\
+ $11.20 \pm 0.11$ & $164.0 \pm 1.6$ & $1.640 \pm 0.016$ & $233 \pm 3$ \\
+ $12.20 \pm 0.12$ & $180.0 \pm 1.8$ & $1.800 \pm 0.018$ & $235 \pm 3$ \\
+ $13.20 \pm 0.13$ & $194 \pm 2$ & $1.94 \pm 0.02$ & $234 \pm 3$ \\
+ $14.20 \pm 0.14$ & $208 \pm 2$ & $2.08 \pm 0.02$ & $233 \pm 3$ \\
+ $15.20 \pm 0.15$ & $224 \pm 2$ & $2.24 \pm 0.02$ & $235 \pm 3$ \\
+ $16.20 \pm 0.16$ & $238 \pm 2$ & $2.38 \pm 0.02$ & $234 \pm 3$ \\
+ $17.40 \pm 0.17$ & $254 \pm 3$ & $2.54 \pm 0.03$ & $232 \pm 3$ \\
+ $18.60 \pm 0.19$ & $268 \pm 3$ & $2.68 \pm 0.03$ & $229 \pm 3$ \\
+ $19.6 \pm 0.2$ & $284 \pm 3$ & $2.84 \pm 0.03$ & $231 \pm 3$ \\
+ $20.4 \pm 0.2$ & $298 \pm 3$ & $2.98 \pm 0.03$ & $232 \pm 3$ \\
+ \bottomrule
+\end{tabular}
+\label{tab:osciloskop}
+\end{table}
+
+\begin{figure}
+    \centering
+    \includegraphics[width=0.5\linewidth]{uloha27/osciloskop.png}
+    \caption{Závislost kapacity deskového kondenzátoru na napětí.}
+    \label{fig:osciloskop}
+\end{figure}
+
+\subsection{LCR metr}
+
+Poté byla proměřována závislost kapacity deskového na vzdálenosti desek. Kapacita byla tentokrát měřena pomocí LCR metru, jehož přesnost je 0.5\,\% měrené hodnoty. Protože podle vztahu (\ref{eq:cdesky}) má být kapacita přímo úměrná převrácené hodnotě vzdálenosti desek, byly hodnoty vzdálenosti voleny tak, aby jejich převrácené hodnoty byly v jejich rozsahu ekvidistantně rozmístěné. Následně však byly tyto datové body doplněny ještě několika měřeními z oblasti větších mezer mezi deskami. Naměřené hodnoty kapacity v závislosti na vzdálenosti desek shrnuje tabulka \ref{tab:lcrmetr}. Nejistota vzdálenosti byla vzata jako nejistota měřítka na otočném šroubu, tedy 0.1 mm. Nejistota převrácené hodnoty vzdálenosti byla určena podle [5] jako
+\begin{equation}
+    \sigma_{d^{-1}} = \frac{\sigma_d}{d^2} .
+\end{equation}
+
+\begin{table}[hbpt]
+\centering
+\caption{závislost kapacity kondenzátoru na vzdálenosti desek}
+\begin{tabular}{cccc}
+ \toprule
+ $d\, (\mathrm{mm})$ & $d^{-1}\, (\mathrm{mm^{-1}})$ & $C\, (\mathrm{pF})$ \\
+ \midrule
+ $1.00 \pm 0.10$ & $1.00 \pm 0.10$ & $487 \pm 2$ \\
+ $1.10 \pm 0.10$ & $0.91 \pm 0.08$ & $442 \pm 2$ \\
+ $1.23 \pm 0.10$ & $0.81 \pm 0.07$ & $383 \pm 2$ \\
+ $1.39 \pm 0.10$ & $0.72 \pm 0.05$ & $353.2 \pm 1.8$ \\
+ $1.60 \pm 0.10$ & $0.62 \pm 0.04$ & $313.0 \pm 1.6$ \\
+ $1.89 \pm 0.10$ & $0.53 \pm 0.03$ & $260.7 \pm 1.3$ \\
+ $2.30 \pm 0.10$ & $0.435 \pm 0.019$ & $215.2 \pm 1.1$ \\
+ $2.93 \pm 0.10$ & $0.341 \pm 0.012$ & $166.4 \pm 0.8$ \\
+ $4.05 \pm 0.10$ & $0.247 \pm 0.006$ & $121.0 \pm 0.6$ \\
+ $6.00 \pm 0.10$ & $0.167 \pm 0.003$ & $93.2 \pm 0.5$ \\
+ $7.00 \pm 0.10$ & $0.143 \pm 0.002$ & $81.8 \pm 0.4$ \\
+ $10.00 \pm 0.10$ & $0.1000 \pm 0.0010$ & $61.4 \pm 0.3$ \\
+ $17.00 \pm 0.10$ & $0.0588 \pm 0.0003$ & $41.4 \pm 0.2$ \\
+ $25.00 \pm 0.10$ & $0.04000 \pm 0.00016$ & $32.00 \pm 0.16$ \\
+ $35.00 \pm 0.10$ & $0.02857 \pm 0.00008$ & $26.20 \pm 0.13$ \\
+ \bottomrule
+\end{tabular}
+\label{tab:lcrmetr}
+\end{table}
+
+Závislost kapacity kondenzátoru na převrácené hodnotě vzdálenosti desek je vykreslena v grafu \ref{fig:lcrmetr}. Datovými body byla proložena lineární přímka s obecným sklonem i průsečíkem s osou $y$, tedy přímka typu $C = k \cdot \frac{1}{d} + q$. K proložení tedy nebyla použita přímka přímé úměrnosti, jak by nasvědčoval vzorec (\ref{eq:cdesky}); viz diskuze. Metodou nejmenších čtverců byla stanovena hodnota směrnice jako $k = \SI{466.6 \pm 0.9}{F \cdot \milli\meter}$ a hodnota průsečíku s osou $y$ jako $q = \SI{13.32 \pm 0.10}{pF}$.
+
+Odpovídající kapacita pro vzdálenost $d = \SI{2}{mm}$ (pro srovnání s výsledkem 1. úkolu) vychází
+\begin{equation} \label{eq:cfromkq}
+    C' = k \cdot \frac{1}{d} + q = \SI{247 \pm 12}{pF} \, .
+\end{equation}
+Nejistota byla spočtena podle [5] jako
+\begin{equation}
+    \sigma_{C'} = \sqrt{\left(\frac{\sigma_k}{d}\right)^2 + 
+    \left(\frac{k \cdot \sigma_d}{d^2}\right)^2 + {\sigma_q}^2}
+\end{equation}
+
+Pro plochu $A$ kruhových desek o průměru $D = \SI{26.0\pm0.1}{cm}$ válcového kondenzátoru platí \\
+$A = \frac{\pi D^2}{4} = \SI{531 \pm 4}{cm\squared}$. Nejistota plochy $A$ byla vypočtena podle [5] jako
+\begin{equation}
+    \sigma_A = A \frac{\sqrt{2}\sigma_D}{D} .
+\end{equation}
+Ze vztahu (\ref{eq:cdesky}) pak lze určit permitivitu vakua jako
+\begin{equation}
+    \varepsilon_0 = \frac{k}{A} = \left(8.79 \pm 0.07\right) \cdot 10^{-12} \, \si{F\per\meter} .
+\end{equation}
+
+\begin{figure}[htpb]
+    \centering
+    \includegraphics[width=0.5\linewidth]{uloha27/lcrmetr.png}
+    \caption{Závislost kapacity deskového kondenzátoru na převrácené hodnotě vzdálenosti desek. Chybové úsečky pro hodnotu kapacity nejsou kvůli své malé velikosti pro přehlednost vykresleny.}
+    \label{fig:lcrmetr}
+\end{figure}
+
+\subsection{Relativní permitivity dielektrik}
+
+Při měření relativní permitivity vybraných dielektrik byla vždy dielektrická deska vložena mezi desky kondenzátoru tak, aby je všude přesahovala. Šroubem pak byly desky kondenzátoru přitlačeny na dielektrikum, aby k němu těsně přiléhaly. LCR metrem byla změřena kapacita kondenzátoru $C$ vyplněného dielektrikem a vzálenost desek. Následně bylo dielektrikum z kondenzátoru vyjmuto (tak, aby se nezměnila vzdálenost desek) a opět LCR metrem změřena kapacita kondenzátoru $C_{vac}$. Relativní permitivita dielektrika byla vypočtena podle rovnice (\ref{eq:cdielektrikum}) jako
+\begin{equation}
+    \varepsilon_r = \frac{C}{C_{vac}} \, .
+\end{equation}
+Její nejistota byla určena podle [5] jako
+\begin{equation}
+    \sigma_{\varepsilon_r} = \varepsilon_r \sqrt{\left(\frac{\sigma_C}{C}\right)^2 + \left(\frac{\sigma_{C_0}}{C_0}\right)^2}
+\end{equation}
+
+Kapacity kondenzátoru s dielektrikem i bez něj a relativní permitivity pro jednotlivá dielektrika jsou uvedena v tabulce \ref{tab:dielektrika}
+
+\begin{table}[hbt]
+\centering
+\caption{kapacita kondenzátoru s dielektrikem a bez něj a relativní permitivita pro různá dielektrika}
+\begin{tabular}{ccccc}
+ \toprule
+ dielektrikum & $d\, (\mathrm{mm})$ & $C\, (\mathrm{pF})$ & $C_{vac}\, (\mathrm{pF})$ & $\varepsilon_r$ \\
+ \midrule
+ sklo & $5.75 \pm 0.10$ & $599 \pm 3$ & $100.8 \pm 0.5$ & $5.94 \pm 0.04$ \\
+ plexisklo & $4.20 \pm 0.10$ & $357.4 \pm 1.8$ & $126.1 \pm 0.6$ & $2.83 \pm 0.02$ \\
+ polyethylen & $7.60 \pm 0.10$ & $164.7 \pm 0.8$ & $77.5 \pm 0.4$ & $2.125 \pm 0.015$ \\        
+ polypropylen & $7.90 \pm 0.10$ & $152.1 \pm 0.8$ & $74.2 \pm 0.4$ & $2.050 \pm 0.014$ \\       
+ PVC & $7.90 \pm 0.10$ & $155.4 \pm 0.8$ & $74.7 \pm 0.4$ & $2.080 \pm 0.015$ \\
+ \bottomrule
+\end{tabular}
+\label{tab:dielektrika}
+\end{table}
+
+% ============================ DISKUZE ===============================
+\section{Diskuze}
+
+Během měření s osciloskopem se v souladu s teorií ukázala být kapacita deskového kondenzátoru nezávislá na napětí na kondenzátoru. Měření bylo prováděno s konstantní vzdáleností desek $d = \SI{2}{mm}$, řádově menší než průměr desek, okrajové efekty lze tedy zanedbat a elektrické pole mezi deskami považovat za homogenní. Jak ukazuje graf \ref{fig:osciloskop}, v rámci nejistoty lze hodnoty kapacity skutečně považovat za konstantní, s hodnotou $C = \SI{233\pm1}{pF}$ a relativní nejistotou 0.5\,\%. Největší nejistotu do měření vneslo určování napětí na kondenzátoru a rezistoru, jejich relativní nejistoty byly kvůli přesnosti osciloskopu 1\,\%, zatímco relativní nejistota generované frekvence a úhlové frekvence byla asi o řád nižší. Přesto se díky statistice podařilo určit kapacitu s velmi dobrou přesností.
+
+Odečet kapacity z LCR metru byl přesnější s relativní nejistotou jen 0.5\,\%, tentokrát však byla určující nejistota nastavení vzdálenosti desek. Pro malé vzdálenosti (1 - 10 mm) se totiž nejistota pohybuje v řádu jednotek procent. S větší vzdáleností její relativní nejistota klesá, stále silněji se však projevují okrajové efekty nehomogenního pole, které mohou systematicky měnit hodnotu kapacity kondenzátoru. Při pohledu na graf \ref{fig:lcrmetr} odhaduji, že s největší jistotou lze považovat datové body odpovídající vzdálenosti desek v rozmezí 3 - 5 mm.
+
+Celkovou závislost kapacity kondenzátoru na převrácené hodnotě vzdálenosti desek podle grafu \ref{fig:lcrmetr} nejlépe popisuje obecná přímka tvaru $C = k \cdot \frac{1}{d} + q$. Důvod, proč datovými body nebyla proložena přímka přímé úměrnosti s průsečíkem s osou $y$ v počátku (jak by napovídal vzorec (\ref{eq:cdesky})), spočívá v metodě měření s LCR metrem. Ten ve skutečnosti určuje hodnotu impedance a na základě fázového rozdílu mezi hodnotami harmonického střídavého napětí a proudu vypočte ekvivalentní hodnotu kapacity. V případě neideálního kondenzátoru však do měření vstupuje i malá vlastní indukčnost a malá vodivost, které systematicky mění hodnotu vypočtené kapacity. Pokud by indukčnost a vodivost kondenzátoru byly přibližně konstantní s měnící se vzdáleností desek, projevily by se přesně tímto systematickým posunem hodnot kapacity.
+
+To, že lze tuto obecnou lineární závislost považovat za správnou, podporuje i hodnota vypočtené elektrické permitivity vakua $\varepsilon_0 = \left(8.79 \pm 0.07\right) \cdot 10^{-12}$. Její teoretická hodnota je podle [6] $\varepsilon'_0 = 8.854 187 8188(14) \cdot 10^{-12} \, \si{F \per\meter}$. V rámci nejistoty měření tedy experimentálně určená hodnota odpovídá té teoretické.
+
+Pro srovnání metod určení kapacity pomocí osciloskopu a LCR metru byla vypočtena odpovídající kapacita pro vzdálenost desek $d = \SI{2}{mm}$ jako $C' = k \cdot \frac{1}{d} + q = \SI{247 \pm 12}{pF}$ s relativní nejistotou 5\,\%. Největší nejistotu do hodnoty vneslo určení vzdálenosti desek kondenzátoru, jelikož relativní nejistota při vzdálenosti $d = \SI{2}{mm}$ je právě 5\,\%. V rámci nejistoty si tedy hodnoty odpovídají, navíc pokud uvážíme, že do nejistoty kapacity měřené pomocí osciloskopu nebyla nejistota vzdálenosti započtena. Pokud by nebyla vzdálenost nastavena přesně na určenou hodnotu, byla by systematicky měřena lehce odlišná kapacita. Hodnoty měřené pomocí těchto dvou metod se však mohou lišit i z důvodu nenulové vlastní indukčnosti a vodivosti. V měření s osciloskopem nebyl fázový posuv mezi napětím na kondenzátoru a proudem v obvodu (napětím na rezistoru) vůbec zaznamenáván a deskový kondenzátor byl považován za ideální, charakterizovatelný pouze kapacitou. Reálný kondenzátor však má i vlastní indukčnost a vodivost, které budou mít na takto určenou hodnotu kapacity systematický vliv.
+
+Relativní permitivity vybraných dielektrik byly určeny porovnáním kapacity kondenzátoru s dielektrikem a bez něj. Při měření bylo dbáno, aby při vyjmutí dielektrika zůstala zachována vzdálenost desek, jinak by měření bylo ovlivněno systematickou chybou. Otočným šroubem byly desky kondenzátoru nastaveny na takovou vzdálenost, aby těsně přiléhaly na desku dielektrika. Případné drobné nerovnosti a netěsnosti by mohly mít na hodnotu relativní permitivity vliv, kvůli změření lehce odlišné hodnoty kapacity kondenzátoru s dielektrikem. Ve vzorci (\ref{eq:cdielektrikum}) se totiž v tomto případě kombinuje relativní permitivita vzduchu a dielektrika, a to netriviálním způsobem.
+
+Pro vybraná dielektrika byly experimentálně změřeny relativní permitivity (označené $\varepsilon_r$), přičemž teoretické hodnoty jsou převzaté z [7] a [8] (označené $\varepsilon'_r$):
+\begin{equation*}
+  \varepsilon_{r, sklo} = 5.94 \pm 0.04 \qquad
+  \varepsilon'_{r, sklo} \in (3.7, 10.0)
+\end{equation*}
+\begin{equation*}
+  \varepsilon_{r, plexisklo} = 2.83 \pm 0.02 \qquad
+  \varepsilon_{r, plexisklo} = 3.4
+\end{equation*}
+\begin{equation*}
+  \varepsilon_{r, polyethylen} = 2.125 \pm 0.015 \qquad
+  \varepsilon_{r, polyethylen} = 2.16
+\end{equation*}
+\begin{equation*}
+  \varepsilon_{r, polypropylen} = 2.050 \pm 0.014 \qquad
+  \varepsilon_{r, polypropylen} \in (2.0, 2.2)
+\end{equation*}
+\begin{equation*}
+  \varepsilon_{r, PVC} = 2.080 \pm 0.015 \qquad
+  \varepsilon_{r, PVC} \in (2.51, 3,10) \,.
+\end{equation*}
+
+Kromě plexiskla a PVC všechny experimentálně určené hodnoty relativních permitivit v rámci nejistoty (pro polyethylen v rámci $2\sigma$) odpovídají teoretickým hodnotám či rozsahům hodnot. Řádově si však odpovídají všechny změřené a teoretické hodnoty. Vzhledem k tomu, že pro spoustu materiálů udává literatura jen rozsah typických hodnot relativních permitivit, usuzuji, že její hodnota velmi závisí na složení, čistotě i postupu výroby vzorku. Experimentálně určené hodnoty tedy lze považovat za zhruba správné.
+
+% ============================= ZÁVĚR ================================
+\section{Závěr}
+
+Kapacita válcového kondenzátoru o průměru $D = \SI{26.0\pm0.1}{cm}$ se vzdáleností desek $d = \SI{2.0\pm0.1}{mm}$ se ukázala být nezávislá na připojeném napětí a vychází 
+\begin{equation*}
+    C = \SI{233\pm1}{pF} \,.
+\end{equation*}
+
+Proměřováním lineární závislosti kapacity deskového kondenzátoru na vzdálenosti desek byla změřena permitivita vakua jako
+\begin{equation*}
+    \varepsilon_0 = \left(8.79 \pm 0.07\right) \cdot 10^{-12} \, \si{F\per\meter} \,.
+\end{equation*}
+
+Relativní permitivity vybraných dielektrik byly určeny porovnáním kapacity kondenzátoru s dielektrikem a bez něj jako
+\begin{equation*}
+  \varepsilon_{r, sklo} = 5.94 \pm 0.04
+\end{equation*}
+\begin{equation*}
+  \varepsilon_{r, plexisklo} = 2.83 \pm 0.02
+\end{equation*}
+\begin{equation*}
+  \varepsilon_{r, polyethylen} = 2.125 \pm 0.015
+\end{equation*}
+\begin{equation*}
+  \varepsilon_{r, polypropylen} = 2.050 \pm 0.014
+\end{equation*}
+\begin{equation*}
+  \varepsilon_{r, PVC} = 2.080 \pm 0.015 \,.
+\end{equation*}
+
+% =========================== LITERATURA =============================
+\section*{Literatura}
+\begin{itemize}
+\item 
+
+[1] Kolektiv ZFP KVOF MFF UK: Měření dielektrických vlastností materiálů [online]. [cit. 26.10.2025], dostupné z https://physics.mff.cuni.cz/vyuka/zfp/\_media/zadani/texty/txt\_227.pdf
+
+\item 
+
+[2] Kolektiv ZFP KVOF MFF UK: Měření odporu [online]. [cit. 26.10.2025], dostupné \\
+z https://physics.mff.cuni.cz/vyuka/zfp/\_media/zadani/texty/txt\_202.pdf
+
+\item
+
+[3] Kolektiv ZFP KVOF MFF UK: Měření dielektrických vlastností materiálů - pokyny k měření [online]. [cit. 26.10.2025], dostupné z https://physics.mff.cuni.cz/vyuka/zfp/\_media/zadani/pokyny/mereni\_227.pdf
+
+\item 
+
+[4] Kolektiv ZFP KVOF MFF UK: Měření dielektrických vlastností materiálů - fotodokumentace [online]. [cit. 26.10.2025], dostupné z https://physics.mff.cuni.cz/vyuka/zfp/\_media/zadani/foto/foto\_227.pdf
+
+\item 
+
+[5] J. Englich: Úvod do praktické fyziky I: Zpracování výsledků měření. 1. vyd. Praha: Matfyzpress, 2006
+
+\item 
+
+[6] Eite Tiesinga, Peter J. Mohr, David B. Newell, and Barry N. Taylor: Values of fundamental physics constants: Vacuum electric permittivity [online]. [cit. 27.10.2025], dostupné z https://physics.nist.gov/cgi-bin/cuu/Value?ep0
+
+\item 
+
+[7] Dinel s.r.o.: tabulka relativních permitivit [online]. [cit. 27.10.2025], dostupné z https://www.dinel.cz/ \\ \_file/AMIfv95QsvMopq8GA848o69r\_yFAVYgklqLiAoLME0ORLQPdCAIkRAeJvDDR90OQh8kq6T4bVT6 \\ 
+dASBZ27h\_lIuHiZ3j-GhH8T6DphAz1Ui4CwS-441Bupe\_IVYYHw\_XkUqAHRt6U93WEiawC8m6jG7tzF1pt \\
+cn0sQ/relativni-permitivity-cz\_n1.pdf
+
+\item 
+
+[8] Mikulčák a kolektiv: Matematické, fyzikální a chemické tabulky pro střední školy: relativní permitivita, Praha: Státní pedagogické nakladatelství, n. p., 1988
+
+\end{itemize}
+\end{document}
