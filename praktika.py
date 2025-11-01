@@ -156,8 +156,8 @@ class Rel:
         self.coeffs = fitted_coeffs
         self.cov = cov_matrix
     
-    def plot_data(self, ax, errors:tuple = (1,1), label='naměřené hodnoty', scale=1, marker='s', color='black'):
-        match errors:
+    def plot_data(self, ax, err: tuple = (1,1), label='naměřené hodnoty', scale=1, marker='s', color='black'):
+        match err:
             case (1, 1): # x_error_bar and y_error_bar
                     ax.errorbar(self.x.val, self.y.val, xerr=self.x.err, yerr=self.y.err, marker=marker,
                                 linewidth=1, color=color, markersize=5*scale, capsize=3, label=label)
@@ -172,13 +172,13 @@ class Rel:
 
         ax.set_xlabel(self.x.long_name)
         ax.set_ylabel(self.y.long_name)
-        ax.legend()
+        #ax.legend()
 
 
     def plot_fit(self, ax, label='fitovaná přímka', linestyle=':', color='black'):
         x = np.linspace(min(self.x.val), max(self.x.val), 200)
         ax.plot(x, self.func(x, *self.coeffs.val), linestyle=linestyle, color=color, linewidth=1.5, label=label)
-        ax.legend()
+        #ax.legend()
 
 
     def show_equation(self, ax, label=None):
@@ -316,14 +316,14 @@ def plot(fig, ax, x, y, fit_coeffs=None, func=F.linear, xerr=True, yerr=True, fi
 def plot_data(ax, x: Var, y: Var, err: tuple = (1,1), label='naměřené hodnoty', scale=1, marker='s', color='black'):
     match err:
         case (1, 1): # x_error_bar and y_error_bar
-                ax.errorbar(x.val, y.val, xerr=x.err, yerr=y.err, fmt='ks', linewidth=1, 
-                            markersize=5*scale, capsize=3, label=label)
+                ax.errorbar(x.val, y.val, xerr=x.err, yerr=y.err, color=color, linewidth=1, 
+                            marker=marker, markersize=5*scale, capsize=3, label=label)
         case (1, 0): # just x_error_bar
-                ax.errorbar(x.val, y.val, xerr=x.err, fmt='ks', linewidth=1, 
-                            markersize=5*scale, capsize=3, label=label)
+                ax.errorbar(x.val, y.val, xerr=x.err, color=color, linewidth=1, 
+                            marker=marker, markersize=5*scale, capsize=3, label=label)
         case (0, 1): # just y_error_bar
-                ax.errorbar(x.val, y.val, yerr=y.err, fmt='ks', linewidth=1, 
-                            markersize=5*scale, capsize=3, label=label)
+                ax.errorbar(x.val, y.val, yerr=y.err, color=color, linewidth=1, 
+                            marker=marker, markersize=5*scale, capsize=3, label=label)
         case (0, 0): # none of the errorbars
             ax.scatter(x.val, y.val, marker=marker, s=25*scale, color=color, linewidth=1, label=label)
 
