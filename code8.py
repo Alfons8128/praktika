@@ -27,17 +27,17 @@ for i in range(len(rdf2['f1'])):
     df2.loc[i, 'f2'] = max(rdf2.loc[i, 'f1'], rdf2.loc[i, 'f2'])
 
 print(df)
-f1 = Var(df['f1'].to_numpy(), errors=0.1, name='f_1', unit='kHz')
-f2 = Var(df['f2'].to_numpy(), errors=0.1, name='f_2', unit='kHz')
-c = Var(rdf['c'].to_numpy(), errors=0.25, name='C_N', unit='pF')
+f1 = Var(df['f1'].to_numpy(), errors=0.1, short_name='f_1', unit='kHz')
+f2 = Var(df['f2'].to_numpy(), errors=0.1, short_name='f_2', unit='kHz')
+c = Var(rdf['c'].to_numpy(), errors=0.25, short_name='C_N', unit='pF')
 fr = (f1 + f2) / 2
 fr.set_lname('f_r', 'kHz')
 w = (2 * np.pi * fr) ** -2 * 1e8
 w.set_lname('\\omega_r^{-2}', '10^{-14}\\, s^{-2}')
 
-f12 = Var(df2['f1'].to_numpy(), errors=0.1, name='f_1', unit='kHz')
-f22 = Var(df2['f2'].to_numpy(), errors=0.1, name='f_2', unit='kHz')
-c2 = Var(rdf2['c'].to_numpy(), errors=0.25, name='C_N', unit='pF')
+f12 = Var(df2['f1'].to_numpy(), errors=0.1, short_name='f_1', unit='kHz')
+f22 = Var(df2['f2'].to_numpy(), errors=0.1, short_name='f_2', unit='kHz')
+c2 = Var(rdf2['c'].to_numpy(), errors=0.25, short_name='C_N', unit='pF')
 fr2 = (f12 + f22) / 2
 fr2.set_lname('f_r', 'kHz')
 w2 = (2 * np.pi * fr2) ** -2 * 1e8
@@ -107,17 +107,17 @@ for i in range(len(rdf4['f1'])):
     df4.loc[i, 'f2'] = max(rdf4.loc[i, 'f1'], rdf4.loc[i, 'f2'])
 
 print(df3)
-f13 = Var(df3['f1'].to_numpy(), errors=0.1, name='f_1', unit='kHz')
-f23 = Var(df3['f2'].to_numpy(), errors=0.1, name='f_2', unit='kHz')
-c3 = Var(rdf3['c'].to_numpy(), errors=0.25, name='C_N', unit='pF')
+f13 = Var(df3['f1'].to_numpy(), errors=0.1, short_name='f_1', unit='kHz')
+f23 = Var(df3['f2'].to_numpy(), errors=0.1, short_name='f_2', unit='kHz')
+c3 = Var(rdf3['c'].to_numpy(), errors=0.25, short_name='C_N', unit='pF')
 fr3 = (f13 + f23) / 2
 fr3.set_lname('f_r', 'kHz')
 w3 = (2 * np.pi * fr3) ** -2 * 1e8
 w3.set_lname('\\omega_r^{-2}', '10^{-14}\\, s^{-2}')
 
-f14 = Var(df4['f1'].to_numpy(), errors=0.1, name='f_1', unit='kHz')
-f24 = Var(df4['f2'].to_numpy(), errors=0.1, name='f_2', unit='kHz')
-c4 = Var(rdf4['c'].to_numpy(), errors=0.25, name='C_N', unit='pF')
+f14 = Var(df4['f1'].to_numpy(), errors=0.1, short_name='f_1', unit='kHz')
+f24 = Var(df4['f2'].to_numpy(), errors=0.1, short_name='f_2', unit='kHz')
+c4 = Var(rdf4['c'].to_numpy(), errors=0.25, short_name='C_N', unit='pF')
 fr4 = (f14 + f24) / 2
 fr4.set_lname('f_r', 'kHz')
 w4 = (2 * np.pi * fr4) ** -2 * 1e8
@@ -165,9 +165,9 @@ else:
     ax4.scatter(c4.val, w4.val, marker='o', s=25, color='brown', linewidth=1, label='cívky ABII')
 
 combined_handle = Line2D([], [], color='green', marker='s', linestyle=':', 
-                         label=f'zapojení ABI: ${w3.name} = {a3.nominal_value:.3f} \\cdot {c3.name} + {b3.nominal_value:.2f}$')
+                         label=f'zapojení ABI: ${w3.short_name} = {a3.nominal_value:.3f} \\cdot {c3.short_name} + {b3.nominal_value:.2f}$')
 combined_handle2 = Line2D([], [], color='brown', marker='o', linestyle=':', 
-                          label=f'zapojení ABII: ${w4.name} = {a4.nominal_value:.3f} \\cdot {c4.name} + {b4.nominal_value:.2f}$')
+                          label=f'zapojení ABII: ${w4.short_name} = {a4.nominal_value:.3f} \\cdot {c4.short_name} + {b4.nominal_value:.2f}$')
 
 ax4.legend(handles=[combined_handle, combined_handle2])
 ax4.set_xlabel(c3.long_name)

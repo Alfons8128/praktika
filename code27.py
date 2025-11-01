@@ -55,6 +55,7 @@ pr.nice_print(coeffs2)
 fig2, ax2 = plt.subplots(layout='constrained')
 pr.plot(fig2, ax2, d_inv, c2, xerr=True, yerr=False, fit_coeffs=coeffs2.val, func=pr.F.linear)
 fig2.savefig('uloha27/lcrmetr.png', dpi=300)
+#ax2.legend(loc='lower left')
 
 #plt.show()
 plt.close('all')
@@ -67,14 +68,14 @@ d = Var(26, 0.1, short_name='D', unit='cm')
 A = np.pi * d**2 / 4
 A.set_lname('A', 'cm^{2}')
 print(A)
-eps0 = coeffs2.val[0] * 1e-15 / (A / 1e4)  # přepočet pF/cm² na F/m²
+eps0 = coeffs2.val[1] * 1e-15 / (A / 1e4)  # přepočet pF/cm² na F/m²
 eps0.set_lname('\\varepsilon_0', 'F/m')
 
 print(eps0)
 pr.nice_print(eps0)
 
 d = Var(2, 0.1, short_name='d', unit='mm')
-C = coeffs2.val[0] * (1 / d) + coeffs2.val[1]
+C = coeffs2.val[1] * (1 / d) + coeffs2.val[0]
 C.set_lname('C', 'pF')
 print(C)
 
