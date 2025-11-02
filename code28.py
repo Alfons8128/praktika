@@ -58,8 +58,10 @@ ax2.set_xlabel(u.long_name)
 ax2.set_ylabel('$\\ln(I_{SC}) \\, (\\ln(\\mathrm{mA}))$')
 ax2.legend()
 fig2.savefig('uloha28/ioveru.png', dpi=300)
+plt.close(fig2)
+
 print('i0, n', isc_rel.coeffs)
-print(isc_rel.coeffs.val[0] / np.log(10))
+print(np.exp(isc_rel.coeffs.val[0]), 60 / isc_rel.coeffs.val[1])
 
 ########################### fotoclanek se zatezi Rl ###########################
 # Rlopt and RL ranges
@@ -67,9 +69,18 @@ df2 = pr.read_excel('uloha28/uloha28.xlsx', sheet_name='List1', cells='A18:F21')
 df2.columns = ['psun', 'ouc', 'isc', 'rlopt', 'rmax', 'rmin']
 psun = Var(df2['psun'].to_numpy(), errors=0.01, short_name='P/P_{Sun}')
 print(u.err[[4,7,12]])
-ouc = Var(df2['ouc'].to_numpy(), errors=[u.err[[2,5,10]]], short_name='U_{OC}', unit='V')
+ouc = Var(df2['ouc'].to_numpy(), errors=u.err[[4,7,12]], short_name='U_{OC}', unit='V')
+isc = Var(df2['isc'].to_numpy(), errors=i.err[[4,7,12]], short_name='I_{SC}', unit='mA')
+rlopt = ouc / isc * 1000
+rlopt.set_lname('R_{L,opt}', '\\Omega')
+rmax = 10 * rlopt
+rmax.set_lname('R_{L,max}', '\\Omega')
+rmin = rlopt / 10
+rmin.set_lname('R_{L,min}', '\\Omega')
+print('Done table 2:')
+pr.to_table(psun, ouc, isc, rlopt, rmax, rmin)
 
-# 0.25 sun
+############################## 0.25 sun #############################
 df3 = pr.read_excel('uloha28/uloha28.xlsx', sheet_name='List1', cells='A24:E46')
 df3.columns = ['rl','u','i','P','du']
 df3.sort_values(by='rl', inplace=True)
@@ -118,7 +129,22 @@ for ax in [axi_25, axp_25]:
     lines_25 += line
     labels_25 += label
 axi_25.legend(lines_25, labels_25, loc='upper right')
-fig.savefig('uloha28/sun25.png', dpi=300)
+
+id_25 = np.argmax(p25.val)
+pmpp25 = p25.unc[id_25] # mW
+umpp25 = u25.unc[id_25] # V
+impp25 = i25.unc[id_25] # mA
+rmpp25 = umpp25 / impp25 * 1000 # Ohm
+ff25 = pmpp25 / (isc.unc[0] * ouc.unc[0])
+eta25 = pmpp25 / (psun.unc[0] * 100 * 3)
+
+xmin, xmax = axi_25.get_xlim()
+ymin, ymax = axp_25.get_ylim()
+axi_25.axhline(y=impp25.nominal_value, xmax=(umpp25.nominal_value-xmin)/(xmax - xmin),
+                color='black', linestyle=':')
+axp_25.axvline(x=umpp25.nominal_value, ymax=(pmpp25.nominal_value-ymin)/(ymax - ymin),
+               color='black', linestyle=':')
+fig25.savefig('uloha28/sun25.png', dpi=300)
 plt.close(fig25)
 
 # isc = 22.2126  # mA
@@ -154,7 +180,7 @@ plt.close(fig25)
 # ax3.legend()
 # plt.close(fig3)
 
-# 0.5 sun
+################################# 0.5 sun ####################################
 df4 = pr.read_excel('uloha28/uloha28.xlsx', sheet_name='List1', cells='J3:N23')
 isc_50 = 47.088
 df4.columns = ['rl','u','i','P','du']
@@ -189,10 +215,28 @@ for ax in [axi_50, axp_50]:
     lines_50 += line
     labels_50 += label
 axi_50.legend(lines_50, labels_50, loc='upper right')
-fig.savefig('uloha28/sun50.png', dpi=300)
+
+
+id_50 = np.argmax(p50.val)
+pmpp50 = p50.unc[id_50] # mW
+print(pmpp50)
+umpp50 = u50.unc[id_50] # V
+impp50 = i50.unc[id_50] # mA
+rmpp50 = umpp50 / impp50 * 1000 # Ohm
+ff50 = pmpp50 / (isc.unc[1] * ouc.unc[1])
+eta50 = pmpp50 / (psun.unc[1] * 100 * 3)
+
+xmin, xmax = axi_50.get_xlim()
+ymin, ymax = axp_50.get_ylim()
+axi_50.axhline(y=impp50.nominal_value, xmax=(umpp50.nominal_value-xmin)/(xmax - xmin),
+                color='black', linestyle=':')
+axp_50.axvline(x=umpp50.nominal_value, ymax=(pmpp50.nominal_value-ymin)/(ymax - ymin),
+               color='black', linestyle=':')
+fig50.savefig('uloha28/sun50.png', dpi=300)
 plt.close(fig50)
 
-# 1.0 sun
+
+################################## 1.0 sun #############################
 df5 = pr.read_excel('uloha28/uloha28.xlsx', sheet_name='List1', cells='O3:S21')
 isc_10 = 92.483
 df5.columns = ['rl','u','i','P','du']
@@ -229,10 +273,52 @@ for ax in [axi_10, axp_10]:
     lines_10 += line
     labels_10 += label
 axi_10.legend(lines_10, labels_10, loc='upper right')
-fig.savefig('uloha28/sun10.png', dpi=300)
+
+
+id_10 = np.argmax(p10.val)
+pmpp10 = p10.unc[id_10] # mW
+umpp10 = u10.unc[id_10] # V
+print(umpp10)
+impp10 = i10.unc[id_10] # mA
+rmpp10 = umpp10 / impp10 * 1000 # Ohm
+ff10 = pmpp10 / (isc.unc[2] * ouc.unc[2])
+eta10 = pmpp10 / (psun.unc[2] * 100 * 3)
+print('xxxxxxxxxx limit', axi_10.get_xlim()[1])
+xmin, xmax = axi_10.get_xlim()
+ymin, ymax = axp_10.get_ylim()
+
+axi_10.axhline(y=impp10.nominal_value, xmax=(umpp10.nominal_value-xmin)/(xmax - xmin),
+                color='black', linestyle=':')
+axp_10.axvline(x=umpp10.nominal_value, ymax=(pmpp10.nominal_value-ymin)/(ymax - ymin),
+               color='black', linestyle=':')
+fig10.savefig('uloha28/sun10.png', dpi=300)
 plt.close(fig10)
 
-# low intensity
+pmaxs = Var(np.array([pmpp25.nominal_value, pmpp50.nominal_value, pmpp10.nominal_value]),
+            errors=np.array([pmpp25.std_dev, pmpp50.std_dev, pmpp10.std_dev]),
+            short_name='P_{mpp}', unit='mW')
+umaxs = Var(np.array([umpp25.nominal_value, umpp50.nominal_value, umpp10.nominal_value]),
+            errors=np.array([umpp25.std_dev, umpp50.std_dev, umpp10.std_dev]),
+            short_name='U_{mpp}', unit='V')
+imaxs = Var(np.array([impp25.nominal_value, impp50.nominal_value, impp10.nominal_value]),
+            errors=np.array([impp25.std_dev, impp50.std_dev, impp10.std_dev]),
+            short_name='I_{mpp}', unit='mA')
+rmaxs = Var(np.array([rmpp25.nominal_value, rmpp50.nominal_value, rmpp10.nominal_value]),
+            errors=np.array([rmpp25.std_dev, rmpp50.std_dev, rmpp10.std_dev]),
+            short_name='R_{mpp}', unit='\\Omega')
+rlopts = Var(np.array([rlopt.val[0], rlopt.val[1], rlopt.val[2]]),
+              errors=np.array([rlopt.err[0], rlopt.err[1], rlopt.err[2]]),
+              short_name='R_{L,opt}', unit='\\Omega')
+ffs = Var(np.array([ff25.nominal_value, ff50.nominal_value, ff10.nominal_value]),
+        errors=np.array([ff25.std_dev, ff50.std_dev, ff10.std_dev]),
+        short_name='FF', unit=None)
+etas = Var(np.array([eta25.nominal_value, eta50.nominal_value, eta10.nominal_value]),
+          errors=np.array([eta25.std_dev, eta50.std_dev, eta10.std_dev]),
+          short_name='\\eta', unit=None)
+print('Done table 3:')
+pr.to_table(pmaxs, umaxs, imaxs, rmaxs, rlopts, ffs, etas)
+
+############################### low intensity ###############################
 df6 = pr.read_excel('uloha28/uloha28.xlsx', sheet_name='List1', cells='F25:J32')
 df6.columns = ['udiod', 'usc', 'isc', 'du', 'di']
 ud = Var(df6['udiod'].to_numpy(), errors=0.1, short_name='U_{D}', unit='V')
@@ -245,7 +331,7 @@ figlow, axlow = plt.subplots(layout='constrained')
 lowrel = pr.Rel(usc2, isc2, pr.F.linear)
 quadratic = pr.Rel(usc, isc, pr.F.polynomial)
 #quadratic.fit(p0=[-8e-3, 9e-2, 2e-4, 4e-6])
-quadratic.fit(p0=[9e-2, 7e-2, 7e-4])
+quadratic.fit(p0=[9e-2, 7e-2, 2e-7])
 quadratic.plot_data(axlow, color='green', err=(0,0), label='hodnoty pro celý rozsah', marker='o', zorder=20, scale=0.8)
 quadratic.plot_fit(axlow, label='kvadratická závislost', color='green', linestyle='--')
 lowfit = Polynomial.fit(usc.val, isc.val, 2, w=1/isc.err)
@@ -259,5 +345,6 @@ plt.close(figlow)
 
 print('lin', lowrel.coeffs)
 print('quad',quadratic.coeffs)
-
+print(quadratic.coeffs.unc[1] -  2.341728935549905e-10 / kToverq / 1.2465141700790494)
+print(2.341728935549905e-10 / (kToverq * 1.2465141700790494)**2)
 plt.show()
