@@ -335,6 +335,33 @@ axp_10.axvline(x=umpp10.nominal_value, ymax=(pmpp10.nominal_value-ymin)/(ymax - 
 fig10.savefig('uloha28/sun10.png', dpi=300)
 plt.close(fig10)
 
+uoc_50 = ouc.unc[1]
+uoc_10 = ouc.unc[2]
+isc_50 = isc.unc[1]
+isc_10 = isc.unc[2]
+delta = 30 # mA
+u1 = 0.4265
+u2 = 0.5017
+
+figtwo, axtwo = plt.subplots(layout='constrained')
+axtwo.plot(u10.val, i10.val, 's:', color='green', label='intenzita 1.0 Sun')
+axtwo.plot(u50.val, i50.val, '^:', color='red', label='intenzita 0.5 Sun')
+xmin, xmax = axtwo.get_xlim()
+ymin, ymax = axtwo.get_ylim()
+axtwo.set_ylabel(i50.long_name)
+axtwo.set_xlabel(u50.long_name)
+axtwo.legend()
+axtwo.axhline(y=isc_50.nominal_value - delta, xmax=(u2-xmin)/(xmax - xmin), 
+              color='black', linestyle=':')
+axtwo.axhline(y=isc_10.nominal_value - delta, xmax=(u1-xmin)/(xmax - xmin),
+              color='black', linestyle=':')
+axtwo.axvline(x=u1, ymax=(isc_10.nominal_value-delta-ymin)/(ymax - ymin),
+               color='black', linestyle=':')
+axtwo.axvline(x=u2, ymax=(isc_50.nominal_value-delta-ymin)/(ymax - ymin),
+               color='black', linestyle=':')
+figtwo.savefig('uloha28/double.png', dpi=300)
+#plt.close(figtwo)
+
 pmaxs = Var(np.array([pmpp25.nominal_value, pmpp50.nominal_value, pmpp10.nominal_value]),
             errors=np.array([pmpp25.std_dev, pmpp50.std_dev, pmpp10.std_dev]),
             short_name='P_{mpp}', unit='mW')
