@@ -9,7 +9,8 @@ from praktika import Var
 from matplotlib.lines import Line2D
 from scipy.interpolate import make_interp_spline
 
-kToverq = 0.026
+kToverq = 1.380649e-23 * (273.15+21) / 1.602176634e-19  # V at 21°C
+print('kT/q:', kToverq)
 
 def solar_exp(x, i0, n, rp):
     return i0 * (np.exp(x / n / kToverq) - 1) + x / rp
@@ -30,6 +31,35 @@ rdf.sort_values(by='sun', inplace=True)
 sun = Var(rdf['sun'].to_numpy(), errors=0.01, short_name='P/P_{Sun}')
 u = Var(rdf['u'].to_numpy(), errors=rdf['du'].to_numpy(), short_name='U', unit='V')
 i = Var(rdf['i'].to_numpy(), errors=rdf['di'].to_numpy(), short_name='I', unit='mA')
+figsun, axssun = plt.subplots(ncols=2, layout='constrained', figsize=(13,5))
+axsunu = axssun[0]
+axsuni = axsunu.twinx()
+axsunu.scatter(sun.val, u.val, marker='^', 
+                   label='napětí naprázdno', color='blue')
+axsuni.scatter(sun.val, i.val, marker='s', 
+                   label='zkratový proud', color='black')
+splineu = make_interp_spline(sun.val, u.val, k=2)
+splinei = make_interp_spline(sun.val, i.val, k=2)
+xsun = np.linspace(sun.val.min(), sun.val.max(), 300)
+axsunu.plot(xsun, splineu(xsun), color='blue', linestyle=':')
+axsuni.plot(xsun, splinei(xsun), color='black', linestyle=':')
+axsunu.set_xlabel(sun.long_name)
+axsunu.set_ylabel(u.long_name)
+#axsuni.set_xlabel(sun.long_name)
+axsuni.set_ylabel(i.long_name)
+
+lines, labels = [], []
+for ax in [axsunu, axsuni]:
+    line, label = ax.get_legend_handles_labels()
+    lines += line
+    labels += label
+axsunu.legend(lines, labels, loc='upper left')
+
+figsun.set_constrained_layout_pads(wspace=0.05)
+
+figsun.savefig('uloha28/uisun.png', dpi=300)
+plt.close(figsun)
+
 
 print('Done table:')
 pr.to_table(sun, u, i)
@@ -51,17 +81,20 @@ isc_rel.fit(p0=[1e-2, 0.5])
 #isc_rel.plot_data(ax2, err=(0,0))
 #isc_rel.plot_fit(ax2)
 x = np.linspace(min(u.val), max(u.val), 200)
-ax2.plot(x, isc_rel.func(x, *isc_rel.coeffs.val), linestyle=':', color='black', linewidth=1.5, 
-         label='lineární závislost pro nejvyšší osvětlení')
-ax2.scatter(u.val, logi.val, marker='s', color='black', s=25, label='naměřené hodnoty')
-ax2.set_xlabel(u.long_name)
-ax2.set_ylabel('$\\ln(I_{SC}) \\, (\\ln(\\mathrm{mA}))$')
-ax2.legend()
-fig2.savefig('uloha28/ioveru.png', dpi=300)
+axssun[1].plot(x, isc_rel.func(x, *isc_rel.coeffs.val), linestyle=':', color='black', linewidth=1.5, 
+         label='lineární závislost pro největší osvětlení')
+axssun[1].scatter(u.val, logi.val, marker='s', color='black', s=25, label='naměřené hodnoty')
+axssun[1].set_xlabel(u.long_name)
+axssun[1].set_ylabel('$\\ln(I_{SC}) \\, (\\ln(\\mathrm{mA}))$')
+axssun[1].legend()
+figsun.savefig('uloha28/sun.png', dpi=300)
+#fig2.savefig('uloha28/ioveru.png', dpi=300)
 plt.close(fig2)
 
 print('i0, n', isc_rel.coeffs)
-print(np.exp(isc_rel.coeffs.val[0]), 60 / isc_rel.coeffs.val[1])
+print(np.exp(isc_rel.coeffs.val[0]), 
+      np.exp(isc_rel.coeffs.val[0]) * isc_rel.coeffs.err[0],
+    isc_rel.coeffs.unc[1] * kToverq)
 
 ########################### fotoclanek se zatezi Rl ###########################
 # Rlopt and RL ranges
@@ -78,7 +111,7 @@ rmax.set_lname('R_{L,max}', '\\Omega')
 rmin = rlopt / 10
 rmin.set_lname('R_{L,min}', '\\Omega')
 print('Done table 2:')
-pr.to_table(psun, ouc, isc, rlopt, rmax, rmin)
+pr.to_table(psun, ouc, isc, rlopt, rmin, rmax)
 
 ############################## 0.25 sun #############################
 df3 = pr.read_excel('uloha28/uloha28.xlsx', sheet_name='List1', cells='A24:E46')
@@ -93,6 +126,8 @@ i25 = u25 / rl25 * 1000
 i25.set_lname('I', 'mA')
 p25 = u25 * i25
 p25.set_lname('P', 'mW')
+print('Tabulka 25:')
+pr.to_table(rl25, u25, i25, p25)
 
 fig25, ax25 = plt.subplots(layout='constrained')
 fig50, ax50 = plt.subplots(layout='constrained')
@@ -193,6 +228,9 @@ i50.set_lname('I', 'mA')
 p50 = u50 * i50
 p50.set_lname('P', 'mW')
 
+print('Tabulka 50:')
+pr.to_table(rl50, u50, i50, p50)
+
 i_rel_50 = pr.Rel(u50, i50, loaded_fotocell_i)
 p_rel_50 = pr.Rel(u50, p50, loaded_fotocell_p)
 
@@ -248,6 +286,9 @@ i10 = u10 / rl10 * 1000
 i10.set_lname('I_{SC}', 'mA')
 p10 = u10 * i10
 p10.set_lname('P', 'mW')
+
+print('Tabulka 10:')
+pr.to_table(rl10, u10, i10, p10)
 
 i_rel_10 = pr.Rel(u10, i10, loaded_fotocell_i)
 p_rel_10 = pr.Rel(u10, p10, loaded_fotocell_p)
@@ -325,26 +366,37 @@ ud = Var(df6['udiod'].to_numpy(), errors=0.1, short_name='U_{D}', unit='V')
 usc = Var(df6['usc'].to_numpy(), errors=df6['du'].to_numpy(), short_name='U_{OC}', unit='mV')
 isc = Var(df6['isc'].to_numpy(), errors=df6['di'].to_numpy(), short_name='I_{SC}', unit='\\mu A')
 
+print('Table low intensity:')
+pr.to_table(ud, usc, isc)
+
 usc2 = Var(usc.val[:4], errors=usc.err[:4], short_name='U_{OC}', unit='mV')
 isc2 = Var(isc.val[:4], errors=isc.err[:4], short_name='I_{SC}', unit='\\mu A')
 figlow, axlow = plt.subplots(layout='constrained')
-lowrel = pr.Rel(usc2, isc2, pr.F.linear)
-quadratic = pr.Rel(usc, isc, pr.F.polynomial)
+#lowrel = pr.Rel(usc2, isc2, pr.F.direct)
+lowrel2 = pr.Rel(usc, isc, pr.F.direct)
+#quadratic = pr.Rel(usc, isc, pr.F.polynomial)
 #quadratic.fit(p0=[-8e-3, 9e-2, 2e-4, 4e-6])
-quadratic.fit(p0=[9e-2, 7e-2, 2e-7])
-quadratic.plot_data(axlow, color='green', err=(0,0), label='hodnoty pro celý rozsah', marker='o', zorder=20, scale=0.8)
-quadratic.plot_fit(axlow, label='kvadratická závislost', color='green', linestyle='--')
-lowfit = Polynomial.fit(usc.val, isc.val, 2, w=1/isc.err)
-print(lowfit.convert().coef)
-lowrel.fit(p0=[1e-2, 8e-2])
-lowrel.plot_data(axlow, err=(0,0), zorder=10, label='hodnoty pro nejnižší osvětlení', scale=2.2)
-lowrel.plot_fit(axlow, label='lineární závislost', linewidth=2)
+#quadratic.fit(p0=[9e-2, 7e-2, 2e-7])
+#quadratic.plot_data(axlow, color='green', err=(0,0), label='hodnoty pro celý rozsah', marker='o', zorder=20, scale=0.8)
+#quadratic.plot_fit(axlow, label='kvadratická závislost', color='green', linestyle='--')
+#lowfit = Polynomial.fit(usc.val, isc.val, 2, w=1/isc.err)
+#print(lowfit.convert().coef)
+#lowrel.fit(p0=[1e-2])
+lowrel2.fit(p0=[1e-2])
+lowrel2.plot_data(axlow, err=(0,0))
+lowrel2.plot_fit(axlow, label='teoretická lineární závislost')
+#lowrel.plot_data(axlow, err=(0,0), zorder=10, label='hodnoty pro nejnižší osvětlení', scale=2.2)
+#lowrel.plot_fit(axlow, label='lineární závislost', linewidth=2)
 axlow.legend()
-figlow.savefig('uloha28/low.png', dpi=300)
+# axlow.set_yscale('log')
+# axlow.set_xscale('log')
+figlow.savefig('uloha28/lowlog.png', dpi=300)
 plt.close(figlow)
 
-print('lin', lowrel.coeffs)
-print('quad',quadratic.coeffs)
-print(quadratic.coeffs.unc[1] -  2.341728935549905e-10 / kToverq / 1.2465141700790494)
+#print('lin', lowrel.coeffs)
+#print('quad',quadratic.coeffs)
+#print(quadratic.coeffs.unc[1] -  2.341728935549905e-10 / kToverq / 1.2465141700790494)
 print(2.341728935549905e-10 / (kToverq * 1.2465141700790494)**2)
+print('lin2', lowrel2.coeffs)
+print(1 / lowrel2.coeffs)
 plt.show()
