@@ -97,6 +97,14 @@ class Var:
         new_unc = self.unc ** power
         return Var(unp.nominal_values(new_unc), unp.std_devs(new_unc), self.short_name, self.unit)
     
+    def ln(self):
+        new_unc = unp.log(self.unc)
+        return Var(unp.nominal_values(new_unc), unp.std_devs(new_unc), f'\\ln {self.short_name}', self.unit)
+    
+    def exp(self):
+        new_unc = unp.exp(self.unc)
+        return Var(unp.nominal_values(new_unc), unp.std_devs(new_unc), f'\\exp {self.short_name}', self.unit)
+    
     def ufmt(self, apx='L'):
         '''Formats all values in the Var instance using ufmt function.'''
         return [scalar_ufmt(x, apx=apx) for x in self.unc]

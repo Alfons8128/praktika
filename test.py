@@ -86,4 +86,8 @@ print(xxx.unc)
 print(yyy.unc)
 ##############################################
 
+print('log', unp.log(y))
+print('exp', unp.exp(y))
+##############################################
+
 print('All done!')
