@@ -138,7 +138,7 @@ class Rel:
     Atributes: independent Var, dependent Var, function, coefficients, covariant matrix.
     Methods: fit, plot_data, plot_function, show_equation.'''
 
-    def __init__(self, x: Var, y: Var, function: callable = F.linear):
+    def __init__(self, x: Var, y: Var, function: callable = None):
         self.x = x
         self.y = y
         self.func = function
@@ -146,6 +146,9 @@ class Rel:
     def fit(self, p0: list = None):
         '''Fits y over x (both Var instances) using the provided function.
         Adds these attributes to Relation: coefficients, covariant matrix.'''
+
+        if self.func is None:
+            raise ValueError('No fitting function defined for the Relation.')
 
         coeff_values, cov_matrix  = curve_fit(self.func, self.x.val, self.y.val, sigma=self.y.err, absolute_sigma=True, p0=p0)
         #alpha = 0.05  # 95% confidence interval
@@ -176,6 +179,11 @@ class Rel:
 
 
     def plot_fit(self, ax, label='fitovaná přímka', linestyle=':', color='black', linewidth=1.5):
+        if self.func is None:
+            raise ValueError('No fitting function defined for the Relation.')
+        if not hasattr(self, 'coeffs'):
+            raise ValueError('No fitted coefficients found. Please run the fit() method first.')
+
         x = np.linspace(min(self.x.val), max(self.x.val), 200)
         ax.plot(x, self.func(x, *self.coeffs.val), linestyle=linestyle, color=color, linewidth=linewidth, label=label)
         #ax.legend()
