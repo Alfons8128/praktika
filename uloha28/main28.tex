@@ -1,0 +1,532 @@
+
+\documentclass{../concepts/prepareprotokol} %všechny balíčky pro protokol + titulní strana
+\usepackage{graphicx}
+\usepackage{booktabs}
+\usepackage{amsmath}
+\usepackage{siunitx}
+\sisetup{inter-unit-product =$\cdot$}
+\sisetup{separate-uncertainty=true}
+
+\praktikum{II} %číslo praktika (I, II nebo III)
+\autor{David Němec} %jméno autora
+\datum{27.\,10.\,2025} %datum měření
+\cislo{28} %číslo úlohy
+\nazev{Charakteristické vlastnosti solárních článků} %název úlohy
+
+\begin{document}
+\maketitle
+
+% ========================== PRACOVNÍ ÚKOL =========================
+\section{Pracovní úkol}
+\begin{enumerate}
+    \item S použitím solárního simulátoru změřte na vybraném fotovoltaickém článku (FV) napětí naprázdno $U_{OC}$ a proud ve zkratu $I_{SC}$ v závislosti na intenzitě dopadajícího záření. Zpracujte graficky přímo v praktiku závislosti $U_{OC}$ a $I_{SC}$ na intenzitě dopadajícího záření.
+
+    \item Pro tři vybrané intenzity záření slunečního simulátoru 0.25, 0.5 a 1.0 Sun určete z naměřených hodnot $U_{OC}$ a $I_{SC}$ optimální odpor zátěže $R_{L,opt}$ a z něho rozsah odporu zátěže $R_L$ pro měření zátěžových charakteristik. Rozsah $R_L$ volte tak, aby minimální odpor $R_L$ byl o řád menší než odpor v bodě maximálního výkonu a maximální odpor $R_L$ byl o řád větší než odpor v bodě maximálního výkonu.
+
+    \item Pro tři vybrané intenzity záření slunečního simulátoru 0,25, 0,50 a 1,0 Sun změřte zátěžové charakteristiky fotovoltaického článku v rozsahu odporu zátěže $R_L$ určeném v bodě 2. Graficky zpracujte závislost proudu I a výkonu P na napětí U fotovoltaického článku.
+
+    \item Z naměřených závislostí určete základní parametry FV článku, napětí $U_{mpp}$, proud $I_{mpp}$ a odpor $R_{mpp}$ článku v bodě maximálního výkonu, maximální výkon článku, faktor plnění $FF$ a účinnost $\eta$. Srovnejte a diskutujte účinnost fotovoltaického článku pro různou intenzitu osvětlení. Srovnejte optimální odpor zátěže $R_{L,opt}$ a zátěž fotovoltaického článku v bodě maximálního výkonu $R_{mpp}$.
+
+    \item S použitím adaptéru s instalovanou LED diodou změřte závislost napětí naprázdno $U_{OC}$ a proudu ve zkratu $I_{SC}$ na intenzitě osvětlení pro nízké hodnoty osvětlení FV článku.
+
+    \item Z naměřených závislostí určete následující parametry fotovoltaického článku, sériový odpor $R_s$, paralelní odpor $R_p$, saturační proud $I_0$ a faktor ideality $n$.
+\end{enumerate}
+
+% ============================= TEORIE ===============================
+\section{Teorie}
+\subsection{Výkon fotovoltaického článku}
+
+Je-li fotovoltaický článek osvětlován, dochází k absorbci fotonů valenčními elektrony, a tím k vnitřnímu fotoelektrickému jevu, kdy se elektrony uvolní do prostoru článku a mohou vést elektrický proud. V článku tím vzniká tzv. fotoproud a v důsledku prostorového oddělení nábojů na kontaktech článku také tzv. fotovoltaické napětí [1]. Teče-li díky článku obvodem proud $I$ při napětí $U$, je elektrický výkon fotovoltaického článku dán rovnicí [1]
+\begin{equation} \label{eq:pui}
+    P = U \cdot I \, .
+\end{equation}
+
+Pro konkrétní osvětlení existují povolené kombinace fotoproudu a fotovoltaického napětí, při kterých lze fotočlánek provozovat (tzv. pracovní body), které jsou definovány Ohmovým zákonem pomocí odporu zátěže $R_L$ [1]
+\begin{equation} \label{eq:ohm}
+    R_L = \frac{U}{I}  \, .
+\end{equation}
+
+Speciální případy nastávají při limitním nulovém odporu $R_L$, kdy obvodem teče zkratový proud $I_{SC}$, a limitním nekonečném odporu, kdy je v obvodu napětí otevřeného obvodu $U_{OC}$. V těchto případech je výkon článku nulový. Naopak pracovní bod, kdy je výkon maximální, se nazývá bod maximálního výkonu a veličiny odpor, proud a napětí pro tento bod se označují po řadě $R_{mpp}$, $I_{mpp}$ a $U_{mpp}$ [1].
+
+Článek lze pro dané osvětlení charakterizovat parametrem faktoru plnění, který je definovaný jako [1]
+\begin{equation} \label{eq:ff}
+    FF = \frac{U_{mpp} \cdot I_{mpp}}{U_{OC} \cdot I_{SC}} = \frac{P_{mpp}}{U_{OC} \cdot I_{SC}} \,
+\end{equation}
+
+Účinnost článku při daném osvětlení je daná maximálním možným výkonem článku $P_{mpp}$, intenzitou dopadajícího záření $P_{sun}$ a plochou článku $S$ [1]:
+\begin{equation} \label{eq:eta}
+    \eta = \frac{P_{mpp}}{S \cdot P_{sun}} = \frac{U_{mpp} \cdot I_{mpp}}{S \cdot P_{sun}} \, ,
+\end{equation}
+kde součin $S \cdot P_{sun}$ udává výkon záření dopadajícího na plochu článku. Nominální hodnota intenzity $P_{sun}$ pro AM1.5 je podle [1] $\SI{100}{\milli W \per \centi\metre\squared}$.
+
+\subsection{Ekvivalentní zapojení fotovoltaického článku}
+Reální fotovoltaický článek lze přesněji znázornit pomocí diody, ke které jsou připojen dva odpory, jeden sériově a jeden paralelně (schéma na obrázku \ref{fig:schema3}). Za předpokladu nízkého odporu $R_s$ je zkratový proud dán rovnicí [1]
+\begin{equation} \label{eq:long}
+    I_{SC} = I_0 \left(\exp{\frac{q \cdot U_{OC}}{n \cdot k_B \cdot T}} - 1 \right) + \frac{U_{OC}}{R_p} \, ,
+\end{equation}
+kde $I_0$ je saturační proud $n$ je tzv. faktor ideality, $q$ je elementární náboj, $k_B$ Boltzmannova konstanta a $T$ termodynamická teplota. Pro nízké hodnoty napětí (nízké hodnoty osvětlení) bude z rovnice (\ref{eq:long}) proud $I_{SC}$ přímo úměrný napětí $U_{OC}$ s konstantou úměrnosti $\frac{1}{R_p}$. Naopak pro vysoké hodnoty napětí (vysoké hodnoty osvětlení) bude lineární závislost přirozeného logaritmu proudu $I_{SC}$ na napětí $U_{OC}$:
+\begin{equation} \label{eq:high}
+    \ln{I_{SC}} = \ln{I_0} + \frac{q}{n \cdot k_B \cdot T} \cdot U_{OC} \, .
+\end{equation}
+
+Odpor $R_s$ se podle [1] určí z voltampérové charakteristiky pro dvě různá osvětlení fotovoltaického článku, kdy je hodnota $I_{SC1}$ přibližně dvakrát větší než $I_{SC2}$. Napětí $U_1$ a $U_2$ odpovídají hodnotám proudů $I_1 = I_{SC1} - \Delta I$ a $I_{SC2} - \Delta I$, kde $\Delta I$ je volena tak, aby platilo $\frac{1}{2} I_{SC2} < \Delta I < \frac{1}{2} I_{SC1}$. Potom hodnota $R_s$ je daná vztahem [1]
+\begin{equation}
+    R_s = \frac{U_2 - U_1}{I_{SC1} - I_{SC2}} \, .
+\end{equation}
+
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=0.5\linewidth]{uloha28/schema3.png}
+    \caption{Ekvivalentní obvod reálného solárního článku obsahující generátor fotoproudu a
+diodu pro oddělení náboje, sériový odpor $R_S$ a paralelní odpor $R_P$ připojené k zátěži $R_L$ [1]}
+    \label{fig:schema3}
+\end{figure}
+
+\subsection{Metoda měření}
+
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=0.5\linewidth]{uloha28/schema.png}
+    \caption{Schéma zapojení Peltiérova článku (TEC) [2]}
+    \label{fig:schema}
+\end{figure}
+
+Zkoumaný fotovoltaický článek byl osvětlován solárním simulátorem s nastavitelnou intenzitou záření od 0.10 po 1.00 Sun s přesností na jednu setinu nominální intenzity slunečního záření. Pro odstínění okolního osvětlení byl použit černý válcový kryt. Protože se fotovoltaický článek dopadajícím zářením zahříval, bylo nutné jej chladit Peltiérovým článkem. Chlazení řídil termostat, který při překročení mezní teploty (cca 21.3 °C) sepnul obvod s Peltiérovým článkem, čímž umožnil chlazení fotovoltaického článku. Při podchlazení pod cílovou teplotu 20.5~°C termostat obvod rozpojil a chlazení článku bylo přerušeno. Schéma chladícího obvodu je na obrázku \ref{fig:schema}.
+
+Během měření 1. úkolu byl obvod zapojen podle obrázku \ref{fig:schema1}: fotovoltaický článek byl napojen na přepínač, jímž se ke článku střídavě připojoval ampérmetr (pro měření zkratového proudu $I_{SC}$) nebo voltmetr (pro měření napětí otevřeného obvodu $U_{OC}$. Zkratový proud i napětí otevřeného obvodu byly měřeny pro deset intenzit záření od 0.1 Sun po 1.0 Sun, vždy bylo vyčkáno, než se hodnota trochu ustálí.
+
+Zátěžové charakteristiky článku byly prováděny pomocí odporové dekády připojené paralelně k voltmetru podle schématu \ref{fig:schema2}. Měřeno bylo napětí na odporové dekádě, proud byl vypočten z Ohmova zákona (\ref{eq:ohm}).
+
+Následně byl proměřován zkratový proud a napětí otevřeného obvodu pro nízké hodnoty osvětlení. Obvod byl zapojen opět podle schématu \ref{fig:schema1}. Článek byl osvětlován diodou umístěnou na spodní straně krytu, který se dal shora nasadit na válcový kryt kolem fotovoltaického článku.
+
+
+
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=0.5\linewidth]{uloha28/schema1.png}
+    \caption{Schéma zapojení pro měření zkratového proudu $I_{SC}$ a napětí otevřeného obvodu $U_{OC}$ fotovoltaického článku s přepínačem [1]}
+    \label{fig:schema1}
+\end{figure}
+
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=0.5\linewidth]{uloha28/schema2.png}
+    \caption{Schéma zapojení pro měření VA charakteristiky fotovoltaického článku se zátěží $R_L$ se známou hodnotou odporu a multimetrem [1]}
+    \label{fig:schema2}
+\end{figure}
+
+% ========================= MĚŘICÍ PŘÍSTROJE ==========================
+\subsection{Měřicí přístroje a jejich nejistoty} \label{pristroje}
+\begin{enumerate}
+    \item Multimetr Fluke 8808:
+    
+     Multimetrem byl měřen zkratový proud a napětí otevřeného obvodu v úkolech 1 a 5, a napětí na odporové dekádě v úkolu 3. Přesnost měření proudu je z manuálu k použití pro rozsah 200 $\mu$A 0.03\,\% hodnoty + 0.005\,\% rozsahu, pro rozsah 20 mA 0.04\,\% hodnoty + 0.02\,\% rozsahu a pro rozsah 200 mA 0.03\,\% hodnoty + 0.008\,\% rozsahu. Přesnost měření napětí je pro rozsah 200 mV 0.015\,\% hodnoty + 0.004\,\% rozsahu a pro rozsah 2 V 0.015\,\% hodnoty + 0.003\,\% rozsahu.
+
+    \item Odporová dekáda:
+
+     Odporová dekáda byla použita jako zátěžový odpor pro fotovoltaický článek, přesnost nastavené hodnoty odporu je ze specifikací přístroje 1\,\%.
+
+\end{enumerate}
+%\def\figurename{Obr\’azek}%
+\def\figurename{Graf}%
+\setcounter{figure}{0}
+
+% ======================== VÝSLEDKY MĚŘENÍ ===========================
+\section{Výsledky měření}
+\subsection{Zkratový proud a napětí otevřeného obvodu v závislosti na osvětlení}
+
+Nejprve byl obvod zapojen podle schématu \ref{fig:schema1} a střídavě byl měřen zkratový proud a napětí naprázdno. Měření probíhalo pro deset hodnot osvětlení slunečním simulátorem v rozsahu od 0.1 Sun po 1.0 Sun. Naměřené hodnoty shrnuje tabulka \ref{tab:uocisc}. Nejistoty byly určeny z uživatelského manuálu multimetru Fluke 8808 (viz \ref{pristroje}).
+
+\begin{table}[hbt]
+\centering
+\caption{Napětí naprázdno ($U_{OC}$) a zkratový proud ($I_{SC}$) pro různá osvětlení článku slunečním simulátorem}
+\begin{tabular}{ccc}
+ \toprule
+ $P/P_{Sun}$ & $U\, (\mathrm{V})$ & $I\, (\mathrm{mA})$ \\
+ \midrule
+ $0.10 \pm 0.01$ & $0.47950 \pm 0.00013$ & $7.650 \pm 0.007$ \\
+ $0.12 \pm 0.01$ & $0.48760 \pm 0.00013$ & $9.416 \pm 0.008$ \\
+ $0.15 \pm 0.01$ & $0.49827 \pm 0.00013$ & $12.353 \pm 0.009$ \\
+ $0.20 \pm 0.01$ & $0.51100 \pm 0.00014$ & $17.250 \pm 0.011$ \\
+ $0.25 \pm 0.01$ & $0.51920 \pm 0.00014$ & $22.21 \pm 0.02$ \\
+ $0.30 \pm 0.01$ & $0.52570 \pm 0.00014$ & $27.22 \pm 0.02$ \\
+ $0.40 \pm 0.01$ & $0.53454 \pm 0.00014$ & $37.14 \pm 0.03$ \\
+ $0.50 \pm 0.01$ & $0.54100 \pm 0.00014$ & $47.09 \pm 0.03$ \\
+ $0.60 \pm 0.01$ & $0.54432 \pm 0.00014$ & $56.62 \pm 0.03$ \\
+ $0.70 \pm 0.01$ & $0.54750 \pm 0.00014$ & $65.98 \pm 0.04$ \\
+ $0.80 \pm 0.01$ & $0.55060 \pm 0.00014$ & $75.10 \pm 0.04$ \\
+ $0.90 \pm 0.01$ & $0.55280 \pm 0.00014$ & $84.20 \pm 0.04$ \\
+ $1.00 \pm 0.01$ & $0.55306 \pm 0.00014$ & $92.47 \pm 0.04$ \\
+ \bottomrule
+\end{tabular}
+\label{tab:uocisc}
+\end{table}
+
+
+
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=1.0\linewidth]{uloha28/sun.png}
+    \caption{Závislost zkratového proudu a napětí naprázdno na intenzitě slunečního simulátoru (vlevo) a závislost přirozeného logaritmu zkratového proudu na napětí naprázdno (vpravo). Chybové úsečky nebyly pro svou malou velikost pro přehlednost vykresleny.}
+    \label{fig:sun}
+\end{figure}
+
+Do grafu \ref{fig:sun} byly vykresleny závislosti napětí na prázdno a zkratového proudu na intenzitě. Pro další zpracování je však důležitější přímá závislost proudu $I_{SC}$ na napětí $U_{OC}$. Protože tato závislost je podle rovnice (\ref{eq:long}) přibližně exponenciální, byly pro přehlednost do sousedního grafu na osu $y$ vyneseny hodnoty přirozeného logaritmu proudu $I_{SC}$. Datové body odpovídající největším hodnotám intenzity slunečního simulátoru byly proloženy lineární přímkou $y = ax + b$. Směrnice vychází z lineární regrese jako $a = (48.13 \pm 0.06) \, \mathrm{V^{-1}}$ a průsečík s osou $y$ jako $b = (-22.17 \pm 0.03) \, \mathrm{ln(mA)}$. Podle rovnice (\ref{eq:high}), která předpokládá čistě exponenciální závislost zkratového proudu na napětí otevřeného obvodu, odpovídá průsečík $b$ hodnotě $\ln{I_0}$ a směrnice $a$ hodnotě $\frac{q}{n \cdot k_B \cdot T}$. Saturační proud tedy vychází jako $I_0 = (2.34 \pm 0.07) \cdot 10^{-10} \, \si{\ampere}$. Nejistota byla vypočtena podle [3] jako
+\begin{equation}
+    \sigma_{I_0} = \sigma_b \cdot e^{b} \, .
+\end{equation}
+Ideální sklon by měl být $b' = \frac{q}{k_B \cdot T} = (39.45 \pm 0.08) \, \mathrm{V^{-1}}$ pro teplotu $(21.0 \pm 0.5) \, \si{^\circ C}$ (průměrná teplota osvětleného článku). Relativní nejistota $b'$ byla vzata jako relativní nejistota $T$. Podle [1] je faktor ideality roven poměru skutečného sklonu a ideálního sklonu, tedy $n = \frac{b}{b'} = (1.22 \pm 0.02)$. Jeho nejistota byla spočtena jako 
+\begin{equation}
+    \sigma_n = n \sqrt{\left(\frac{\sigma_b}{b}\right)^2 + \left(\frac{\sigma_{b'}}{b'}\right)^2}
+\end{equation}
+
+\subsection{Voltampérové charakteristiky fotočlánku se zátěží}
+
+Pro tři vybrané intenzity 0.25 Sun, 0.5 Sun a 1.0 Sun byly vypočteny odhadované optimální odpory zátěže $R_{L,opt}$ z Ohmova zákona (\ref{eq:ohm}) jako $R_{L,opt} = \frac{U_{OC}}{I_{SC}}$. Nejistoty byly spočteny podle [3] jako
+\begin{equation}
+    \sigma_{R_{L,opt}} = R_{L,opt} \sqrt{\left(\frac{\sigma_{U_{OC}}}{U_{OC}}\right)^2 + \left(\frac{\sigma_{I_{SC}}}{I_{SC}}\right)^2}
+\end{equation}
+Rozsah zátěžových odporů byl stanoven jako přibližně o řád menší a o řád větší hodnota než $R_{L,opt}$. Minimální hodnota zátěže však byla podle pokynů k měření zvýšena na alespoň $\SI{1}{\ohm}$ a nejmenší krok mezi jednotlivými pracovními body byl také $\SI{1}{\ohm}$. Odhady optimálních odporů a rozsahy zátěže shrnuje tabulka \ref{tab:rlopt}.
+
+\begin{table}[hbtp]
+\centering
+\caption{Odhady optimálních odporů zátěže a rozsah měřených pracovních bodů pro tři vybrané intenzity solárního simulátoru}
+\begin{tabular}{cccccc}
+ \toprule
+ $P/P_{Sun}$ & $U_{OC}\, (\mathrm{V})$ & $I_{SC}\, (\mathrm{mA})$ & $R_{L,opt}\, (\mathrm{\Omega})$ & $R_{L,min}\, (\mathrm{\Omega})$ & $R_{L,max}\, (\mathrm{\Omega})$ \\
+ \midrule
+ $0.25 \pm 0.01$ & $0.51920 \pm 0.00014$ & $22.21 \pm 0.02$ & $23.37 \pm 0.02$ & $2$ & $230$ \\
+ $0.50 \pm 0.01$ & $0.54100 \pm 0.00014$ & $47.09 \pm 0.03$ & $11.489 \pm 0.008$ & $1$ & $110$ \\
+ $1.00 \pm 0.01$ & $0.55306 \pm 0.00014$ & $92.47 \pm 0.04$ & $5.981 \pm 0.003$ & $1$ & $60$ \\
+ \bottomrule
+\end{tabular}
+\label{tab:rlopt}
+\end{table}
+
+Následně byla k fotovoltaickému článku podle schématu \ref{fig:schema2} připojena odporová dekáda. Napětí bylo měřeno na odporové dekádě multimetrem Fluke zapojeným jako voltmetr, proud byl určen z ohmova zákona (\ref{eq:ohm}). Hodnoty odporu byly nastavovány v rámci rozsahu z tabulky \ref{tab:rlopt}. Změřené hodnoty proudu a napětí pro jednotlivá zatížení pro tři vybraná osvětlení článku jsou vypsané v tabulkách \ref{tab:25}, \ref{tab:50} a \ref{tab:100}. Pro intenzitu 0.5 Sun nebylo měřeno pro zatížení až do maxima rozsahu, protože hodnoty napětí a proudu se již příliš neměnily, a navíc se tyto body nenacházely v okolí maxima výkonu, a tedy nebyly pro zpracování podstatné.
+
+Nejistota napětí byla vzatá z nejistoty přístroje a nejistota odporu byla určena podle specifikací u odporové dekády jako 1\,\% z nastavené hodnoty. V nejistotě proudu a výkonu se projevila především nejistota odporu, protože nejistota napětí je vůči ní zanedbatelná. I nejistoty proudu a výkonu tedy odpovídají 1\,\% z vypočtené hodnoty.
+
+\begin{table}[hbtp]
+\centering
+\caption{Napětí na zátěži, proud v obvodu a výkon solárního článku pro intenzitu 0.25 Sun}
+\begin{tabular}{cccc}
+ \toprule
+ $R_L\, (\mathrm{\Omega})$ & $U\, (\mathrm{V})$ & $I\, (\mathrm{mA})$ & $P\, (\mathrm{mW})$ \\  
+ \midrule
+ $2.00 \pm 0.02$ & $0.046210 \pm 0.000015$ & $23.1 \pm 0.2$ & $1.068 \pm 0.011$ \\
+ $4.00 \pm 0.04$ & $0.09023 \pm 0.00002$ & $22.6 \pm 0.2$ & $2.04 \pm 0.02$ \\
+ $6.00 \pm 0.06$ & $0.13444 \pm 0.00003$ & $22.4 \pm 0.2$ & $3.01 \pm 0.03$ \\
+ $10.00 \pm 0.10$ & $0.22070 \pm 0.00009$ & $22.1 \pm 0.2$ & $4.87 \pm 0.05$ \\
+ $12.00 \pm 0.12$ & $0.2625 \pm 0.0001$ & $21.9 \pm 0.2$ & $5.74 \pm 0.06$ \\
+ $15.00 \pm 0.15$ & $0.31845 \pm 0.00011$ & $21.2 \pm 0.2$ & $6.76 \pm 0.07$ \\
+ $16.00 \pm 0.16$ & $0.33550 \pm 0.00011$ & $21.0 \pm 0.2$ & $7.04 \pm 0.07$ \\
+ $17.00 \pm 0.17$ & $0.35048 \pm 0.00011$ & $20.6 \pm 0.2$ & $7.23 \pm 0.07$ \\
+ $18.00 \pm 0.18$ & $0.36515 \pm 0.00011$ & $20.3 \pm 0.2$ & $7.41 \pm 0.07$ \\
+ $19.00 \pm 0.19$ & $0.37761 \pm 0.00012$ & $19.9 \pm 0.2$ & $7.50 \pm 0.08$ \\
+ $20.0 \pm 0.2$ & $0.38964 \pm 0.00012$ & $19.5 \pm 0.2$ & $7.59 \pm 0.08$ \\
+ $21.0 \pm 0.2$ & $0.39887 \pm 0.00012$ & $19.0 \pm 0.2$ & $7.58 \pm 0.08$ \\
+ $22.0 \pm 0.2$ & $0.40752 \pm 0.00012$ & $18.52 \pm 0.19$ & $7.55 \pm 0.08$ \\
+ $23.0 \pm 0.2$ & $0.41538 \pm 0.00012$ & $18.06 \pm 0.18$ & $7.50 \pm 0.08$ \\
+ $24.0 \pm 0.2$ & $0.42209 \pm 0.00012$ & $17.59 \pm 0.18$ & $7.42 \pm 0.07$ \\
+ $25.0 \pm 0.2$ & $0.42840 \pm 0.00012$ & $17.14 \pm 0.17$ & $7.34 \pm 0.07$ \\
+ $26.0 \pm 0.3$ & $0.43289 \pm 0.00012$ & $16.65 \pm 0.17$ & $7.21 \pm 0.07$ \\
+ $30.0 \pm 0.3$ & $0.45050 \pm 0.00013$ & $15.02 \pm 0.15$ & $6.77 \pm 0.07$ \\
+ $40.0 \pm 0.4$ & $0.47217 \pm 0.00013$ & $11.80 \pm 0.12$ & $5.57 \pm 0.06$ \\
+ $60.0 \pm 0.6$ & $0.49034 \pm 0.00013$ & $8.17 \pm 0.08$ & $4.01 \pm 0.04$ \\
+ $120.0 \pm 1.2$ & $0.50922 \pm 0.00014$ & $4.24 \pm 0.04$ & $2.16 \pm 0.02$ \\
+ $230 \pm 2$ & $0.51203 \pm 0.00014$ & $2.23 \pm 0.02$ & $1.140 \pm 0.011$ \\
+ \bottomrule
+\end{tabular}
+\label{tab:25}
+\end{table}
+
+\begin{table}[hbtp]
+\centering
+\caption{Napětí na zátěži, proud v obvodu a výkon solárního článku pro intenzitu 0.5 Sun}
+\begin{tabular}{cccc}
+ \toprule
+ $R_L\, (\mathrm{\Omega})$ & $U\, (\mathrm{V})$ & $I\, (\mathrm{mA})$ & $P\, (\mathrm{mW})$ \\  
+ \midrule
+ $1.000 \pm 0.010$ & $0.051220 \pm 0.000016$ & $51.2 \pm 0.5$ & $2.62 \pm 0.03$ \\
+ $2.00 \pm 0.02$ & $0.09813 \pm 0.00002$ & $49.1 \pm 0.5$ & $4.82 \pm 0.05$ \\
+ $4.00 \pm 0.04$ & $0.19149 \pm 0.00004$ & $47.9 \pm 0.5$ & $9.17 \pm 0.09$ \\
+ $6.00 \pm 0.06$ & $0.27938 \pm 0.00010$ & $46.6 \pm 0.5$ & $13.01 \pm 0.13$ \\
+ $7.00 \pm 0.07$ & $0.31849 \pm 0.00011$ & $45.5 \pm 0.5$ & $14.49 \pm 0.15$ \\
+ $8.00 \pm 0.08$ & $0.35133 \pm 0.00011$ & $43.9 \pm 0.4$ & $15.43 \pm 0.15$ \\
+ $9.00 \pm 0.09$ & $0.37807 \pm 0.00012$ & $42.0 \pm 0.4$ & $15.88 \pm 0.16$ \\
+ $10.00 \pm 0.10$ & $0.39977 \pm 0.00012$ & $40.0 \pm 0.4$ & $15.98 \pm 0.16$ \\
+ $11.00 \pm 0.11$ & $0.41740 \pm 0.00012$ & $37.9 \pm 0.4$ & $15.84 \pm 0.16$ \\
+ $12.00 \pm 0.12$ & $0.43034 \pm 0.00012$ & $35.9 \pm 0.4$ & $15.43 \pm 0.15$ \\
+ $13.00 \pm 0.13$ & $0.44107 \pm 0.00013$ & $33.9 \pm 0.3$ & $14.96 \pm 0.15$ \\
+ $14.00 \pm 0.14$ & $0.45010 \pm 0.00013$ & $32.1 \pm 0.3$ & $14.47 \pm 0.14$ \\
+ $15.00 \pm 0.15$ & $0.45732 \pm 0.00013$ & $30.5 \pm 0.3$ & $13.94 \pm 0.14$ \\
+ $17.00 \pm 0.17$ & $0.46873 \pm 0.00013$ & $27.6 \pm 0.3$ & $12.92 \pm 0.13$ \\
+ $20.0 \pm 0.2$ & $0.48158 \pm 0.00013$ & $24.1 \pm 0.2$ & $11.60 \pm 0.12$ \\
+ $25.0 \pm 0.2$ & $0.49450 \pm 0.00013$ & $19.8 \pm 0.2$ & $9.8 \pm 0.1$ \\
+ $35.0 \pm 0.4$ & $0.50855 \pm 0.00014$ & $14.53 \pm 0.15$ & $7.39 \pm 0.07$ \\
+ $45.0 \pm 0.5$ & $0.51562 \pm 0.00014$ & $11.46 \pm 0.11$ & $5.91 \pm 0.06$ \\
+ $55.0 \pm 0.6$ & $0.52002 \pm 0.00014$ & $9.45 \pm 0.09$ & $4.92 \pm 0.05$ \\
+ $65.0 \pm 0.7$ & $0.52327 \pm 0.00014$ & $8.05 \pm 0.08$ & $4.21 \pm 0.04$ \\
+ \bottomrule
+\end{tabular}
+\label{tab:50}
+\end{table}
+
+\begin{table}[hbtp]
+\centering
+\caption{Napětí na zátěži, proud v obvodu a výkon solárního článku pro intenzitu 1.0 Sun}
+\begin{tabular}{cccc}
+ \toprule
+ $R_L\, (\mathrm{\Omega})$ & $U_{OC}\, (\mathrm{V})$ & $I_{SC}\, (\mathrm{mA})$ & $P\, (\mathrm{mW})$ \\
+ \midrule
+ $1.000 \pm 0.010$ & $0.10860 \pm 0.00002$ & $108.6 \pm 1.1$ & $11.79 \pm 0.12$ \\
+ $2.00 \pm 0.02$ & $0.19604 \pm 0.00004$ & $98 \pm 1$ & $19.2 \pm 0.2$ \\
+ $3.00 \pm 0.03$ & $0.27013 \pm 0.00010$ & $90.0 \pm 0.9$ & $24.3 \pm 0.2$ \\
+ $4.00 \pm 0.04$ & $0.33095 \pm 0.00011$ & $82.7 \pm 0.8$ & $27.4 \pm 0.3$ \\
+ $5.00 \pm 0.05$ & $0.37575 \pm 0.00012$ & $75.1 \pm 0.8$ & $28.2 \pm 0.3$ \\
+ $6.00 \pm 0.06$ & $0.40728 \pm 0.00012$ & $67.9 \pm 0.7$ & $27.6 \pm 0.3$ \\
+ $7.00 \pm 0.07$ & $0.43013 \pm 0.00012$ & $61.4 \pm 0.6$ & $26.4 \pm 0.3$ \\
+ $8.00 \pm 0.08$ & $0.44689 \pm 0.00013$ & $55.9 \pm 0.6$ & $25.0 \pm 0.2$ \\
+ $9.00 \pm 0.09$ & $0.45928 \pm 0.00013$ & $51.0 \pm 0.5$ & $23.4 \pm 0.2$ \\
+ $10.00 \pm 0.10$ & $0.46959 \pm 0.00013$ & $47.0 \pm 0.5$ & $22.1 \pm 0.2$ \\
+ $11.00 \pm 0.11$ & $0.47757 \pm 0.00013$ & $43.4 \pm 0.4$ & $20.7 \pm 0.2$ \\
+ $15.00 \pm 0.15$ & $0.49839 \pm 0.00013$ & $33.2 \pm 0.3$ & $16.56 \pm 0.17$ \\
+ $20.0 \pm 0.2$ & $0.51204 \pm 0.00014$ & $25.6 \pm 0.3$ & $13.11 \pm 0.13$ \\
+ $25.0 \pm 0.2$ & $0.52029 \pm 0.00014$ & $20.8 \pm 0.2$ & $10.83 \pm 0.11$ \\
+ $30.0 \pm 0.3$ & $0.52566 \pm 0.00014$ & $17.52 \pm 0.18$ & $9.21 \pm 0.09$ \\
+ $40.0 \pm 0.4$ & $0.53242 \pm 0.00014$ & $13.31 \pm 0.13$ & $7.09 \pm 0.07$ \\
+ $50.0 \pm 0.5$ & $0.53644 \pm 0.00014$ & $10.73 \pm 0.11$ & $5.76 \pm 0.06$ \\
+ $60.0 \pm 0.6$ & $0.53861 \pm 0.00014$ & $8.98 \pm 0.09$ & $4.84 \pm 0.05$ \\
+ \bottomrule
+\end{tabular}
+\label{tab:100}
+\end{table}
+
+Závislosti proudu a výkonu na napětí byly vyneseny do grafů \ref{fig:25}, \ref{fig:50} a \ref{fig:100}. Polohy hodnot $U_{mpp}$ a $I_{mpp}$ odpvídající bodu maximálního výkonu jsou vyznačeny tečkovanými čarami.
+
+\newpage
+
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=0.5\linewidth]{uloha28/sun25.png}
+    \caption{Závislost proudu a výkonu fotovoltaického článku na zatížení pro intenzitu 0.25 Sun. Chybové úsečky nebyly pro svou malou velikost pro přehlednost vykresleny.}
+    \label{fig:25}
+\end{figure}
+
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=0.5\linewidth]{uloha28/sun50.png}
+    \caption{Závislost proudu a výkonu fotovoltaického článku na zatížení pro intenzitu 0.5 Sun. Chybové úsečky nebyly pro svou malou velikost pro přehlednost vykresleny.}
+    \label{fig:50}
+\end{figure}
+
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=0.5\linewidth]{uloha28/sun10.png}
+    \caption{Závislost proudu a výkonu fotovoltaického článku na zatížení pro intenzitu 1.0 Sun. Chybové úsečky nebyly pro svou malou velikost pro přehlednost vykresleny.}
+    \label{fig:100}
+\end{figure}
+
+Hodnoty $U_{mpp}$, $I_{mpp}$ a $R_{mpp}$ byly vzaty jako hodnoty proudu, napětí a příslušného odporu zátěže, pro které byl vypočtený výkon maximální, jejich nejistotu proto odhaduji také jako 1\,\% jejich hodnoty. Účinnost byla vypočtena podle vztahu (\ref{eq:eta}), její nejistota podle [3] jako
+\begin{equation}
+    \sigma_\eta = \eta \sqrt{\left(\frac{\sigma_{P_{mpp}}}{P_{mpp}}\right)^2 + \left(\frac{\sigma_{\frac{P}{P_{sun}}}}{\frac{P}{P_{sun}}}\right)^2} \, ,
+\end{equation}
+kde poměr $\frac{P}{P_{sun}}$ je pro jednotlivé intenzity roven 0.25, 0.50 a 1.00 a $\sigma_{\frac{P}{P_{sun}}} = 0.01$ je nejistota nastavení intenzity (intenzita slunečního simulátoru se dala měnit s krokem právě 0.01). Nejistota plochy článku $S$ a nominální hodnoty sluneční intenzity $P_{sun}$ nebyly uvažovány.
+
+Faktor plnění byl vypočten podle (\ref{eq:ff}), jeho relativní nejistota byla vzata jako relativní nejistota maximálního výkonu $P_{mpp}$, tedy 1\,\%, protože relativní nejistoty napětí $U_{OC}$ a proudu $I_{SC}$ jsou vůči ní zanedbatelné.
+
+Přehled hodnot napětí, proudu, výkonu a odporu odpovídajících maximálnímu výkonu spolu s účinností článku a faktorem plnění pro dané intenzity je v tabulce \ref{tab:etaff}. Pro srovnání jsou uvedeny i odhadované hodnoty optimální zátěže $R_{L,opt}$. Je vidět, že skutečné zátěžové odpory odpovídající maximálnímu výkonu jsou o něco menší, než ty odhadované (viz diskuze).
+
+\begin{table}[hbtp]
+\centering
+\caption{Hodnoty napětí, proudu a odporu odpovídající maximálnímu výkonu, účinnost a faktor plnění pro vybrané intenzity osvětlení}
+\begin{tabular}{ccccccc}
+ \toprule
+ $P_{mpp}\, (\mathrm{mW})$ & $U_{mpp}\, (\mathrm{V})$ & $I_{mpp}\, (\mathrm{mA})$ & $R_{mpp}\, (\mathrm{\Omega})$ & $R_{L,opt}\, (\mathrm{\Omega})$ & $FF$ & $\eta$ \\
+ \midrule
+ $7.59 \pm 0.08$ & $0.390 \pm 0.004$ & $19.5 \pm 0.2$ & $20.0 \pm 0.2$ & $23.37 \pm 0.02$ & $0.658 \pm 0.007$ & $0.101 \pm 0.004$ \\
+ $15.98 \pm 0.16$ & $0.400 \pm 0.004$ & $40.0 \pm 0.4$ & $10.00 \pm 0.10$ & $11.489 \pm 0.008$ & $0.627 \pm 0.006$ & $0.107 \pm 0.002$ \\
+ $28.2 \pm 0.3$ & $0.378 \pm 0.004$ & $75.1 \pm 0.8$ & $5.00 \pm 0.05$ & $5.981 \pm 0.003$ & $0.552 \pm 0.006$ & $0.0941 \pm 0.0013$ \\
+ \bottomrule
+\end{tabular}
+\label{tab:etaff}
+\end{table}
+
+\newpage
+
+\subsection{Napětí naprázdno a zkratový proud pro nízké hodnoty osvětlení}
+
+V posledním úkolu byl sluneční simulátor vypnut a fotovoltaický článek byl shora zakryt tak, že byl osvětlován jen slabou diodou. Obvod s fotovoltaickým článkem byl opět zapojen podle schématu \ref{fig:schema1} a střídavě bylo měřeno napětí naprázdno a zkratový proud pro různá osvětlení. Různých hodnot osvětlení bylo dosaženo změnou napětí na diodě. Naměřené hodnoty napětí a proudu v závislosti na napětí diody jsou uvedeny v tabulce \ref{tab:low}. Nejistoty napětí a proudu byly vzaty z nejistoty multimetru Fluke, nejistota napětí na diodě byla odhadnuta jako velikost nejmenšího kroku změny napětí, tedy \SI{0.1}{V}.
+
+\begin{table}[hbtp]
+\centering
+\caption{Napětí naprázdno a zkratový proud v závislosti na napětí diody}
+\begin{tabular}{ccc}
+ \toprule
+ $U_{D}\, (\mathrm{V})$ & $U_{OC}\, (\mathrm{mV})$ & $I_{SC}\, (\mathrm{\mu A})$ \\
+ \midrule
+ $1.8 \pm 0.1$ & $1.144 \pm 0.008$ & $0.102 \pm 0.010$ \\
+ $3.1 \pm 0.1$ & $13.480 \pm 0.010$ & $1.220 \pm 0.010$ \\
+ $5.7 \pm 0.1$ & $37.830 \pm 0.014$ & $3.840 \pm 0.011$ \\
+ $8.3 \pm 0.1$ & $59.200 \pm 0.017$ & $6.685 \pm 0.012$ \\
+ $10.4 \pm 0.1$ & $73.330 \pm 0.019$ & $9.077 \pm 0.013$ \\
+ $12.1 \pm 0.1$ & $84.35 \pm 0.02$ & $10.946 \pm 0.013$ \\
+ $14.8 \pm 0.1$ & $97.78 \pm 0.02$ & $13.980 \pm 0.014$ \\
+ \bottomrule
+\end{tabular}
+\label{tab:low}
+\end{table}
+
+Hodnoty zkratového proudu v závislosti na napětí naprázdno byly vyneseny do grafu \ref{fig:low}. Body byla proložena lineární závislost procházející počátkem $I_{SC} = k \cdot U_{OC}$, tj. v souladu s aproximací rovnice (\ref{eq:long}) pro nízké hodnoty osvětlení. Převrácená hodntota koeficientu úměrnosti $k$ by měla být rovna paralelnímu odporu z ekvivalentního zapojení fotovoltaického článku (schéma \ref{fig:schema3}).
+
+Z lineární regrese vychází koeficient úměrnosti jako $k = (0.127 \pm 0.005) \, \si{(\kilo\ohm)^{-1}}$. Odpor $R_p$ je tedy roven \\ $R_p = (7.8 \pm 0.3) \, \si{\kilo\ohm}$. Jeho nejistota byla vzpočtena jako
+\begin{equation}
+    \sigma_{R_p} = R_p \frac{\sigma_k}{k} \, .
+\end{equation}
+
+\begin{figure}
+    \centering
+    \includegraphics[width=0.5\linewidth]{uloha28/low.png}
+    \caption{Závislost zkratového proudu $I_{SC}$ na napětí naprázdno $U_{OC}$ pro nízké hodnoty osvětlení. Chybové úsečky nebyly pro svou malou velikost pro přehlednost vykresleny.}
+    \label{fig:low}
+\end{figure}
+
+Pro výpočet odporu $R_s$ byly analyzovány voltampérové charakteristiky pro intenzitu 1.0 Sun a 0.5 Sun s hodnotami zkratového proudu $I_{SC1} = (92.47 \pm 0.04) \, \si{\milli A}$ resp. $I_{SC2} = (47.09 \pm 0.03) \, \si{\milli A}$. Index 1 používám pro intenzitu 1.0 Sun a index 2 pro intenzitu 0.5 Sun. Odečítaná hodnota proudu byla zvolena jako $\Delta I = 30 \, \si{\milli A}$, proudy $I_1$ a $I_2$ tedy jsou $I_1 = (62.47 \pm 0.04) \, \si{\milli A}$ a $I_2 = (17.09 \pm 0.03) \, \si{\milli A}$. Napětí $U_1$ a $U_2$ byly odečteny z křivek závislostí proudu na napětí v grafu \ref{fig:double} jako hodnoty napětí odpovídající hodnotám $I_1$ resp. $I_2$. Napětí vycházejí jako $U_1 = (0.427 \pm 0.001) \, \si{V}$ a $U_2 = (0.502 \pm 0.001) \, \si{V}$. Jejich nejistoty byly vzhledem k nejistému průběhu křivek závislostí odhadnuty jako \SI{0.001}{V}. Z těchot hodnot vychází sériový odpor jako $R_s = (1.54 \pm 0.03) \, \si{\ohm}$. Jeho nejistota byla vypočtena jako
+\begin{equation}
+    \sigma_{R_s} = R_s \frac{\sqrt{\sigma_{U_2}^2 + \sigma_{U_1}^2}}{U_2 - U_1} \, ,
+\end{equation}
+tedy z relativní nejistoty rozdílu $U_2 - U_1$, protože relativní nejistota rozdílu $I_{SC1} - I_{SC2}$ je oproti ní zanedbatelná.
+
+\begin{figure}
+    \centering
+    \includegraphics[width=0.5\linewidth]{uloha28/double.png}
+    \caption{Postup pro určení sériového odporu z voltampérových charakteristik pro intenzity 1.0 Sun a 0.5 Sun. Polohy odečítaných proudů a napětí jsou vyznačeny černou tečkovanou čarou.}
+    \label{fig:double}
+\end{figure}
+
+% ============================ DISKUZE ===============================
+\section{Diskuze}
+
+Pro různé intenzity osvětlení fotovoltaického článku byl střídavě měřen zkratový proud a napětí naprázdno. Zkratový proud lze měřit přímo ampérmetrem připojeným ke článku, pokud je vnitřní odpor ampérmetru velmi malý, ideálně nulový. Stejně tak lze napětí naprázdno měřit přímo na článku jen tehdy, pokud je vnitřní odpor voltmetr velmi velký, ideálně nekonečný. Nesplnění předpokladů by mělo přímý vliv na měřené hodnoty proudu $I_{SC}$ a napětí $U_{OC}$.
+
+Dále bylo pozorováno, že zkratový proud i napětí naprázdno velmi závisí na teplotě článku. Proto bylo nutné chvíli počkat, než se díky stabilizaci termočlánkem přibližně ustálí teplota na fotovoltaickém článku. Při každém zvýšení intenzity se totiž fotočlánek stále více zahřívá. Bez aktivního chlazení termočlánkem by byly naměřené hodnoty zatíženy velkou systematickou chybou. Sledováním teploty na termostatu se však chlazení ukázalo být účinné pro všechny intenzity osvětlení, a tedy naměřené hodnoty lze považovat za správné.
+
+Závislost zkratového proudu na intenzitě se podle grafu \ref{fig:sun} ukázala být přibližně lineární a závislost napětí naprázdno přibližně logaritmická. Zkombinovaná závislost proudu na napětí je tedy zhruba exponenciální, přesně jak předpokládá teorie (a rovnice (\ref{eq:long}) pro vysoké hodnoty napětí). Datovými body pro vysoké hodnoty osvětlení v závislosti přirozeného logaritmu proudu na napětí byla proložena afinní přímka. Z rovnice této přímky byl regresí určen saturační proud jako $I_0 = (2.34 \pm 0.07) \cdot 10^{-10} \, \si{\ampere}$ s relativní nejistotou 3\,\% a faktor ideality jako $n = 1.22 \pm 0.02$ s relativní nejistotou asi 2\,\%, což odpovídá hodnotě pro solární články 1,1 až 1,3 udávané v [1]. 
+
+Pro tři vybrané intenzity osvětlení 0.25 Sun, 0.5 Sun a 1.0 Sun byly proměřeny voltampérové charakteristiky fotovoltaického článku se zátěží. Měření probíhalo v rozsahu zátěžových odporů pro odpory od o řád menších hodnot až po o řád větších hodnot, než byla odhadovaná optimální zátěž (vypočtená na základě hodnot $U_{OC}$ a $I_{SC}$ Ohmovým zákonem). V průběhu měření se ukázalo, že skutečný odpor, při kterém je výkon fotočlánku maximální, je o něco nižší než odhadovaná hodnota. Náhled na vysvětlení může dát hodnota faktoru plnění, která je menší než 1 a je daná poměrem maximálního výkonu a jakéhosi zobecněného výkonu $U_{OC} \cdot I_{SC}$. Poměr odporů $R_{mpp}$ a $R_{L,opt}$ je dán vlastně faktorem plnění vynásobeným kvadrátem poměru $\frac{I_{SC}}{I_{mpp}}$. Faktor plnění závisí na poměrech $\frac{U_{mpp}}{U_{OC}}$ a $\frac{I_{mpp}}{I_{SC}}$, proto pokud je poměr $\frac{U_{mpp}}{U_{OC}}$ o něco málo menší než $\frac{I_{mpp}}{I_{SC}}$, bude v konečném důsledku poměr $\frac{R_{mpp}}{R_{L,opt}}$ menší než 1. Při pohledu na grafy \ref{fig:25}, \ref{fig:50} a \ref{fig:100} se však poměry proudů a napětí zdají přibližně stejné, což je i důvod, proč se odhadovaný a skutečný optimální zátěžový odpor příliš neliší, a tedy lze odpor $R_{L,opt} = \frac{U_{OC}}{I_{SC}}$ považovat za dobrý odhad optimálního odporu.
+
+Účinnosti přeměny zářivého výkonu na elektrický výkon fotovoltaického článku pro tři vybrané intenzity byly změřeny jako
+\begin{equation*}
+    \eta_{0.25 \, Sun} = (10.1 \pm 0.2)\,\% \, ,
+\end{equation*}
+\begin{equation*}
+    \eta_{0.5 \, Sun} = (10.7 \pm 0.2)\,\% \, a
+\end{equation*}
+\begin{equation*}
+    \eta_{1.0 \, Sun} = (9.41 \pm 0.13)\,\% \, ,
+\end{equation*}
+tedy s rostoucím osvětlením klesá účinnost fotovoltaického článku. To lze vysvětlit výkonovými ztrátami na sériovém a paralelním odporu v ekvivalentním zapojení fotovoltaického článku. Účinnost je daná maximálním výkonem článku a ten je dán napětím a proudem na odporu $R_L$, které jsou ovšem kvůli paralelnímu a sériovému odporu nižší než fotoproud a fotovoltaické napětí samotného článku. Výkonové ztráty jsou podle [1] $R_s \cdot I_{mpp}^2$ na odporu $R_s$ a $\frac{U_{mpp}^2}{R_p}$ na odporu $R_p$. Výkon článku $P_{mpp}$ měřený z napětí a proudu na odporu $R_L$ je ponížen právě o tyto hodnoty. Protože fotovoltaické napětí a fotoproud rostou s intenzitou dopadajícího záření, rostou i výkonové ztráty na sériovém a paralelním odporu, čímž klesá účinnost fotovoltaického článku.
+
+Paralelní odpor z ekvivalentního zapojení fotovoltaického článku byl určen jako převrácená hodnota směrnice lineární závislosti zkratového proudu na napětí naprázdno pro nízké hodnoty osvětlení (v souladu s rovnicí (\ref{eq:long})). Z grafu \ref{fig:low} je patrné, že závislost není úplně lineární, spíše se podobá kvadratické závislosti (podobu rovnice lze odhadnout z Taylorova rozvoje exponenciální funkce $\exp{\frac{q}{n \cdot k_B \cdot T} \cdot U_{OC}}$). Odpor $R_p$ byl určen jako \\ $R_p = (7.8 \pm 0.3) \, \si{\kilo\ohm}$, přičemž nejistota byla určena lineární regresí. Pro přesnější hodnotu by bylo třeba měřit zkratové napětí a proud naprázdno pro ještě nižší hodnoty osvětlení, kdy se dá závislost lépe popsat jako lineární.
+
+Sériový odpor ekvivalentního zapojení byl vypočten jako $R_s = (1.54 \pm 0.03) \, \si{\ohm}$, je tedy oproti paralelnímu odporu zanedbatelný a nutná aproximace, díky které platí rovnice (\ref{eq:long}) je tím splněna. Relativní nejistota odporu $R_s$ je 2\,\% a je daná především nejistotou určení hodnot napětí $U_1$ a $U_2$. Pro získání přesnější hodnoty by bylo nutné podrobněji proměřit voltampérové charakteristiky fotovoltaického článku se zátěží pro intenzity 0.5 Sun a 1.0 Sun právě v oblastech napětí $U_1$ a $U_2$.
+
+% ============================= ZÁVĚR ================================
+\section{Závěr}
+
+Pro tři vybrané intenzity osvětlení fotovoltaického článku byly proměřeny jeho voltampérové charakteristiky. V pracovních bodech odpovídajících maximálním výkonům byly základní veličiny, účinnost a faktor plnění určeny pro intenzitu 0.25 Sun jako:
+\begin{equation*}
+    U_{mpp} = (0.390 \pm 0.004) \, \si{V}
+\end{equation*}
+\begin{equation*}
+    I_{mpp} = (19.5 \pm 0.2) \, \si{mA}
+\end{equation*}
+\begin{equation*}
+    P_{mpp} = (7.59 \pm 0.08) \, \si{mW}
+\end{equation*}
+\begin{equation*}
+    R_{mpp} = (20.0 \pm 0.2) \, \si{\ohm}
+\end{equation*}
+\begin{equation*}
+    FF = 0.658 \pm 0.007
+\end{equation*}
+\begin{equation*}
+    \eta = (10.1 \pm 0.2)\,\%
+\end{equation*}
+
+pro intenzitu 0.5 Sun jako:
+\begin{equation*}
+    U_{mpp} = (0.400 \pm 0.004) \, \si{V}
+\end{equation*}
+\begin{equation*}
+    I_{mpp} = (40.0 \pm 0.4) \, \si{mA}
+\end{equation*}
+\begin{equation*}
+    P_{mpp} = (15.98 \pm 0.16) \, \si{mW}
+\end{equation*}
+\begin{equation*}
+    R_{mpp} = (10.00 \pm 0.10) \, \si{\ohm}
+\end{equation*}
+\begin{equation*}
+    FF = 0.627 \pm 0.006
+\end{equation*}
+\begin{equation*}
+    \eta = (10.7 \pm 0.2)\,\%
+\end{equation*}
+    
+
+a pro intenzitu 1.0 Sun jako:
+\begin{equation*}
+    U_{mpp} = (0.378 \pm 0.004) \, \si{V}
+\end{equation*}
+\begin{equation*}
+    I_{mpp} = (75.1 \pm 0.8) \, \si{mA}
+\end{equation*}
+\begin{equation*}
+    P_{mpp} = (28.2 \pm 0.3) \, \si{mW}
+\end{equation*}
+\begin{equation*}
+    R_{mpp} = (5.00 \pm 0.05) \, \si{\ohm}
+\end{equation*}
+\begin{equation*}
+    FF = 0.552 \pm 0.006
+\end{equation*}
+\begin{equation*}
+    \eta = (9.41 \pm 0.13)\,\% \, .
+\end{equation*}
+
+Sériový odpor z ekvivalentního zapojení fotovoltaického článku byl určen jako
+\begin{equation*}
+    R_s = (1.54 \pm 0.03) \, \si{\ohm} \, ,
+\end{equation*}
+paralelní odpor jako
+\begin{equation*}
+    R_p = (7.8 \pm 0.3) \, \si{\kilo\ohm} \, ,
+\end{equation*}
+saturační proud článku je
+\begin{equation*}
+    I_0 = (2.34 \pm 0.07) \cdot 10^{-10} \, \si{\ampere}
+\end{equation*}
+a faktor ideality je
+\begin{equation*}
+    n = 1.22 \pm 0.02 \, .
+\end{equation*}
+
+% =========================== LITERATURA =============================
+\section*{Literatura}
+\begin{itemize}
+\item 
+
+[1] Kolektiv ZFP KVOF MFF UK: Charakteristické vlastnosti solárních článků [online]. [cit. 3.11.2025], dostupné z https://physics.mff.cuni.cz/vyuka/zfp/\_media/zadani/texty/txt\_228.pdf
+
+\item 
+
+[2] Kolektiv ZFP KVOF MFF UK: Charakteristické vlastnosti solárních článků - pokyny k měření [online]. [cit. 3.11.2025], dostupné z https://physics.mff.cuni.cz/vyuka/zfp/\_media/zadani/pokyny/mereni\_228.pdf
+
+\item 
+
+[3] J. Englich: Úvod do praktické fyziky I: Zpracování výsledků měření. 1. vyd. Praha: Matfyzpress, 2006
+
+\end{itemize}
+\end{document}

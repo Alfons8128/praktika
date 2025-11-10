@@ -1,0 +1,336 @@
+
+\documentclass{../concepts/prepareprotokol} %všechny balíčky pro protokol + titulní strana
+\usepackage{graphicx}
+\usepackage{booktabs}
+\usepackage{amsmath}
+\usepackage{siunitx}
+\sisetup{inter-unit-product =$\cdot$}
+\sisetup{per-mode = reciprocal}
+\sisetup{separate-uncertainty=true}
+
+\newcommand{\nobars}[]{
+Chybové úsečky nebyly pro svou malou velikost pro přehlednost vykresleny.}
+
+\praktikum{II} %číslo praktika (I, II nebo III)
+\autor{David Němec} %jméno autora
+\datum{3.\,11.\,2025} %datum měření
+\cislo{9} %číslo úlohy
+\nazev{Charakteristiky termistoru} %název úlohy
+
+\begin{document}
+\maketitle
+
+% ========================== PRACOVNÍ ÚKOL =========================
+\section{Pracovní úkol}
+\begin{enumerate}
+    \item Změřte statickou charakteristiku termistoru pro proudy do 25 mA a graficky ji zpracujte přímo v praktiku. V případě měření počítačem záznam vytiskněte.
+    
+    \item Změřte teplotní závislost odporu termistoru v teplotním intervalu přibližně 210 až 310 K, graficky znázorněte a vytiskněte přímo v praktiku.
+    
+    \item Graficky znázorněte závislost logaritmu odporu $R$ termistoru na 1/$T$ a vyhodnoťte velikost materiálových veličin $R_\infty$ a $B$ a aktivační energie $U$.
+    
+    \item Stanovte teplotu termistoru v maximu statické charakteristiky.
+\end{enumerate}
+
+% ============================= TEORIE ===============================
+\section{Teorie}
+\subsection{Odpor termistoru}
+Odpor termistoru při termodynamické teplotě $T$ lze (v oblasti teplot, kde převažuje přímá vodivost) vyjádřit jako [1]
+\begin{equation} \label{eq:rexpt}
+    R = R_\infty \exp{\frac{B}{T}} \, ,
+\end{equation}
+kde materiálová veličina $R_\infty$ je limitní hodnota odporu pro nekonečnou teplotu $T$ a $B$ je tepelná citlivost termistoru. Pro polovodiče je $B$ daná aktivační energií $\Delta U$ a Boltzmannovou konstantou $k_B$ [1]:
+\begin{equation} \label{eq:bfromk}
+    B = \frac{\Delta U}{2 k_B} \, .
+\end{equation}
+Pokud však označíme $\Delta U$ aktivační energii vztaženou na jeden mol látky (původní hodnota aktivační energie vynásobená Avogadrovou konstantou $N_A$), přejde vztah (\ref{eq:bfromk}) na [1]:
+\begin{equation} \label{eq:bfromr}
+    B = \frac{\Delta U}{2 R} \, ,
+\end{equation}
+kde $R = k_B \cdot N_A$ je molární plynová konstanta.
+
+Pro určení teploty termistoru lze použít platinový odporový teploměr, jehož odpor se mění lineárně s teplotou a jehož teplotu ve $^\circ \mathrm{C}$ lze podle [1] spočítat jako
+\begin{equation} \label{eq:platina}
+    t = \frac{R_t - R_0}{\alpha R_0} \, ,
+\end{equation}
+kde $R_t$ je odpor při teplotě $t$, $R_0$ odpor při teplotě \SI{0}{\celsius} a $\alpha$ je teplotní součinitel odporu. Pro použitý platinový teploměr platí $R_0$ = \SI{100}{\ohm} a $\alpha = 3.85 \cdot 10^{-3} \, \si{\per \kelvin}$.
+
+\subsection{Voltampérová charakteristika termistoru}
+Při průchodu proudu termistorem se termistor zahřívá dokud nebude v rovnováze elektrický příkon (daný napětím a proudem na termistoru) a tepelný výkon vyzařovaný termistorem do okolí (daný rozdílem teploty termistoru a okolí) [1]. Lze tedy studovat závislost napětí na termistoru v závislosti na jeho teplotě. Podle [1] bude napětí termistoru maximální při teplotě $T_m$ dané vztahem
+\begin{equation} \label{eq:tmax}
+    T_m = \frac{1}{2} \left[ B - \sqrt{B \cdot \left(B - 4 T_0 \right)}\right] \, ,
+\end{equation}
+kde $T_0$ je termodynamická teplota okolí.
+
+
+\subsection{Metoda měření}
+
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=0.5\linewidth]{uloha9/schva.png}
+    \caption{Zapojení pro měření statické charakteristiky termistoru [1]}
+    \label{fig:schemava}
+\end{figure}
+
+\begin{figure}
+    \centering
+    \includegraphics[width=0.5\linewidth]{uloha9/schrt.png}
+    \caption{Zapojení termistoru pro měření teplotní závislosti jeho odporu [1]}
+    \label{fig:schemart}
+\end{figure}
+
+Statická charakteristika termistoru byla proměřována jako závislost napětí termistoru na proudu procházejícím obvodem zakresleným na obrázku \ref{fig:schemava}. Postupným zvyšováním napětí na zdroji stejnoměrného napětí byla zvyšována hodnota proudu na termistoru. Měření probíhalo pro proudy od asi \SI{0.1}{\milli \ampere} do \SI{25}{\milli \ampere}. Do \SI{1}{\milli \ampere} (tj. odhad rozsahu lineární závislosti napětí na proudu podle [1]) byl proud zvyšován s menším krokem. 
+
+Čárkovanou čarou je vyznačena navenek jednotná součástka obsahující termistor T, ochranný odpor R a platinový teploměr Pt100 (viz níže). Napětí bylo měřeno přímo na termistoru přístrojem METEX MXD - 4664A, proud byl měřen mezi ochranným odporem R a potenciometrem P stejným měřícím přístrojem. Potenciometr sloužil k jemnějšímu nastavení proudu v obvodu. Před odečtením hodnoty napětí a proudu bylo po každém zvýšení proudu nutné chvíli počkat, než se elektrický výkon a výkon vyzařovaný termistorem vyrovnají a teplota se ustálí.
+
+Pro měření závislosti odporu termistoru na teplotě byl termistor zchlazen kapalným dusíkem na teplotu menší než \SI{210}{\kelvin} a poté umístěn do Dewarovy nádoby, kde docházelo k pomalému samovolnému ohřívání. Při přiblížení se teplotě \SI{0}{\celsius} začal být termistor aktivně zahříván průchodem proudu a to až do teploty asi \SI{40}{\celsius}. Pro zvýšení přesnosti byl termistor při dosažení zhruba pokojové teploty přemístěn do méně izolující nádoby, aby mohla lépe probíhat výměna tepla s okolím a termistor se ohříval pomaleji. Teplota termistoru byla určována pomocí platinového odporového teploměru s lineární závislostí odporu na teplotě, umístěného spolu s termistorem v Dewarově nádobě. Odpory termistoru a platinového teploměru byly měřeny multimetry METEX MXD - 4664A zapojenými podle schématu \ref{fig:schemart} do zdířek A a C, resp. $\mathrm{R_t}$. Zdroj pro ohřívání termistoru byl připojen do zdířek označených písmenem Ž.
+
+
+
+
+
+
+\subsection{Měřicí přístroje a jejich nejistoty}
+\begin{enumerate}
+    \item Multimetr METEX MXD - 4664A:
+    
+    Multimetrem bylo měřeno napětí na termistoru, proud procházející termistorem, odpor termistoru a odpor platinového teploměru. Nejistoty měřených veličin byly určeny ze specifikací přístroje v příloze v [2]:
+
+    pro měření napětí: 0.05 \,\% hodnoty + 3 digity (kde 1 digit, tj. rozlišení pro rozsah 200 mV je $10\, \mu$V a pro rozsah 2 V $100\,\mu$V)
+
+    pro měření proudu: 0.3 \,\% hodnoty + 3 digity (kde rozlišení pro rozsah 2 mA je 100 nA, pro rozsah 20 mA je $1\,\mu$A a pro rozsah 200 mA je $10\,\mu$A)
+
+    pro měření odporu: pro rozsah 200 \si{\ohm} je nejistota 0.2\,\% hodnoty + 5 digitů (kde rozlišení je 10 \si{\milli \ohm}), pro ostatní měřené rozsahy je 0.15\,\% hodnoty + 3 digity (kde rozlišení je 0.1 \si{\ohm} pro rozsah 2 \si{\kilo\ohm}, 1 \si{\ohm} pro rozsah 20 \si{\kilo\ohm} a 10 \si{\ohm} pro rozsah 200 \si{\kilo\ohm})
+
+\end{enumerate}
+%\def\figurename{Obr\’azek}%
+\def\figurename{Graf}%
+\setcounter{figure}{0}
+
+% ======================== VÝSLEDKY MĚŘENÍ ===========================
+\section{Výsledky měření}
+
+\subsection{Statická charakteristika termistoru}
+
+Teplota okolí byla určena jako $T_0 = (22.0 \pm 0.4)\, \si{\celsius}$. Přístroji METEX MXD - 4664A zapojenými jako voltmetr a ampérmetr (viz schéma \ref{fig:schemava}) bylo měřeno napětí a proud termistoru. Naměřené hodnoty byly ukládány do souboru programem Termistor, jsou shrnuty v tabulce \ref{tab:va}. Nejistoty hodnot byly určeny ze specifikací přístrojů z přílohy v [2]. Datové body byly následně vyneseny do grafu \ref{fig:va} jako závislost napětí na proudu. Maximální napětí dosažené během experimentu bylo $U_m = (1.537 \pm 0.008) \, \si{V}$ a to při proudu $I_m = (17.71 \pm 0.06) \, \si{\milli \ampere}$. Hodnota $U_m$ a datový bod odpovídající maximu statické charakteristiky je v grafu \ref{fig:va} vyznačen zelenou barvou.
+
+\begin{table}[hbtp]
+\centering
+\caption{Napětí a proudu na termistoru pro postupně zvyšované dodávané napětí}
+\begin{tabular}{cc}
+ \toprule
+ $I\, (\mathrm{mA})$ & $U\, (\mathrm{V})$ \\
+ \midrule
+ $0.0721 \pm 0.0005$ & $0.02720 \pm 0.00017$ \\
+ $0.1661 \pm 0.0008$ & $0.0629 \pm 0.0003$ \\
+ $0.2583 \pm 0.0011$ & $0.0979 \pm 0.0005$ \\
+ $0.3400 \pm 0.0013$ & $0.1287 \pm 0.0007$ \\
+ $0.4099 \pm 0.0015$ & $0.1550 \pm 0.0008$ \\
+ $0.5142 \pm 0.0018$ & $0.194 \pm 0.001$ \\
+ $0.580 \pm 0.002$ & $0.2183 \pm 0.0014$ \\
+ $0.713 \pm 0.002$ & $0.2664 \pm 0.0016$ \\
+ $0.830 \pm 0.003$ & $0.3097 \pm 0.0018$ \\
+ $0.895 \pm 0.003$ & $0.333 \pm 0.002$ \\
+ $1.017 \pm 0.003$ & $0.376 \pm 0.002$ \\
+ $1.417 \pm 0.005$ & $0.513 \pm 0.003$ \\
+ $2.353 \pm 0.010$ & $0.796 \pm 0.004$ \\
+ $4.009 \pm 0.015$ & $1.117 \pm 0.006$ \\
+ $4.934 \pm 0.018$ & $1.234 \pm 0.006$ \\
+ $6.13 \pm 0.02$ & $1.339 \pm 0.007$ \\
+ $7.23 \pm 0.02$ & $1.405 \pm 0.007$ \\
+ $8.42 \pm 0.03$ & $1.454 \pm 0.008$ \\
+ $10.09 \pm 0.03$ & $1.498 \pm 0.008$ \\
+ $11.01 \pm 0.04$ & $1.511 \pm 0.008$ \\
+ $12.37 \pm 0.04$ & $1.524 \pm 0.008$ \\
+ $13.23 \pm 0.04$ & $1.528 \pm 0.008$ \\
+ $14.47 \pm 0.05$ & $1.534 \pm 0.008$ \\
+ $15.25 \pm 0.05$ & $1.535 \pm 0.008$ \\
+ $16.69 \pm 0.05$ & $1.537 \pm 0.008$ \\
+ $17.71 \pm 0.06$ & $1.537 \pm 0.008$ \\
+ $18.92 \pm 0.06$ & $1.534 \pm 0.008$ \\
+ $20.17 \pm 0.09$ & $1.531 \pm 0.008$ \\
+ $21.16 \pm 0.09$ & $1.529 \pm 0.008$ \\
+ $22.1 \pm 0.1$ & $1.526 \pm 0.008$ \\
+ $22.7 \pm 0.1$ & $1.524 \pm 0.008$ \\
+ $23.0 \pm 0.1$ & $1.523 \pm 0.008$ \\
+ $23.68 \pm 0.10$ & $1.522 \pm 0.008$ \\
+ $24.01 \pm 0.10$ & $1.520 \pm 0.008$ \\
+ $24.55 \pm 0.10$ & $1.518 \pm 0.008$ \\
+ $24.91 \pm 0.10$ & $1.518 \pm 0.008$ \\
+ \bottomrule
+\end{tabular}
+\label{tab:va}
+\end{table}
+
+\begin{figure}
+    \centering
+    \includegraphics[width=0.5\linewidth]{uloha9/va.png}
+    \caption{Závislost napětí termistoru na proudu procházejívím termistorem s vyznačeným maximem. Chybové úsečky nebyly pro svou malou velikost pro přehlednost vykresleny.}
+    \label{fig:va}
+\end{figure}
+
+\subsection{Teplotní závislost odporu termistoru}
+
+Následně probíhalo proměřování závislosti odporu termistoru na teplotě. Odpor termistoru $R$ i platinového odporového teploměru $R_{Pt,100}$ byl měřen opět přístrojem METEX MXD - 4664A, nastaveným na rozsah pro měření odporu. Zápis dat probíhal pomocí programu Termistor od chvíle, kdy se teplota termistoru a platinového teploměru přibližně vyrovnaly a začaly pomalu růst. Hodnota termodynamické teploty byla vypočtena ze vztahu (\ref{eq:platina}) a převedena z Celsiovy na termodynamickou stupnici přičtením teploty \SI{273.15}{\kelvin} k hodnotě dané vzorcem (\ref{eq:platina}). Odpor platinového teploměru při teplotě \SI{0}{\celsius} je z [1] $R_0 = \SI{100}{\ohm}$ a teplotní součinitel odporu je \\ $\alpha = 3.85 \cdot 10^{-3} \, \si{\per \kelvin}$. Jejich nejistoty nebyly uvažovány.
+
+Naměřené hodnoty odporů spolu s vypočtenou teplotou, převrácenou hodnotou teploty a přirozeným logaritmem hodnoty odporu $R$ jsou uvedeny v tabulce \ref{tab:rt}.\footnote{Oproti záznamu z měření nejsou v tabulce \ref{tab:rt} uvedeny první dvě hodnoty, protože teplota termistoru a platinového teploměru zřejmě ještě nebyly vyrovnány. Tyto hodnoty tedy nejsou ve zpracování uvažovány.} Nejistoty odporů byly vzaty jako nejistoty přístrojů ze specifikace uvedené v příloze v [2]. Nejistota teploty byla vypočtena podle [3] jako
+\begin{equation}
+    \sigma_T = \frac{\sigma_{R_t}}{\alpha R_0} \, ,
+\end{equation}
+nejistota převrácené hodnoty teploty byla určena jako
+\begin{equation}
+    \sigma_{\frac{1}{T}} = \frac{\sigma_T}{T^2}
+\end{equation}
+a nejistota přirozeného logaritmu hodnoty odporu termistoru byla vypočtena jako
+\begin{equation}
+    \sigma_{\ln{R}} = \frac{\sigma_{R}}{R} \, .
+\end{equation}
+
+\begin{table}[hbtp]
+\centering
+\caption{Veličiny potřebné pro vyšetření teplotní závislosti odporu termistoru: odpor platinového teploměru, teplota termistoru, její převrácená hodnota, odpor termistoru, přirozený logaritmus jeho hodnoty}
+\begin{tabular}{ccccc}
+ \toprule
+ $R_{Pt,100}\, (\mathrm{\Omega})$ & $T\, (\mathrm{K})$ & $T^{-1}\, (10^{-3} \, \mathrm{K^{-1}})$ & $R\, (\mathrm{k\Omega})$ & $\ln R\, (\mathrm{\ln \Omega})$ \\
+ \midrule
+ $67.92 \pm 0.14$ & $189.8 \pm 0.4$ & $5.27 \pm 0.01$ & $49.26 \pm 0.07$ & $10.8049 \pm 0.0015$ \\
+ $69.58 \pm 0.14$ & $194.1 \pm 0.4$ & $5.15 \pm 0.01$ & $36.81 \pm 0.06$ & $10.5135 \pm 0.0015$ \\
+ $70.92 \pm 0.14$ & $197.6 \pm 0.4$ & $5.060 \pm 0.009$ & $29.55 \pm 0.04$ & $10.2938 \pm 0.0015$ \\
+ $72.51 \pm 0.15$ & $201.7 \pm 0.4$ & $4.957 \pm 0.009$ & $22.97 \pm 0.03$ & $10.0419 \pm 0.0015$ \\
+ $73.51 \pm 0.15$ & $204.3 \pm 0.4$ & $4.894 \pm 0.009$ & $19.67 \pm 0.03$ & $9.8868 \pm 0.0015$ \\
+ $74.78 \pm 0.15$ & $207.6 \pm 0.4$ & $4.816 \pm 0.009$ & $16.30 \pm 0.02$ & $9.6989 \pm 0.0015$ \\
+ $75.92 \pm 0.15$ & $210.6 \pm 0.4$ & $4.748 \pm 0.009$ & $13.82 \pm 0.02$ & $9.5339 \pm 0.0015$ \\
+ $77.56 \pm 0.16$ & $214.9 \pm 0.4$ & $4.654 \pm 0.009$ & $10.950 \pm 0.016$ & $9.3011 \pm 0.0015$ \\
+ $79.21 \pm 0.16$ & $219.1 \pm 0.4$ & $4.563 \pm 0.009$ & $8.710 \pm 0.013$ & $9.0722 \pm 0.0015$ \\
+ $80.84 \pm 0.16$ & $223.4 \pm 0.4$ & $4.477 \pm 0.008$ & $7.010 \pm 0.011$ & $8.8551 \pm 0.0015$ \\
+ $81.84 \pm 0.16$ & $226.0 \pm 0.4$ & $4.425 \pm 0.008$ & $6.120 \pm 0.009$ & $8.7193 \pm 0.0015$ \\
+ $83.27 \pm 0.17$ & $229.7 \pm 0.4$ & $4.354 \pm 0.008$ & $5.102 \pm 0.008$ & $8.5374 \pm 0.0015$ \\
+ $84.32 \pm 0.17$ & $232.4 \pm 0.4$ & $4.303 \pm 0.008$ & $4.448 \pm 0.007$ & $8.4002 \pm 0.0015$ \\
+ $85.68 \pm 0.17$ & $236.0 \pm 0.4$ & $4.238 \pm 0.008$ & $3.779 \pm 0.006$ & $8.2372 \pm 0.0015$ \\
+ $87.48 \pm 0.18$ & $240.6 \pm 0.5$ & $4.156 \pm 0.008$ & $3.059 \pm 0.005$ & $8.0258 \pm 0.0015$ \\
+ $88.79 \pm 0.18$ & $244.0 \pm 0.5$ & $4.098 \pm 0.008$ & $2.634 \pm 0.004$ & $7.8763 \pm 0.0015$ \\
+ $89.57 \pm 0.18$ & $246.1 \pm 0.5$ & $4.064 \pm 0.008$ & $2.413 \pm 0.004$ & $7.7886 \pm 0.0015$ \\
+ $90.44 \pm 0.18$ & $248.3 \pm 0.5$ & $4.027 \pm 0.008$ & $2.190 \pm 0.003$ & $7.6917 \pm 0.0015$ \\
+ $91.72 \pm 0.18$ & $251.6 \pm 0.5$ & $3.974 \pm 0.008$ & $1.902 \pm 0.003$ & $7.5507 \pm 0.0015$ \\
+ $92.99 \pm 0.19$ & $254.9 \pm 0.5$ & $3.922 \pm 0.007$ & $1.657 \pm 0.002$ & $7.4128 \pm 0.0015$ \\
+ $94.40 \pm 0.19$ & $258.6 \pm 0.5$ & $3.867 \pm 0.007$ & $1.427 \pm 0.002$ & $7.2633 \pm 0.0015$ \\
+ $95.5 \pm 0.2$ & $261.5 \pm 0.5$ & $3.825 \pm 0.007$ & $1.271 \pm 0.002$ & $7.1476 \pm 0.0015$ \\
+ $96.6 \pm 0.2$ & $264.2 \pm 0.5$ & $3.784 \pm 0.007$ & $1.1380 \pm 0.0017$ & $7.0370 \pm 0.0015$ \\
+ $97.7 \pm 0.2$ & $267.1 \pm 0.5$ & $3.744 \pm 0.007$ & $1.0200 \pm 0.0015$ & $6.9276 \pm 0.0015$ \\
+ $98.5 \pm 0.2$ & $269.3 \pm 0.5$ & $3.714 \pm 0.007$ & $0.9380 \pm 0.0014$ & $6.8437 \pm 0.0015$ \\
+ $99.6 \pm 0.2$ & $272.1 \pm 0.5$ & $3.675 \pm 0.007$ & $0.8275 \pm 0.0012$ & $6.7184 \pm 0.0015$ \\
+ $100.0 \pm 0.2$ & $273.1 \pm 0.5$ & $3.661 \pm 0.007$ & $0.7915 \pm 0.0012$ & $6.6739 \pm 0.0015$ \\
+ $100.6 \pm 0.2$ & $274.7 \pm 0.5$ & $3.640 \pm 0.007$ & $0.7466 \pm 0.0011$ & $6.6155 \pm 0.0015$ \\
+ $101.5 \pm 0.2$ & $276.9 \pm 0.5$ & $3.611 \pm 0.007$ & $0.6884 \pm 0.0010$ & $6.5344 \pm 0.0015$ \\
+ $102.5 \pm 0.2$ & $279.7 \pm 0.5$ & $3.575 \pm 0.007$ & $0.6215 \pm 0.0009$ & $6.4321 \pm 0.0015$ \\
+ $103.5 \pm 0.2$ & $282.3 \pm 0.5$ & $3.542 \pm 0.007$ & $0.5657 \pm 0.0008$ & $6.3381 \pm 0.0015$ \\
+ $104.3 \pm 0.2$ & $284.4 \pm 0.5$ & $3.516 \pm 0.007$ & $0.5249 \pm 0.0008$ & $6.2632 \pm 0.0015$ \\
+ $105.3 \pm 0.2$ & $286.9 \pm 0.5$ & $3.486 \pm 0.007$ & $0.4820 \pm 0.0007$ & $6.1779 \pm 0.0015$ \\
+ $106.5 \pm 0.2$ & $290.1 \pm 0.6$ & $3.447 \pm 0.007$ & $0.4315 \pm 0.0006$ & $6.0673 \pm 0.0015$ \\
+ $107.5 \pm 0.2$ & $292.6 \pm 0.6$ & $3.417 \pm 0.007$ & $0.3973 \pm 0.0006$ & $5.9847 \pm 0.0015$ \\
+ $108.5 \pm 0.2$ & $295.1 \pm 0.6$ & $3.388 \pm 0.006$ & $0.3665 \pm 0.0006$ & $5.9040 \pm 0.0015$ \\
+ $109.2 \pm 0.2$ & $297.1 \pm 0.6$ & $3.366 \pm 0.006$ & $0.3466 \pm 0.0005$ & $5.8482 \pm 0.0015$ \\
+ $110.0 \pm 0.2$ & $299.1 \pm 0.6$ & $3.343 \pm 0.006$ & $0.3241 \pm 0.0005$ & $5.7811 \pm 0.0015$ \\
+ $111.2 \pm 0.2$ & $302.2 \pm 0.6$ & $3.309 \pm 0.006$ & $0.2948 \pm 0.0004$ & $5.6863 \pm 0.0015$ \\
+ $112.0 \pm 0.2$ & $304.3 \pm 0.6$ & $3.286 \pm 0.006$ & $0.2762 \pm 0.0004$ & $5.6211 \pm 0.0015$ \\
+ $113.1 \pm 0.2$ & $307.3 \pm 0.6$ & $3.254 \pm 0.006$ & $0.2534 \pm 0.0004$ & $5.5350 \pm 0.0015$ \\
+ $114.1 \pm 0.2$ & $309.8 \pm 0.6$ & $3.228 \pm 0.006$ & $0.2357 \pm 0.0004$ & $5.4626 \pm 0.0015$ \\
+ $115.5 \pm 0.2$ & $313.3 \pm 0.6$ & $3.192 \pm 0.006$ & $0.2144 \pm 0.0003$ & $5.3678 \pm 0.0015$ \\
+ $116.7 \pm 0.2$ & $316.5 \pm 0.6$ & $3.160 \pm 0.006$ & $0.1970 \pm 0.0003$ & $5.2832 \pm 0.0015$ \\
+ $118.0 \pm 0.2$ & $319.9 \pm 0.6$ & $3.126 \pm 0.006$ & $0.1803 \pm 0.0003$ & $5.1946 \pm 0.0015$ \\
+ \bottomrule
+\end{tabular}
+\label{tab:rt}
+\end{table}
+
+Závislost odporu termistoru na jeho teplotě je vykreslena v grafu \ref{fig:rtlog}. 
+
+Zlogaritmováním rovnice (\ref{eq:rexpt}) dostaneme lineární závislost přirozeného logaritmu odporu termistoru na převrácené hodnotě teploty $\ln{R} = \ln{R_\infty} + B \cdot \frac{1}{T}$ s průsečíkem osy y $\ln{R_\infty}$ a směrnicí $B$. Závislot logaritmu $R$ \\ na $\frac{1}{T}$ byla vynesena do grafu \ref{fig:rt}.
+
+Koeficienty $\ln{R_\infty}$ a $B$ a jejich nejistoty byly určeny lineární regresí jako $\ln{R_\infty} = (-3.0312 \pm 0.0015) \, \ln{\Omega}$ \\ a $B = (2.4672 \pm 0.0004) \cdot 10^3 \, \si{\kelvin}$. Limitní odpor pro nekonečnou teplotu $R_\infty$ pak vychází jako \\ $R_\infty = (48.26 \pm 0.07) \, \si{\milli \ohm}$. Nejistota odporu $R_\infty$ byla vypočtena podle [3] jako
+\begin{equation}
+    \sigma_{R_\infty} = R_\infty \cdot \sigma_{\ln{R_\infty}} \, .
+\end{equation}
+
+Aktivační energie na jeden mol byla určena podle vztahu (\ref{eq:bfromr}) jako $\Delta U = (44.020 \pm 0.006) \, \si{\kilo J \per\mole}$. Její nejistota byla spočtena jako
+\begin{equation}
+    \sigma_{\Delta U} = U \cdot \frac{\sigma_B}{B}\, .
+\end{equation}
+
+\begin{figure}
+    \centering
+    \includegraphics[width=0.5\linewidth]{uloha9/rtlog.png}
+    \caption{Závislost odporu termistoru na teplotě. Chybové úsečky nebyly pro svou malou velikost pro přehlednost vykresleny}
+    \label{fig:rtlog}
+\end{figure}
+
+\begin{figure}
+    \centering
+    \includegraphics[width=0.5\linewidth]{uloha9/rt.png}
+    \caption{Závislost přirozeného logaritmu odporu termistoru na převrácené hodnotě teploty.\nobars}
+    \label{fig:rt}
+\end{figure}
+
+\subsection{Teplota v maximu statické charakteristiky}
+
+Z hodnoty $B$ a teploty okolí $T_0$ lze nyní podle rovnice (\ref{eq:tmax}) vypočítat teplotu termistoru v maximu statické charakteristiky. Teplota vychází $T_0 = (338.4 \pm 0.5) \, \si{\kelvin}$. Její nejistota byla určena podle [3] jako
+\begin{equation}
+    \sigma_{T_0} = \sqrt{\sigma_B^2 \cdot \left[\frac{1}{2} \left(1-\sqrt{1 - \frac{4 T_0}{B}}\right) - \frac{T_0}{B\sqrt{1-\frac{4 T_0}{B}}}\right]^2 + \sigma_{T_0}^2 \cdot \left(\frac{2}{\sqrt{1-\frac{4 T_0}{B}}}\right)^2} \, .
+\end{equation}
+
+
+
+
+% ============================ DISKUZE ===============================
+\section{Diskuze}
+
+Z grafu \ref{fig:va} je vidět, že pro nízké hodnoty proudu je závislost napětí termistoru na proudu přibližně lineární. To je v souladu s předpokladem, že termistor se ještě příliš neohřívá a jeho odpor je stále přibližně konstantní, tedy poměr napětí a proudu je konstantní a platí Ohmův zákon. Pro vyšší hodnoty proudu se však již termistor ohřívá, jeho odpor klesá (jak je vidět z grafu teplotní závislosti \ref{fig:rtlog}) a tedy i napětí je nižší, než by předpokládal Ohmův zákon. V maximu statické charakteristiky je napětí $U_m = (1.537 \pm 0.008) \, \si{V}$ s relativní přesností 0.5\,\%. Nejistotu maximálního napětí mohu uvažovat jako nejistotu hodnoty napětí v maximu, protože okolní datové body jsou blízko $U_m$ (některý je dokonce v rámci nejistoty $U_m$ stejný). Proud v maximu charakteristiky lze však určit s přesností jen na 1 mA (vzdálnost sousedních datových bodů v okolí maxima). Pro určení proudu v maximu by bylo třeba podrobnějšího měření v okolí maxima.
+
+Při proměřování statické charakteristiky bylo po každém zvýšení proudu nutné chvíli počkat, než se elektrický výkon a výkon vyzařovaný termistorem vyrovnají a teplota se ustálí. Hodnoty proudu a napětí se odečítaly z měřícího přístroje až poté, jinak by byly zatíženy systematickou chybou.
+
+Teplotní závislost odporu termistoru je lze velmi dobře popsat exponenciální závislostí, jak ukazují grafy \ref{fig:rtlog} a \ref{fig:rt}. Koeficienty $B$ a $R_\infty$ z rovnice (\ref{eq:rexpt}) byly určeny jako $B = (2467.2 \pm 0.4) \, \si{\kelvin}$ s relativní nejistotou 0.02\,\% a $R_\infty = (48.26 \pm 0.07) \, \si{\ohm}$ s relativní nejistotou 0.15\,\%. Tak vysoké přesnosti bylo dosaženo díky přesnosti měřících přístrojů a velkému množství datových bodů pro lineární regresi.
+
+Aktivační energie vztažená na jeden mol vychází $\Delta U = (44.020 \pm 0.006) \, \si{\kilo J \per\mole}$ s relativní nejistotou stejnou jako u veličiny $B$, tedy 0.02\,\%. Podle [1] má aktivační energie řádově hodnotu desítek \si{\kilo J \per \mole}, čemuž experimentálně určená hodnota odpovídá.
+
+Teplota termistoru v maximu statické charakteristiky byla zjištěna jako $T_m = (338.4 \pm 0.5) \, \si{\kelvin}$, tedy asi \SI{65}{\celsius}, s relativní nejistotou 0.15\,\%. Správnost hodnoty lze řádově odhadnout dosazením odporu $R_m = \frac{U_m}{I_m}$ do rovnice (\ref{eq:rexpt}), odkud teplota v bodě maxima vychází přibližně \SI{350}{\kelvin}. Rozdíl mezi touto hodnotou a $T_m$ spočtenou z rovnice (\ref{eq:tmax}) může být dán právě nejistou hodnotou proudu v bodě maxima, která může být ve skutečnosti až o 1 mA odlišná od hodnoty proudu $I_m$ odpovídající nejvyššímu naměřenému napětí $U_m$. Po uvážení této nejistoty (necelých 6\,\%) se obě hodnoty teploty termistoru v maximu statické charakteristiky v rámci nejistoty shodují. Experimentálně určenou hodnotu $T_m$ tedy lze považovat za správnou.
+
+% ============================= ZÁVĚR ================================
+\section{Závěr}
+
+Limitní odpor termistoru při nekonečné teplotě $R_\infty$ byl určen jako
+\begin{equation*}
+    R_\infty = (48.26 \pm 0.07) \, \si{\ohm} \, ,
+\end{equation*}
+tepelná citlivost termistoru $B$ byla určena jako
+\begin{equation*}
+    B = (2467.2 \pm 0.4) \, \si{\kelvin} \,
+\end{equation*}
+a aktivační energie vztažená na jeden mol $\Delta U$ vychází
+\begin{equation*}
+    \Delta U = (44.020 \pm 0.006) \, \si{\kilo J \per\mole} \, .
+\end{equation*}
+
+Teplota termistoru v bodě maxima statické charakteristiky byla spočtena jako
+\begin{equation*}
+    T_m = (338.4 \pm 0.5) \, \si{\kelvin} \, .
+\end{equation*}
+
+
+% =========================== LITERATURA =============================
+\section*{Literatura}
+\begin{itemize}
+\item 
+
+[1] Kolektiv ZFP KVOF MFF UK: Charakteristiky termistoru [online]. [cit. 10.11.2025], dostupné z https://physics.mff.cuni.cz/vyuka/zfp/\_media/zadani/texty/txt\_209.pdf
+
+\item
+
+[2] Kolektiv ZFP KVOF MFF UK: Charakteristiky termistoru -fotodokumentace [online]. [cit. 10.11.2025], dostupné z https://physics.mff.cuni.cz/vyuka/zfp/\_media/zadani/foto/foto\_209.pdf
+
+\item 
+
+[3] J. Englich: Úvod do praktické fyziky I: Zpracování výsledků měření. 1. vyd. Praha: Matfyzpress, 2006
+
+
+\end{itemize}
+\end{document}
