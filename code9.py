@@ -92,7 +92,7 @@ rel2 = pr.Rel(oneovert, lnr, pr.F.linear)
 fig2, ax2 = plt.subplots(layout = 'constrained')
 rel2.plot_data(ax2, err=(0,0))
 rel2.fit()
-rel2.plot_fit(ax2, label='fitovaná lineární závislost')
+rel2.plot_fit(ax2, label='fitovaná lineární závislost $\\ln R = 0.04826 + 2467.2 \cdot \\frac{1}{T}$')
 ax2.legend()
 fig2.savefig('uloha9/rt.png', dpi=300)
 #plt.close(fig2)
@@ -122,7 +122,7 @@ t0 = t0 + 273.15
 tm = b / 2 * (1 - unp.sqrt(1 - 4 * t0.unc / b.unc))
 print('tm:', tm)
 print(b / unp.log(u.val[idxmax] / i.val[idxmax] / rinf.val[0] * 1000))
-print(b, u.val[idxmax], i.val[idxmax], rinf.val[0])
+print(b, u.unc[idxmax], i.unc[idxmax], rinf.unc[0])
 
 #plt.show()
 
