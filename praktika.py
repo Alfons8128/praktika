@@ -167,7 +167,8 @@ class Rel:
         self.coeffs = fitted_coeffs
         self.cov = cov_matrix
     
-    def plot_data(self, ax, err: tuple = (1,1), label='naměřené hodnoty', scale=1, marker='s', color='black', zorder=None):
+    def plot_data(self, ax, err: tuple = (1,1), connect=False, label='naměřené hodnoty', 
+                  scale=1, marker='s', color='black', zorder=None):
         match err:
             case (1, 1): # x_error_bar and y_error_bar
                     ax.errorbar(self.x.val, self.y.val, xerr=self.x.err, yerr=self.y.err, marker=marker,
@@ -180,6 +181,9 @@ class Rel:
                                 color=color, markersize=5*scale, capsize=3, label=label, linestyle='', zorder=zorder)
             case (0, 0): # none of the errorbars
                 ax.scatter(self.x.val, self.y.val, marker=marker, s=25*scale, color=color, linewidth=1, label=label, zorder=zorder)
+
+        if connect:
+            ax.plot(self.x.val, self.y.val, color='black')
 
         ax.set_xlabel(self.x.long_name)
         ax.set_ylabel(self.y.long_name)
