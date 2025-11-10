@@ -15,6 +15,7 @@ class Var:
     
     methods:
     artithmetical operation with error propagation: + - * /
+    __get_item__(idx): returns Var instance with selected items
     set_lname(short_name, unit): defines long_name for matplolib axes labels
     ufmt(format description): uses scalar ufmt function to round values to apropriate decimal digits
     '''
@@ -104,6 +105,23 @@ class Var:
     def exp(self):
         new_unc = unp.exp(self.unc)
         return Var(unp.nominal_values(new_unc), unp.std_devs(new_unc), f'\\exp {self.short_name}', self.unit)
+    
+    def __setitem__(self, idx, value):
+        new_unc = self.unc
+        if isinstance(value, Var):
+            new_unc[idx] = value.unc
+        elif isinstance(value, ufloat) or isinstance(value, unp.uarray):
+            new_unc[idx] = value
+        else:
+            new_unc[idx] = unp.uarray(value, 0)
+        self.unc = new_unc
+        self.val = unp.nominal_values(self.unc)
+        self.err = unp.std_devs(self.unc)
+
+    
+    def __getitem__(self, idx):
+        new_unc = self.unc[idx]
+        return Var(unp.nominal_values(new_unc), unp.std_devs(new_unc), self.short_name, self.unit)
     
     def ufmt(self, apx='L'):
         '''Formats all values in the Var instance using ufmt function.'''
