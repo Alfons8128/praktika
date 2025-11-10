@@ -21,17 +21,29 @@ class Var:
     '''
     
     def __init__(self, values: np.array, errors=0, short_name='', unit=None):
-        if isinstance(errors, str):
-            if errors.endswith('%'):
-                errors = float(errors[:-1]) / 100.0
-            else:
-                errors = float(errors)
-            errors = np.abs(values) * errors
+        if isinstance(values, ufloat):
+            self.unc = [values]
         
-        if np.shape(values) == ():
-            self.unc = unp.uarray([values], [errors])
+        elif isinstance(values, unp.uarray):
+            self.unc = values
+
+        elif isinstance(values, Var):
+            self.unc = values.unc
+            short_name = values.short_name
+            unit = values.unit
         else:
+            if isinstance(errors, str):
+                if errors.endswith('%'):
+                    errors = float(errors[:-1]) / 100.0
+                else:
+                    errors = float(errors)
+                errors = np.abs(values) * errors
             self.unc = unp.uarray(values, errors)
+        
+        if np.shape(values) == (): # scalar
+            self.unc = unp.uarray([values], [errors])
+        
+        
         self.val = unp.nominal_values(self.unc)
         self.err = unp.std_devs(self.unc)
         self.short_name = short_name

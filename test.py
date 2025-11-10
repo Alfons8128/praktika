@@ -88,6 +88,8 @@ print(yyy.unc)
 
 print('log', unp.log(y))
 print('exp', unp.exp(y))
+z = unp.log(y)[1]
+print(unp.nominal_values(unp.exp(z)))
 ##############################################
 
 print('All done!')
