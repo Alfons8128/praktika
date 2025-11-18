@@ -9,4 +9,4 @@ from scipy.interpolate import make_interp_spline
 
 import praktika as pr
 
-df = pr.read_excel('uloha4/ulaha4.xlsx')
+df = pr.read_excel('uloha4/uloha4.xlsx')

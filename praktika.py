@@ -305,7 +305,7 @@ def to_table(*args, apx='L'):
     #     df[var.long_name] = [scalar_ufmt(x, apx=apx) for x in var.unc]
     # return df.to_latex(index=False, column_format=len(args)*'c')
 
-    print('\\begin{table}[hbt]')
+    print('\\begin{table}[!htbp]')
     print('\\centering')
     print('\\caption{NAZEV}')
     print('\\begin{tabular}{' + 'c'*len(args) + '}', sep='')
