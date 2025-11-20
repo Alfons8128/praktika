@@ -9,4 +9,15 @@ from scipy.interpolate import make_interp_spline
 
 import praktika as pr
 
-df = pr.read_excel('uloha4/uloha4.xlsx')
+df1 = pr.read_excel('uloha4/uloha4.xlsx', cells='B3:B12')
+
+df2 = pr.read_excel('uloha4/uloha4.xlsx', cells='B3:B12')
+
+df3 = pr.read_excel('uloha4/uloha4.xlsx', cells='B3:B12')
+
+
+df4 = pr.read_excel('uloha4/uloha4.xlsx', cells='B3:B12')
+
+df5 = pr.read_excel('uloha4/uloha4.xlsx', cells='B3:B12')
+
+
