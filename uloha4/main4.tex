@@ -3,6 +3,8 @@
 \usepackage{graphicx}
 \usepackage{booktabs}
 \usepackage{amsmath}
+\usepackage{newfloat}
+\usepackage{caption}
 \usepackage{siunitx}
 \sisetup{inter-unit-product =$\cdot$}
 \sisetup{separate-uncertainty=true}
@@ -13,7 +15,16 @@
 \cislo{4} %číslo úlohy
 \nazev{Měření malých odporů} %název úlohy
 
+\DeclareFloatingEnvironment[fileext=los, placement={htbp}, name=Obrázek]{schema}
+
+\newcommand{\nobars}{
+Chybové úsečky nebyly pro svou malou velikost pro přehlednost vykresleny.}
+
+
 \begin{document}
+\renewcommand{\figurename}{Graf}
+\renewcommand{\refname}{Literatura}
+
 \maketitle
 
 % ========================== PRACOVNÍ ÚKOL =========================
@@ -31,41 +42,136 @@
 
 % ============================= TEORIE ===============================
 \section{Teorie}
-\subsection{Kapacita deskového kondenzátoru}
+
+\subsection{Čtyřbodové zapojení rezistoru}
+
+Pro přesnější měření odporu rezistoru lze využít čtyřbodového zapojení podle schématu na obrázku \ref{sch:four}. Pokud je voltmetr připojen k napěťovým svorkám $b$ a $b'$, nebude měření ovlivněno spádem napětí na přívodních vodičích mezi rezistorem a proudovými svorkami $a$ a $a'$. Za předpokladu nízkých hodnot $R$ oproti odporu voltmetru poteče přívodními vodiči k napěťovým svorkám zanedbatelný proudu a ani odpor těchto vodičů se neuplatní \cite{studijni}.
+
+\subsection{Wheastonův můstek}
+
+Nízké hodnoty odporu studovaného rezistoru lze měřit pomocí Wheastonova můstku. Jeho schéma zapojení je na obrázku \ref{sch:wheast}. Je-li můstek v rovnováze, tj. galvanometrem G neteče proud, platí pro poměry jednotlivých odporů $R_1$, $R_2$, $R_3$ a $R_4$ vztah \cite{studijni}
+\begin{equation}
+    \frac{R_1}{R_2} = \frac{R_3}{R_4} \, .
+\end{equation}
+Zafixováním poměru $R_3$\,/\,$R_4$ na vysoké hodnotě a postupným měněním odporu $R_2$ tak, aby výchylka galvanometru byla nulová, lze pak snadno změřit zkoumaný nízký odpor $R_1$. V jeho hodnotě však bude v důsledku tohoto zapojení započten i odpor přívodních drátů.
+
+\subsection{Thomsonův můstek}
+
+Přesnější měření lze provést pomocí Thomsonova můstku, jehož schéma zapojení je na obrázku \ref{sch:four}. Pokud bude opět můstek v rovnováze (galvanometrem G nepoteče proud) a pro odpory $P$, $Q$, $p$ a $q$ bude platit
+\begin{equation}
+    \frac{p}{P} = \frac{q}{Q} \, ,
+\end{equation}
+lze zkoumaný odpor $R_X$ určit jednoduše jako \cite{studijni}
+\begin{equation}
+    R_X = \frac{Q}{P} R_N \, .
+\end{equation}
+Při čtyřbodovém zapojení odporů $R_N$ a $R_X$ již nebude měření ovlivněno odporem jejich přívodních drátů. Za předpokladu nízkých hodnot $R_N$ a $R_X$ oproti odporům $P$, $Q$, $p$ a $q$, budou také nízké proudy $I$ a $i$ oproti proudu $I_0$ a odpory přívodních vodičů k můstku se díky tomu také v měření neuplatní \cite{studijni}.
+
+\subsection{Měrný odpor}
+
+Měrný odpor $\rho$ drátu průřezu $S$ a délky $l$ je definován vztahem \cite{studijni}
+\begin{equation}
+    \rho = \frac{R S}{l} \, ,
+\end{equation}
+kde $R$ je celkový odpor drátu. Je-li příčný řez drátu kruhový, lze průřez $S$ vypočítat jako
+\begin{equation}
+    S = \frac{\pi D^2}{4} \, ,
+\end{equation}
+kde $D$ je průměr drátu.
 
 
-\subsection{Experimentální uspořádání}
+\subsection{Metoda měření}
 
-\begin{figure}[htbp]
+Nejprve byly zjištěny rozměry zkoumaných drátů - průměr a délka, přičemž délka byla měřena mezi napěťovými kontakty na obou koncích drátu. Pro větší přesnost byl průměr měřen na několika místech drátu.
+
+Při měření multimetrem KEITHLEY 2010 bylo použito čtyřbodové zapojení rezistoru (obr. \ref{sch:four}), napěťové a proudové kontakty byly propojeny se vstupními svorkami multimetru podle pokynů v \cite{pokyny}.
+
+Při měření odporu pomocí Wheastonova a Thomsonova můstku byly nastaveny hodnoty zbylých odporů ($R_3$ a $R_4$ pro Wheastonův můstek a $P$ pro Thomsonův můstek) tak, aby hodnota na odporové dekádě v jednotkách \si{\ohm} odpovídala hodnotě zkoumaného odporu v jednotkách \si{\milli \ohm} (viz \ref{wheaston} a \ref{thomson}). Jako první odhad optimální hodnoty odporu na odporové dekádě posloužila hodnota odporu určená pomocí multimetru KEITHLEY 2010. Otáčením postupně jemnějších koleček dekády byla vyladěna výsledná hodnota tak, aby byl můstek v rovnováze, tedy aby galvanometrem netekl proud a jeho výchylka byla nulová.
+
+\begin{schema}[htbp]
     \centering
-    \includegraphics[width=0.5\linewidth]{uloha27/schema.png}
-    \caption{Schéma zapojení [LITERATURA]}
-    \label{fig:schema}
-\end{figure}
+    \includegraphics[width=0.5\linewidth]{uloha4/fourpoints.png}
+    \caption{Čtyřbodové zapojení rezistoru \cite{studijni}}
+    \label{sch:four}
+\end{schema}
 
+\begin{schema}[htbp]
+    \centering
+    \includegraphics[width=0.5\linewidth]{uloha4/wheaston.png}
+    \caption{Wheastonův můstek \cite{studijni}}
+    \label{sch:wheast}
+\end{schema}
+
+\begin{schema}[htbp]
+    \centering
+    \includegraphics[width=0.5\linewidth]{uloha4/thomson.png}
+    \caption{Thomsonův můstek \cite{studijni}}
+    \label{sch:thomson}
+\end{schema}
 
 
 \subsection{Měřicí přístroje a jejich nejistoty}
 \begin{enumerate}
-    \item PŘÍSTROJ:
+    \item Mikrometr s nejmenším dílkem 0.01 mm:
     
-    POZNÁMKY
+    Mikrometrem byly měřeny průměry jednotlivých drátů z různých materiálů. Nejistotu naměřené hodnoty odhaduji jako velikost nejmenšího dílku, tedy 0.01 mm.
+
+    \item Pásový metr s nejmenším dílkem 1 mm:
+
+    Metrem byly měřeny délky jednotlivých drátů. Nejistotu naměřené hodnoty odhaduji jako velikost nejmenšího dílku, tedy 1 mm. Některé dráty však nebyly mezi svorkami napnuty úplně dokonale, proto je nejistota jejich délky větší (viz \ref{rozmery}).
+
+    \item Multimetr KEITHLEY 2010:
+
+    Multimetrem se měřily odpory drátů ve čtyřbodovém zapojení. Z manuálu k použití přístroje v příloze v \cite{pokyny} je nejistota měření odporu (pro rozsah \SI{10}{\ohm}, na kterém bylo měřeno) 60 ppm z naměřené hodnoty + 9 ppm z rozsahu.
+
+    \item Odporová dekáda:
+
+    Nastavováním odporu na odporové dekádě byla hledána rovnováha na Wheastonově a Thomsonově můstku. Nejistota nastaveného odporu byla odhadnuta jako největší řád, který již neměl vliv na výchylku galvanometru (tj. výchylka byla nulová a nijak se něměnila ani při otáčení příslušného kolečka odporové dekády). Nejistota dekády uvedená na její přední straně je zanedbatelná vůči takto odhadnuté nejistotě pro všechny řády kromě řádu \SI{1000}{\ohm}. Jeho nejistota je 0.02\,\% z nastavené hodnoty.
+
+    \item Termohygrobarometr Commeter C4130:
+
+    termohygrobarometrem byla zjištěna teplota okolí během měření, aby experimentálně určené hodnoty měrného odporu mohly být srovnány s tabulkovými. Nejistota teploty byla určena z manuálu přístroje jako \SI{0.4}{\celsius}.
 
 \end{enumerate}
-%\def\figurename{Obr\’azek}%
-\def\figurename{Graf}%
-\setcounter{figure}{0}
 
 % ======================== VÝSLEDKY MĚŘENÍ ===========================
 \section{Výsledky měření}
 
+Průměry jednotlivých drátů byly změřeny mikrometrem na deseti místech a z nich byl vypočtena střední hodnota (aritmetický průměr). Naměřené hodnoty a jejich střední hodnoty shrnuje tabulka \ref{tab:prumer}. Nejistota středních hodnot byla vypočtena jako 
+\begin{equation}
+    \sigma_{\bar{D}} = \sqrt{\frac{1}{9} \sum_{i=1}^{10} (\bar{D} - D_i)^2 + \sigma_{mic}^2} \,
+\end{equation}
+kde $\bar{D}$ je střední hodnota průměru drátu, $D_i$ je i-tá hodnota průměru a $\sigma_{mic}=\SI{0.01}{\milli\metre}$ je nejistota měřidla.
 
-\begin{figure}
-    \centering
-    \includegraphics[width=0.5\linewidth]{uloha27/GRAF1.png}
-    \caption{Závislost kapacity deskového kondenzátoru na napětí.}
-    \label{fig:osciloskop}
-\end{figure}
+Vypočtené střední hodnoty průměrů drátů a jejich délky ukazuje tabulka \ref{tab:delky}. Nejistota určení délky byla u většiny drátů vzata jako nejistota pásového metru. Měděný drát však zjevně nebyl mezi svorkami dokonale napnutý, proto jeho délka i její nejistota byly odhadnuty jako o něco větší, než byla přímá vzdálenost mezi svorkami.
+
+\begin{table}[!hbtp]
+\centering
+\caption{Změřené průměry drátů}
+\begin{tabular}{cccccc}
+ \toprule
+ wolfram & měď & kanthal & železo & mosaz & chromnikl \\
+ \midrule
+ 
+& & & & & \\
+ & & & & & \\
+ & & & & & \\
+ & & & & & \\
+ & & & & & \\
+ & & & & & \\
+ & & & & & \\
+ & & & & & \\
+ & & & & & \\
+ & & & & & \\
+ 
+ \midrule
+
+ & & & & & \\
+ 
+ \bottomrule
+\end{tabular}
+\label{tab:prumer}
+\end{table}
 
 
 % ============================ DISKUZE ===============================
@@ -77,33 +183,17 @@
 
 
 % =========================== LITERATURA =============================
-\section*{Literatura}
-\begin{itemize}
-\item 
+\begin{thebibliography}{9}
 
-[1] Kolektiv ZFP KVOF MFF UK: Měření dielektrických vlastností materiálů [online]. [cit. 26.10.2025], dostupné z https://physics.mff.cuni.cz/vyuka/zfp/\_media/zadani/texty/txt\_227.pdf
+\bibitem{studijni} Kolektiv ZFP KVOF MFF UK: Měření malých odporů [online]. [cit. 17.11.2025], dostupné z~https://physics.mff.cuni.cz/vyuka/zfp/\_media/zadani/texty/txt\_204.pdf
 
-\item 
+\bibitem{pokyny} Kolektiv ZFP KVOF MFF UK: Měření malých odporů - pokyny k měření [online]. [cit. 17.11.2025], dostupné
+z~https://physics.mff.cuni.cz/vyuka/zfp/\_media/zadani/pokyny/mereni\_204.pdf
 
-[2] Kolektiv ZFP KVOF MFF UK: Měření odporu [online]. [cit. 26.10.2025], dostupné \\
-z https://physics.mff.cuni.cz/vyuka/zfp/\_media/zadani/texty/txt\_202.pdf
+\bibitem{englich} J. Englich: Úvod do praktické fyziky I: Zpracování výsledků měření. 1. vyd. Praha: Matfyzpress, 2006
 
-\item
+\bibitem{mikulcak} Mikulčák a kolektiv: Matematické, fyzikální a chemické tabulky pro střední školy: relativní permitivita, Praha: Státní pedagogické nakladatelství, n. p., 1988
 
-[3] Kolektiv ZFP KVOF MFF UK: Měření dielektrických vlastností materiálů - pokyny k měření [online]. [cit. 26.10.2025], dostupné z https://physics.mff.cuni.cz/vyuka/zfp/\_media/zadani/pokyny/mereni\_227.pdf
+\end{thebibliography}
 
-\item 
-
-[4] Kolektiv ZFP KVOF MFF UK: Měření dielektrických vlastností materiálů - fotodokumentace [online]. [cit. 26.10.2025], dostupné z https://physics.mff.cuni.cz/vyuka/zfp/\_media/zadani/foto/foto\_227.pdf
-
-\item 
-
-[5] J. Englich: Úvod do praktické fyziky I: Zpracování výsledků měření. 1. vyd. Praha: Matfyzpress, 2006
-
-
-\item 
-
-[8] Mikulčák a kolektiv: Matematické, fyzikální a chemické tabulky pro střední školy: relativní permitivita, Praha: Státní pedagogické nakladatelství, n. p., 1988
-
-\end{itemize}
 \end{document}
