@@ -1,8 +1,12 @@
 
 \documentclass{../concepts/prepareprotokol} %všechny balíčky pro protokol + titulní strana
 \usepackage{graphicx}
+\usepackage{newfloat}
+\usepackage{caption}
 \usepackage{booktabs}
 \usepackage{amsmath}
+\usepackage{newfloat}
+\usepackage{caption}
 \usepackage{siunitx}
 \sisetup{inter-unit-product =$\cdot$}
 \sisetup{separate-uncertainty=true}
@@ -13,21 +17,37 @@
 \cislo{ČÍSLO} %číslo úlohy
 \nazev{NÁZEV} %název úlohy
 
+\DeclareFloatingEnvironment[fileext=los, placement={htbp}, name=Obrázek]{schema}
+
+\newcommand{\nobars}{
+Chybové úsečky nebyly pro svou malou velikost pro přehlednost vykresleny.}
+
+
 \begin{document}
+\renewcommand{\figurename}{Graf}
+\renewcommand{\refname}{Literatura}
+
 \maketitle
 
-% ========================== PRACOVNÍ ÚKOL =========================
+% ========================== PRACOVNÍ ÚKOL ============================
 \section{Pracovní úkol}
 \begin{enumerate}
     \item
 \end{enumerate}
 
-% ============================= TEORIE ===============================
+% ============================= TEORIE ================================
 \section{Teorie}
 \subsection{Kapacita deskového kondenzátoru}
 
 
 \subsection{Experimentální uspořádání}
+
+\begin{schema}[htbp]
+    \centering
+    \includegraphics[width=0.5\linewidth]{uloha4/fourpoints.png}
+    \caption{Schema yap}
+    \label{sch:4}
+\end{schema}
 
 \begin{figure}[htbp]
     \centering
@@ -45,9 +65,7 @@
     POZNÁMKY
 
 \end{enumerate}
-%\def\figurename{Obr\’azek}%
-\def\figurename{Graf}%
-\setcounter{figure}{0}
+
 
 % ======================== VÝSLEDKY MĚŘENÍ ===========================
 \section{Výsledky měření}
@@ -70,33 +88,16 @@
 
 
 % =========================== LITERATURA =============================
-\section*{Literatura}
-\begin{itemize}
-\item 
+\begin{thebibliography}{9}
 
-[1] Kolektiv ZFP KVOF MFF UK: Měření dielektrických vlastností materiálů [online]. [cit. 26.10.2025], dostupné z https://physics.mff.cuni.cz/vyuka/zfp/\_media/zadani/texty/txt\_227.pdf
+\bibitem{studijni} Kolektiv ZFP KVOF MFF UK: Měření dielektrických vlastností materiálů [online]. [cit. 26.10.2025], dostupné z https://physics.mff.cuni.cz/vyuka/zfp/\_media/zadani/texty/txt\_227.pdf
 
-\item 
-
-[2] Kolektiv ZFP KVOF MFF UK: Měření odporu [online]. [cit. 26.10.2025], dostupné \\
+\bibitem{pokyny} Kolektiv ZFP KVOF MFF UK: Měření odporu [online]. [cit. 26.10.2025], dostupné \\
 z https://physics.mff.cuni.cz/vyuka/zfp/\_media/zadani/texty/txt\_202.pdf
 
-\item
+\bibitem{englich} J. Englich: Úvod do praktické fyziky I: Zpracování výsledků měření. 1. vyd. Praha: Matfyzpress, 2006
 
-[3] Kolektiv ZFP KVOF MFF UK: Měření dielektrických vlastností materiálů - pokyny k měření [online]. [cit. 26.10.2025], dostupné z https://physics.mff.cuni.cz/vyuka/zfp/\_media/zadani/pokyny/mereni\_227.pdf
+\bibitem{mikulcak} Mikulčák a kolektiv: Matematické, fyzikální a chemické tabulky pro střední školy: relativní permitivita, Praha: Státní pedagogické nakladatelství, n. p., 1988
 
-\item 
-
-[4] Kolektiv ZFP KVOF MFF UK: Měření dielektrických vlastností materiálů - fotodokumentace [online]. [cit. 26.10.2025], dostupné z https://physics.mff.cuni.cz/vyuka/zfp/\_media/zadani/foto/foto\_227.pdf
-
-\item 
-
-[5] J. Englich: Úvod do praktické fyziky I: Zpracování výsledků měření. 1. vyd. Praha: Matfyzpress, 2006
-
-
-\item 
-
-[8] Mikulčák a kolektiv: Matematické, fyzikální a chemické tabulky pro střední školy: relativní permitivita, Praha: Státní pedagogické nakladatelství, n. p., 1988
-
-\end{itemize}
+\end{thebibliography}
 \end{document}
