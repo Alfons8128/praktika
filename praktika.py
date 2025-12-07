@@ -21,11 +21,11 @@ class Var:
     '''
     
     def __init__(self, values: np.array, errors=0, short_name='', unit=None):
-        if isinstance(values, ufloat):
+        if isinstance(values, str):
             self.unc = [values]
         
-        elif isinstance(values, unp.uarray):
-            self.unc = values
+        # elif isinstance(values, unp.uarray):
+        #     self.unc = values
 
         elif isinstance(values, Var):
             self.unc = values.unc
@@ -307,7 +307,7 @@ def to_table(*args, apx='L'):
 
     print('\\begin{table}[!htbp]')
     print('\\centering')
-    print('\\caption{NAZEV}')
+    print('\\caption{CAPTION}')
     print('\\begin{tabular}{' + 'c'*len(args) + '}', sep='')
     print(' \\toprule')
     print(' ' +' & '.join(arg.long_name for arg in args) + ' \\\\')
@@ -316,6 +316,7 @@ def to_table(*args, apx='L'):
         print(' $' + '$ & $'.join(scalar_ufmt(arg.unc[i], apx=apx) for arg in args) + '$ \\\\')
     print(' \\bottomrule')
     print('\\end{tabular}')
+    print('\\label{tab:LABEL}')
     print('\\end{table}')
 
 ########################################################
