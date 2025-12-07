@@ -1,0 +1,195 @@
+
+\documentclass{../concepts/prepareprotokol} %všechny balíčky pro protokol + titulní strana
+\usepackage{graphicx}
+\usepackage{newfloat}
+\usepackage{caption}
+\usepackage{booktabs}
+\usepackage{amsmath}
+\usepackage{newfloat}
+\usepackage{caption}
+\usepackage{siunitx}
+\sisetup{inter-unit-product =$\cdot$}
+\sisetup{separate-uncertainty=true}
+\usepackage{subcaption}
+
+\praktikum{II} %číslo praktika (I, II nebo III)
+\autor{David Němec} %jméno autora
+\datum{24.\,11.\,2025} %datum měření
+\cislo{5} %číslo úlohy
+\nazev{Měření osciloskopem} %název úlohy
+
+\DeclareFloatingEnvironment[fileext=los, placement={htbp}, name=Obrázek]{schema}
+
+\newcommand{\nobars}{
+Chybové úsečky nebyly pro svou malou velikost pro přehlednost vykresleny.}
+
+
+\begin{document}
+\renewcommand{\figurename}{Graf}
+\renewcommand{\refname}{Literatura}
+
+\maketitle
+
+% ========================== PRACOVNÍ ÚKOL ============================
+\section{Pracovní úkol}
+\begin{enumerate}
+    \item Pomocí osciloskopu změřte špičkovou hodnotu napětí na svorkách sekundárního vinutí převodního transformátoru a porovnejte ji s hodnotou naměřenou na střídavém rozsahu digitálního voltmetru.
+    \item Sledujte činnost jednocestného usměrňovače s křemíkovými diodami KY711
+    \item Při maximální hodnotě zatěžovacího odporu \qty{10}{\kilo\ohm} sledujte závislost stejnosměrného napětí na filtrační kapacitě C v intervalu 0–10 \unit{\micro\farad}. Hodnotu usměrněného napětí při C = \qty{10}{\micro\farad} srovnejte se špičkovou hodnotou pulzního průběhu.
+    \item Při filtrační kapacitě C = \qty{10}{\micro\farad} změřte závislost střídavé složky usměrněného napětí na odebíraném proudu. Proud upravujte nastavením odporu Rz. U jednocestného usměrňovače měřte do proudu \qty{0.6}{\milli\ampere}.
+    \item Naměřené závislosti zpracujte graficky přímo v praktiku.
+    \item Na osciloskopu zobrazte voltampérovou charakteristiku vakuové diody podle schématu připojeného k úloze. Orientačně načrtněte pozorovanou charakteristiku a vyznačte měřítka na osách. Odhadněte napětí na diodě při proudu 20 mA v propustném směru.
+\end{enumerate}
+
+% ============================= TEORIE ================================
+\section{Teorie}
+\subsection{Střední a efektivní hodnoty střídavého napětí}
+
+Střední hodnota střídavého napětí $\overline{U}$ s periodickým průběhem je definována jako \cite{studijni}
+\begin{equation} \label{eq:stredni}
+    \overline{U} = \frac{1}{T} \int_0^T u(t) dt \, ,
+\end{equation}
+kde $t$ je čas, $T$ perioda a $u(t)$ je okamžitá hodnota napětí. Přístroje měřící na stejnosměrném rozsahu ukazují právě tuto střední hodnotu napětí $\bar{U}$. Zobrazovaná hodnota bude časově nezávislá, pokud intergrační doba přístroje bude menší než perioda střídavého napětí. To je u napětí odebíraného ze sítě ($f = \qty{50}{\hertz}, T = \frac{1}{f} = \qty{20}{\milli\second}$) splněno. \cite{studijni}
+
+Efektivní hodnota střídavého napětí $U_{eff}$ je naopak definována vztahem \cite{studijni}
+\begin{equation} \label{eq:efektivni}
+    U_{eff}^2 = \frac{1}{T} \int_0^T u^2(t) dt \, .
+ \end{equation}
+
+V případě harmonického průběhu napětí (tj. $U = U_0 \sin(\omega t + \varphi_0)$ se špičkovou hodnotou $U_0$ a úhlovou frekvencí $\omega$) platí pro $U_{eff}$ jednoduchý vztah \cite{studijni}
+\begin{equation} \label{eq:stredkueff}
+    U_{eff} = \frac{U_0}{\sqrt{2}} \, .
+\end{equation}
+
+\subsection{Filtrace a usměrňování napětí}
+
+Schéma zapojení jednocestného usměrňovače s filtrem napětí je nakresleno na obrázku \ref{sch:filtr} a vysvětleno v kapitole \ref{filtrace}. Výsledný průběh okamžité hodnoty napětí na čase je na obrázku \ref{sch:prubehy}.
+
+\begin{schema}
+\centering
+\begin{subschema}{0.49\linewidth}
+    \centering
+    \includegraphics[width=\linewidth]{uloha5/udiod.png}
+    \caption{}
+    \label{sch:bezfiltru}
+\end{subschema}
+\hfill
+\begin{subschema}{0.49\linewidth}
+    \centering
+    \includegraphics[width=\linewidth]{uloha5/udiodc.png}
+    \caption{}
+    \label{sch:sfiltrem}
+\end{subschema}
+
+\caption{Průběhy napětí usměrněného jednocestným usměrňovačem bez filtru (a) a s filtrem (b). \cite{studijni}}
+\label{sch:prubehy}
+\end{schema}
+
+Usměrňovač propustí jen tu část střídavého napětí, která odpovídá proudu procházejícím diodou v propustném směru. V době, kdy dioda propouští proud se kondenzátor nabíjí přes odpor $R_{ochr}$ až na špičkovou hodnotu $U_0$. V době, kdy dioda proud nepropouští, se kondenzátor vybíjí přes odpor $R_z$ podle rovnice
+\begin{equation} \label{eq:vybijeni}
+    u = U_0 e^{-\frac{t}{R_z C}} \, .
+\end{equation}
+Za předpokladu, že $R_{ochr} \ll R_z$ a že kondenzátor se nabije za zanedbatelně krátkou dobu, dostaneme dosazením (\ref{eq:vybijeni}) do (\ref{eq:stredni}) vztah pro střední hodnotu napětí
+\begin{equation} \label{eq:filtr}
+    \overline{U} = \frac{U_0 R_z C}{T} \left( 1-e^{-\frac{T}{R_z C}} \right) \, .
+\end{equation}
+Kondenzátor se vybíjí až do příchodu následujícího pulzu v čase $t=T$. Pokud je poměr $\frac{T}{R_z C} \ll 1$, pak pro špičkovou hodnotu střídavé složky usměrněného napětí (tj. rozdíl minimální a maximální hodnoty napětí) $\Delta U$ platí (upraveno z \cite{studijni})
+\begin{equation} \label{eq:deltau}
+    \Delta U = U_0 - u(T) \approx \frac{U_0 T}{R_z C} \, .
+\end{equation}
+
+Stejnosměrný proud $I_{ss}$ zátěží $R_z$ je dán Ohmovým zákonem \cite{studijni}
+\begin{equation} \label{eq:ohm}
+    I_{ss} = \frac{U_{ss}}{R_z} \, ,
+\end{equation}
+kde $U_{ss}$ je stenosměrné napětí na zátěži. Za předpokladu $\frac{T}{R_z C} \ll 1$ je $U_{ss} \approx U_0$ a vztah (\ref{eq:deltau} lze přepsat na
+\begin{equation} \label{deltauss}
+    \Delta U = I_{ss} \frac{T}{C} \, .
+\end{equation}
+
+
+
+\subsection{Metoda měření}
+
+\subsubsection{Filtrace jednocestně usměrněného napětí} \label{filtrace}
+
+Jednocestný usměrňovač je na obrázku \ref{sch:filtr} vyznačen čárkovanou čarou. Skládá se z diody, která 
+
+\begin{schema}[!htbp]
+    \centering
+    \includegraphics[width=0.5\linewidth]{uloha5/filtr.png}
+    \caption{Schéma zapojení pro měření jednocestného usměrňovače \cite{studijni}}
+    \label{sch:filtr}
+\end{schema}
+
+\subsubsection{Voltampérová charakteristika diody} \label{va}
+
+\begin{figure}[!htbp]
+    \centering
+    \includegraphics[width=0.5\linewidth]{uloha5/va.png}
+    \caption{Schéma zapojení pro zobrazení V-A charakteristiky diody \cite{studijni}}
+    \label{sch:va}
+\end{figure}
+
+
+
+\subsection{Měřicí přístroje a jejich nejistoty}
+\begin{enumerate}
+    \item Multimetr Fluke 175:
+    
+    Multimetrem byla nejprve ověřována činnost osciloskopu a následně jím byla měřena střední hodnota usměrněného napětí (využitím stejnosměrného rozsahu multimetru). Nejistota měřené hodnoty stejnosměrného napětí je z přiložených specifikací přístroje 0.15\,\% z měřené hodnoty + 2 digity a nejistota stejnosměrného proudu je 1\,\% z měřené hodnoty + 3 digity.
+
+    \item Odporová dekáda Metra XL6:
+
+    Odporová dekáda představovala zátěžový odpor pro studium činnosti jednocestného usměrňovače. Nejistota nastaveného odporu je ze specifikací přístroje 0.1\,\% hodnoty.
+
+    \item Kapacitní dekáda ELC DC05:
+
+    Kapacitní dekáda představovala filtrující kapacitu pro studium činnosti jednocestného usměrňovače. Ve druhém úkolu pak sloužila ke kompenzaci parazitní indukčnosti odporové dekády. Nejistota nastavené kapacity je ze specifikací přístroje 1\,\% hodnoty.
+
+    \item Osciloskop GW Instek GOS-620:
+
+    Osciloskopem byla měřena střídavá složka usměrněného napětí a následně posloužil k zobrazení voltampérové charakteristiky vakuové diody. Jeho nejistota byla odhadnuta jako velikost nejmenšího dílku vykreslené mřížky, tedy závisela na nastaveném měřítku.
+\end{enumerate}
+
+
+% ======================== VÝSLEDKY MĚŘENÍ ===========================
+\section{Výsledky měření}
+
+\subsection{Špičková a efektivní hodnota napětí}
+
+
+\begin{figure}
+    \centering
+    \includegraphics[width=0.5\linewidth]{uloha5/GRAF1.png}
+    \caption{Závislost kapacity deskového kondenzátoru na napětí.}
+    \label{fig:osciloskop}
+\end{figure}
+
+
+% ============================ DISKUZE ===============================
+\section{Diskuze}
+
+
+% ============================= ZÁVĚR ================================
+\section{Závěr}
+
+Špičková hodnota střídavého napětí na výstupních svorkách transformátoru byla změřena osciloskopem jako $U_0 = \qty{10\pm1}{\volt}$. Digitálním voltmetrem byla při tomto nastavení změřena efektivní hodnota střídavého napětí $U_{eff} = \qty{6.72\pm0.10}{V}$.
+
+
+
+
+% =========================== LITERATURA =============================
+\begin{thebibliography}{9}
+
+\bibitem{studijni} Kolektiv ZFP KVOF MFF UK: Měření dielektrických vlastností materiálů [online]. [cit. 26.10.2025], dostupné z https://physics.mff.cuni.cz/vyuka/zfp/\_media/zadani/texty/txt\_227.pdf
+
+\bibitem{pokyny} Kolektiv ZFP KVOF MFF UK: Měření odporu [online]. [cit. 26.10.2025], dostupné \\
+z https://physics.mff.cuni.cz/vyuka/zfp/\_media/zadani/texty/txt\_202.pdf
+
+\bibitem{englich} J. Englich: Úvod do praktické fyziky I: Zpracování výsledků měření. 1. vyd. Praha: Matfyzpress, 2006
+
+\bibitem{mikulcak} Mikulčák a kolektiv: Matematické, fyzikální a chemické tabulky pro střední školy: relativní permitivita, Praha: Státní pedagogické nakladatelství, n. p., 1988
+
+\end{thebibliography}
+\end{document}
