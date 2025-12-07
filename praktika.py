@@ -183,7 +183,7 @@ class Rel:
 
     def fit(self, p0: list = None):
         '''Fits y over x (both Var instances) using the provided function.
-        Adds these attributes to Relation: coefficients, covariant matrix.'''
+        Adds these attributes to Relation: coefficients (.coeffs), covariant matrix (.cov).'''
 
         if self.func is None:
             raise ValueError('No fitting function defined for the Relation.')

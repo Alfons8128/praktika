@@ -9,24 +9,36 @@ from scipy.interpolate import make_interp_spline
 
 import praktika as pr
 
-def osciloskop_eq(x, u0):
-    return None
+def filtr(x, u0, b):
+    T = 0.02
+    r = 0.01 # in MOhm
+    return u0 * r * (x - b) / T * (1 - np.exp(-T/(r*(x - b))))
+
+def filtreff(x, u0, r, T):
+    return u0 * np.sqrt(r*x/(2*T) * (1 - np.exp(-2*T/(r*x)))) 
 
 df1 = pr.read_excel('uloha5/uloha5.xlsx', 'List1', 'A7:F31')
 df1.columns = ['c', 'dc', 'i', 'di', 'u', 'du']
 df1.sort_values(by='c', inplace=True)
 
-c = pr.Var(df1['c'].to_numpy(), df1['dc'].to_numpy(), 'C', '\\mu F')
-i = pr.Var(df1['i'].to_numpy(), df1['di'].to_numpy(), 'I', 'mA')
-u = pr.Var(df1['u'].to_numpy(), df1['du'].to_numpy(), 'U', 'V')
+a = 0
+c = pr.Var(df1['c'].to_numpy()[a:], df1['dc'].to_numpy()[a:], 'C', '\\mu F')
+i = pr.Var(df1['i'].to_numpy()[a:], df1['di'].to_numpy()[a:], 'I', 'mA')
+u = pr.Var(df1['u'].to_numpy()[a:], df1['du'].to_numpy()[a:], 'U', 'V')
 
-rel1 = pr.Rel(c, u, osciloskop_eq)
-#rel1.fit()
+rel1 = pr.Rel(c, u, filtr)
+rel1.fit(p0 = [11, -0.5]) # u0, b
+x = np.linspace(min(c.val), max(c.val), 100)
+print(x)
+y = filtr(x, 11, -0.5)
+print('00000000000000000000',rel1.coeffs)
 
-fix1, ax1 = plt.subplots(layout='constrained')
+fig1, ax1 = plt.subplots(layout='constrained')
 rel1.plot_data(ax1, err=(0,0))
-#rel1.plot_fit(ax1, label='fitovaná závislost')
+rel1.plot_fit(ax1, label='fitovaná závislost')
+#ax1.plot(x, y, label='předpokládaná závislost', linestyle='dashed')
 ax1.legend()
+fig1.savefig('uloha5/fig1.png')
 
 pr.to_table(c, u)
 
@@ -41,11 +53,14 @@ u = pr.Var(df2['du'], df2['ddu'], '\\Delta U', 'V')
 pr.to_table(r, i, u)
 
 fig2, ax2 = plt.subplots(layout='constrained')
-rel2 = pr.Rel(i, u, pr.F.linear)
+rel2 = pr.Rel(i, u, pr.F.direct)
 rel2.fit()
+print('2222222222222222222',rel2.coeffs)
 rel2.plot_data(ax2)
+rel2.plot_fit(ax2, label='fitovaná závislost $\\Delta U = 1.949 \\, I_{{SS}}$')
 ax2.legend()
+fig2.savefig('uloha5/fig2.png')
 
-plt.show()
+#plt.show()
 
 
