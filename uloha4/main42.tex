@@ -20,6 +20,10 @@
 \newcommand{\nobars}{
 Chybové úsečky nebyly pro svou malou velikost pro přehlednost vykresleny.}
 
+\newcommand{\relunc}[1]{
+\left( \frac{\sigma_{#1}}{#1} \right)^2
+}
+
 
 \begin{document}
 \renewcommand{\figurename}{Graf}
@@ -62,7 +66,7 @@ Přesnější měření lze provést pomocí Thomsonova můstku, jehož schéma 
     \frac{p}{P} = \frac{q}{Q} \, ,
 \end{equation}
 lze zkoumaný odpor $R_X$ určit jednoduše jako \cite{studijni}
-\begin{equation}
+\begin{equation} \label{eq:thomson}
     R_X = \frac{Q}{P} R_N \, .
 \end{equation}
 Při čtyřbodovém zapojení odporů $R_N$ a $R_X$ již nebude měření ovlivněno odporem jejich přívodních drátů. Za předpokladu nízkých hodnot $R_N$ a $R_X$ oproti odporům $P$, $Q$, $p$ a $q$, budou také nízké proudy $I$ a $i$ oproti proudu $I_0$ a odpory přívodních vodičů k můstku se díky tomu také v měření neuplatní \cite{studijni}.
@@ -70,11 +74,11 @@ Při čtyřbodovém zapojení odporů $R_N$ a $R_X$ již nebude měření ovlivn
 \subsection{Měrný odpor}
 
 Měrný odpor $\rho$ drátu průřezu $S$ a délky $l$ je definován vztahem \cite{studijni}
-\begin{equation}
+\begin{equation} \label{eq:rho}
     \rho = \frac{R S}{l} \, ,
 \end{equation}
 kde $R$ je celkový odpor drátu. Je-li příčný řez drátu kruhový, lze průřez $S$ vypočítat jako
-\begin{equation}
+\begin{equation} \label{eq:s}
     S = \frac{\pi D^2}{4} \, ,
 \end{equation}
 kde $D$ je průměr drátu.
@@ -141,8 +145,7 @@ obvodem netekl dlouho a jednotlivé rezistory (a dráty) se nezahřívaly a něm
     nastaveného odporu byla odhadnuta jako o řád větší než největší řád, který již neměl vliv na výchylku galvanometru 
     (tj. výchylka byla nulová a nijak se něměnila ani při otáčení příslušného kolečka odporové dekády, např. pokud se otáčením
     kolečka odpovídajícího jednotkám \si{\ohm} výchylka neměnila, byla nejistota odhadnuta jako \SI{10}{\ohm}). Nejistota
-    dekády uvedená na její přední straně je (pro měřené hodnoty odporů) zanedbatelná vůči takto odhadnuté nejistotě pro 
-    všechny řády kromě řádu \SI{1000}{\ohm}. Jeho nejistota je 0.02\,\% z nastavené hodnoty, tedy \SI{20}{\ohm}.
+    dekády uvedená na její přední straně se ukázala být zanedbatelná vůči takto odhadnuté nejistotě.
 
     \item Termohygrobarometr Commeter C4130:
 
@@ -153,7 +156,7 @@ obvodem netekl dlouho a jednotlivé rezistory (a dráty) se nezahřívaly a něm
 % ======================== VÝSLEDKY MĚŘENÍ ===========================
 \section{Výsledky měření}
 
-\subsection{Rozměry drátů} \label{rozmery}
+\subsection{Rozměry drátů a teplota okolí} \label{rozmery}
 
 Průměry jednotlivých drátů byly změřeny mikrometrem na deseti místech a z nich byl 
 vypočtena střední hodnota (aritmetický průměr). Naměřené hodnoty a jejich střední 
@@ -165,37 +168,51 @@ kde $\bar{D}$ je střední hodnota průměru drátu, $D_i$ je i-tá hodnota prů
 $\sigma_{mic}=\SI{0.01}{\milli\metre}$ je nejistota měřidla.
 
 Vypočtené střední hodnoty průměrů drátů a jejich délky ukazuje tabulka \ref{tab:delky}. 
-Nejistota určení délky byla u většiny drátů vzata jako nejistota pásového metru. Měděný 
+Nejistota určení délky byla u~většiny drátů vzata jako nejistota pásového metru. Měděný 
 drát však zjevně nebyl mezi svorkami dokonale napnutý, proto jeho délka i její nejistota 
 byly odhadnuty jako o něco větší, než byla přímá vzdálenost mezi svorkami.
 
 \begin{table}[!hbtp]
 \centering
 \caption{Změřené průměry drátů}
-\begin{tabular}{cccccc}
+\begin{tabular}{c|cccccc}
  \toprule
- wolfram & měď & kanthal & železo & mosaz & chromnikl \\
- \midrule
- 
-& & & & & \\
- & & & & & \\
- & & & & & \\
- & & & & & \\
- & & & & & \\
- & & & & & \\
- & & & & & \\
- & & & & & \\
- & & & & & \\
- & & & & & \\
- 
+ materiál & wolfram & měď & kanthal & železo & mosaz & chromnikl \\
  \midrule
 
- & & & & & \\
+ 1 & $0.69$ & $1.34$ & $0.5$ & $0.41$ & $0.59$ & $1.02$ \\
+ 2 & $0.68$ & $1.35$ & $0.5$ & $0.41$ & $0.6$ & $1.01$ \\
+ 3 & $0.69$ & $1.35$ & $0.5$ & $0.41$ & $0.6$ & $0.99$ \\
+ 4 & $0.69$ & $1.34$ & $0.49$ & $0.41$ & $0.6$ & $1.0$ \\
+ 5 & $0.69$ & $1.35$ & $0.5$ & $0.41$ & $0.59$ & $1.01$ \\
+ 6 & $0.68$ & $1.35$ & $0.5$ & $0.41$ & $0.61$ & $1.0$ \\
+ 7 & $0.69$ & $1.35$ & $0.51$ & $0.41$ & $0.59$ & $1.0$ \\
+ 8 & $0.69$ & $1.35$ & $0.51$ & $0.41$ & $0.6$ & $0.99$ \\
+ 9 & $0.68$ & $1.34$ & $0.5$ & $0.41$ & $0.6$ & $1.0$ \\
+ 10 & $0.69$ & $1.34$ & $0.5$ & $0.41$ & $0.59$ & $1.02$ \\
+ \midrule
+ $\bar{D}$ (mm) & $0.687 \pm 0.011$ & $1.346 \pm 0.011$ & $0.501 \pm 0.011$ & $0.410 \pm 0.010$ & $0.597 \pm 0.012$ & $1.004 \pm 0.015$ \\
  
  \bottomrule
 \end{tabular}
 \label{tab:prumer}
 \end{table}
+
+\begin{table}[!hbtp]
+\centering
+\caption{Změřené průměry a délky drátů}
+\begin{tabular}{c|cccccc}
+ \toprule
+ materiál & wolfram & měď & kanthal & železo & mosaz & chromnikl \\
+ \midrule
+ D (\si{\milli\metre}) & $0.687 \pm 0.011$ & $1.346 \pm 0.011$ & $0.501 \pm 0.011$ & $0.410 \pm 0.010$ & $0.597 \pm 0.012$ & $1.004 \pm 0.015$ \\
+ l (\si{\centi\metre}) & $89.9 \pm 0.1$ & $90.2 \pm 0.3$ & $89.8 \pm 0.1$ & $89.9 \pm 0.1$ & $89.9 \pm 0.1$ & $89.8 \pm 0.1$ \\
+ \bottomrule
+\end{tabular}
+\label{tab:delky}
+\end{table}
+
+Teplota během měření byla termohygrobarometrem Commeter změřena jako $t_0 = (22.8 \pm 0.4) \, \si{\celsius}$ 
 
 \subsection{Čtyřbodové zapojení}
 
@@ -211,17 +228,17 @@ můstku.
 \begin{table}[!hbtp]
 \centering
 \caption{Odpory drátů z přístroje KEITHLEY 2010 pro čtyřbodové zapojení}
-\begin{tabular}{cccccc}
+\begin{tabular}{c|cccccc}
  \toprule
- wolfram & měď & kanthal & železo & mosaz & chromnikl \\
+ materiál & wolfram & měď & kanthal & železo & mosaz & chromnikl \\
  \midrule
-   &  &  &  &  &  \\
+ $R_K (\si{\milli\ohm})$ & $136.9 \pm 0.1$ & $10.59 \pm 0.09$ & $6287.3 \pm 0.5$ & $1475.6 \pm 0.2$ & $220.8 \pm 0.1$ & $1179.27 \pm 0.16$ \\
  \bottomrule
 \end{tabular}
 \label{tab:keithley}
 \end{table}
 
-\subsection{Měření odporu pomocí Wheastonova můstku}
+\subsection{Měření odporu pomocí Wheastonova můstku} \label{wheaston}
 
 Pro měření odporu pomocí Wheastonova můstku byl přístroj MTW nastaven podle pokynů k měření \cite{pokyny},
 přičemž poměr odporů $\frac{R_3}{R_4}$ byl zvolen jako $10^{-3}$. Díky tomu byla hodnota měřeného odporu drátu 
@@ -232,20 +249,26 @@ v rovnováze, tedy aby galvanometrem netekl proud (tj. jeho výchylka byla nulov
 V tomto zapojení (schéma na obr. \ref{sch:wheast}) jsou v měřeném odporu započteny i odpory přívodních vodičů. 
 Jejich odpor byl zjištěn připojením obou vodičů na stejný kontakt (namísto dvou kontaktů na opačných koncích drátů, 
 jejichž odpor byl zkoumán) a opět vyladěním hodnoty odporu na odporové dekádě tak, aby můstek byl v rovnováze.
-Odpory přívodních drátů byly tímto způsobem určeny jako $27 \pm 1 \si{\milli\ohm}$. Nejistota byla odhadnuta
+Odpory přívodních vodičů byly tímto způsobem určeny jako $R_0 = (27 \pm 1) \, \si{\milli\ohm}$. Nejistota byla odhadnuta
 jako o řád větší než řád kolečka odporové dekády, při jehož otáčení již výchylka galvanometru zůstávala nulová.
 
 O tuto hodnotu byly následně korigovány naměřené odpory. Hodnoty odporů jednotlivých drátů - bez korekce i s ní -
-ukazuje tabulka \ref{tab:wheaston}.
+ukazuje tabulka \ref{tab:wheaston}. Nejistoty korigovaných hodnot byly vypočteny jako
+\begin{equation}
+    \sigma_{R} = \sqrt{\sigma_{R'} + \sigma_{R_0}} \, ,
+\end{equation}
+výsledná hodnota byla ovšem zaokrouhlena na jednu platnou číslici, protože většina hodnot odporu nebyla určena přesněji, než byl řád odpovídající první platné číslici nejistoty.
 
 \begin{table}[!hbtp]
 \centering
-\caption{Odpory drátů zjištěné pomocí Wheastonova můstku, surové i korigované o odpor přívodních drátů}
-\begin{tabular}{cccccc}
+\caption{Odpory drátů zjištěné pomocí Wheastonova můstku, bez korekce a korigované o odpor přívodních drátů}
+\begin{tabular}{c|cccccc}
  \toprule
- wolfram & měď & kanthal & železo & mosaz & chromnikl \\
+ materiál & wolfram & měď & kanthal & železo & mosaz & chromnikl \\
  \midrule
-   &  &  &  &  &  \\
+ $R'_W (\si{\milli\ohm})$ & $169.1 \pm 0.1$ & $38.3 \pm 0.1$ & $6311 \pm 1$ & $1508 \pm 1$ & $250 \pm 1$ & $1208 \pm 1$ \\
+ $R_W (\si{\milli\ohm})$ & $142 \pm 1$ & $11 \pm 1$ & $6284 \pm 1$ & $1481 \pm 1$ & $223 \pm 1$ & $1181 \pm 1$ \\
+
  \bottomrule
 \end{tabular}
 \label{tab:wheaston}
@@ -254,30 +277,260 @@ ukazuje tabulka \ref{tab:wheaston}.
 
 
 
-\subsection{Měření odporu pomocí Thomsonova můstku}
+\subsection{Měření odporu pomocí Thomsonova můstku} \label{thomson}
 
+Následně byl přístroj Metra MTW přenastaven do konfigurace pro měření odporu Thomsnovým můstkem. Odpor $R_N$ ze schématu \ref{sch:thomson} měl hodnotu \SI{0.1}{\ohm}, odpory $P$ a $p$ byly nastaveny na stejnou hodnotu \SI{100}{\ohm}. Odporová dekáda je díky přístroji zdvojená a odpovídá odporům $Q$ a $q$ \cite{pokyny}. Díky tomuto nastavení tedy z rovnice \ref{eq:thomson} číselná hodnota na odporové dekádě (v jednotkách \si{\ohm}) odpovídá hodnotě měřeného odporu, avšak v jednotkách \si{\milli\ohm}. Změřené hodnoty odporů jednotlivých drátů, které odpovídají hodnotě odporu na odporové dekádě pro Thomsonův můstek v rovnováze, ukazuje tabulka \ref{tab:thomson} Jejich nejistota byla určena obdobně jako v případě měření s Wheastonovým můstkem.
+
+\begin{table}[!hbtp]
+\centering
+\caption{Odpory drátů zjištěné pomocí Thomsonova můstku}
+\begin{tabular}{c|cccccc}
+ \toprule
+ materiál & wolfram & měď & kanthal & železo & mosaz & chromnikl \\
+ \midrule
+ $R_T (\si{\milli\ohm})$ & $137.6 \pm 0.1$ & $10.9 \pm 0.1$ & $6284 \pm 1$ & $1482 \pm 1$ & $221.4 \pm 0.1$ & $1179 \pm 1$ \\
+ \bottomrule
+\end{tabular}
+\label{tab:thomson}
+\end{table}
+
+\subsection{Měrný odpor}
+
+Pro všechny tři metody měření odporu byl z rovnic \ref{eq:s} a \ref{eq:rho} určen měrný odpor příslušného drátu. Jeho nejistota byla vypočtena podle \cite{englich} jako
+\begin{equation}
+    \sigma_\rho = \rho \sqrt{\relunc{R} + \relunc{l} + 4 \relunc{D}} \, .
+\end{equation}
+
+Pro srovnání s tabulkovými hodnotami byl z těchto hodnot měrných odporů vypočten aritmetický průměr, jeho nejistota byla vypočtena jako
+\begin{equation}
+    \sigma_{\bar{\rho}} = \sqrt{\frac{\left(\rho_K - \bar{\rho}\right)^2+ \left(\rho_W - \bar{\rho}\right)^2 + \left(\rho_T - \bar{\rho}\right)^2}{2} + \left(\frac{\sigma_{\rho}}{3}\right)^2} \, ,
+\end{equation}
+kde $\sigma_\rho$ je průměrná hodnota nejistoty měrného odporu pro jednotlivé metody měření. Protože nejistota měrného odporu je za použití různých metod měření téměř stejná, je s ní zacházeno jako s nejistotou tybu B, tedy se předepsaným způsobem \cite{englich} sčítá s nejistotou aritmetického průměru (vlastně nejistota typu A).
+
+
+\begin{table}[!htbp]
+\centering
+\caption{Odpory a měrné odpory jednotlivých drátů pro různé metody měření}
+\begin{tabular}{c|cccccc}
+ \toprule
+ materiál & $R_K\, (\mathrm{m\Omega})$ & $R_W\, (\mathrm{m\Omega})$ & $R_T\, (\mathrm{m\Omega})$ & $\rho_K\, (10^{-8} \, \mathrm{\Omega \cdot m})$ & $\rho_W\, (10^{-8} \, \mathrm{\Omega \cdot m})$ & $\rho_T\, (10^{-8} \, \mathrm{\Omega \cdot m})$ \\
+ \midrule
+ wolfram & $136.9 \pm 0.1$ & $142.1 \pm 0.1$ & $137.6 \pm 0.1$ & $5.64 \pm 0.18$ & $5.86 \pm 0.19$ & $5.67 \pm 0.18$ \\
+ měď & $10.59 \pm 0.09$ & $11.3 \pm 0.1$ & $10.9 \pm 0.1$ & $1.67 \pm 0.03$ & $1.78 \pm 0.03$ & $1.72 \pm 0.03$ \\
+ kanthal & $6287.3 \pm 0.5$ & $6284 \pm 1$ & $6284 \pm 1$ & $138 \pm 6$ & $138 \pm 6$ & $138 \pm 6$ \\
+ železo & $1475.6 \pm 0.2$ & $1481 \pm 1$ & $1482 \pm 1$ & $21.7 \pm 1.1$ & $21.7 \pm 1.1$ & $21.8 \pm 1.1$ \\
+ mosaz & $220.8 \pm 0.1$ & $223 \pm 1$ & $221.4 \pm 0.1$ & $6.9 \pm 0.3$ & $6.9 \pm 0.3$ & $6.9 \pm 0.3$ \\
+ chromnikl & $1179.27 \pm 0.16$ & $1181 \pm 1$ & $1179 \pm 1$ & $104 \pm 3$ & $104 \pm 3$ & $104 \pm 3$ \\
+ \bottomrule
+\end{tabular}
+\label{tab:rho}
+\end{table}
+
+\begin{table}[!hbtp]
+\centering
+\caption{Střední hodnota měrného odporu pro jednotlivé materiály}
+\begin{tabular}{c|cccccc}
+ \toprule
+ materiál & wolfram & měď & kanthal & železo & mosaz & chromnikl \\
+ \midrule
+ $\bar{\rho} \, (10^{-8} \, \mathrm{\Omega \cdot m})$ & $5.7 \pm 0.2$ & $1.72 \pm 0.06$ & $138 \pm 6$ & $21.7 \pm 1.1$ & $6.9 \pm 0.3$ & $104 \pm 3$ \\
+ \bottomrule
+\end{tabular}
+\label{tab:meanrho}
+\end{table}
 
 
 
 % ============================ DISKUZE ===============================
 \section{Diskuze}
 
+Odpory drátů z různých materiálů byly měřeny pomocí tří odlišných metod: multimetru Keithley 2010, Wheastonova můstku a Thomsonova můstku. Nejvíce odlišné byly hodnoty odporu z Wheastonova můstku, protože byly systematicky větší o odpory přívodních drátů a odpory svorek. Při měření s multimetrem Keithley a Thomsonovým můstkem se totiž využívalo čtyřbodové zapojení rezistoru (schéma \ref{sch:four}), při kterém se napětí měří mezi napěťovými kontakty a odpor přívodních drátů se tak neuplatní. Odpor přívodních drátů byl u Wheastonova můstku změřen jako $R_0 = (27 \pm 1) \, \si{\milli\ohm}$, což je téměř třikrát větší hodnota než byl skutečný odpor měděného drátu. A i pro ostatní dráty se již tato hodnota pohybuje v řádu jednotek až desítek procent měřené hodnoty, nelze jej tedy zanedbat a bylo jej nutné od výsledných hodnot odečíst. V tomto dodatečném odporu je obsažen odpor přívodních drátů i odpor svorek, na které byly dráty připojeny. Jeho hodnota však nebyla měřena pro všechny svorky, je tedy možné, že se odpor různých svorek liší, a tedy odpor změřený pomocí Wheastonova můstku by byl stále zatížen systematickou chybou. Kromě wolframového drátu však byly hodnoty odporu ze~všech metod měření v rámci nejistoty velmi podobné. Pokud se tedy odpory jednotlivých svorek liší, zřejmě není tento rozdíl příliš velký a nemá významný vliv na změřený odpor drátu.
+
+Měření Wheastonovým můstkem bylo specifické i tím, že se při dlouhém zapojení drátu do obvodu začal drát ohřívat, čímž jeho odpor lehce rostl. Bylo pozorováno, že výchylka galvanometru - nejprve nulová - se začala s rostoucí dobou zapojení drátu do obvodu zvětšovat. Proto bylo nutné měřit galvanometrem (spojit obvod a nechat jím téct proud) vždy jen krátký okamžik. U měření s Thomsonovým můstkem tekl proud obvodem se zkoumaným drátem neustále a změna výchylky galvanometru při delším sepnutí nebyla pozorována. Díky nízké hodnotě proudu se však drát a rezistory v obvodu pravděpodobně nezahřívaly tolik jako při měření s Wheastonovým můstkem. I tak ale může takovéto ohřátí vodiče procházejícím proudem systematicky zvýšit hodnotu zkoumaného odporu.
+
+Do výsledné hodnoty měrného odporu vnášela (u většiny materiálů) největší nejistotu hodnota průměru drátu. Jednak se kvůli přesnosti měřidla nedá určit dostatečně přesně, jednak se ve vztahu pro výpočet měrného odporu objevuje ve druhé mocnině a má tak ze všech veličin největší váhu. Mikrometrem byly průměry drátů určeny s přesností v řádu jednotek procent, největší relativní přesnosti bylo dosaženo u měděného drátu (0,8\,\%) a nejmenší u železného (2,4\,\%) díky jejich velkému resp. malému průměru. Měrný odpor měděného drátu byl nejvíce zatížen nejistotou celkového odporu, a to kvůli jeho velmi nízké hodnotě. Měděný drát nebyl mezi svorkami napnut úplně dokonale, jeho délka a i odhadovaná nejistota byly větší než u ostatních drátů. V~relativním měřítku však u měděného drátu převážila nejistota odporu: asi 0,9\,\%. Relativní přesnosti celkových odporů drátů se lehce lišily v závislosti na použité metodě měření, obecně bylo nejpřesnější měření multimetrem Keithley 2010.
+
+Měření probíhalo za teploty $t_0 = (22.8 \pm 0.4) \, \si{\celsius}$. Vzhledem k tomu, že odpor drátů závisí na jeho teplotě, bylo nutné před srovnáním experimentální a tabulkové hodnoty měrného odporu provést její přepočet na stejnou teplotu. Experimentálně určená hodnota měrného odporu wolframu je $\bar{\rho} = (5.7 \pm 0.2) \cdot 10^{-8} \, \mathrm{\Omega \cdot m}$. Tabulková hodnota při teplotě \SI{0}{\celsius} je podle \cite{mikulcak} $\rho' = 5.3 \cdot 10^{-8} \, \mathrm{\Omega \cdot m}$ s teplotním součinitelem odporu $\alpha = 4.4 \cdot 10^{-3} \, \mathrm{K^{-1}}$. Za předpokladu lineární závislosti měrného odporu na teplotě vychází tabulková hodnota pro $t = 22.8 \,^\circ \mathrm{C}$ $\rho'' = 5.8 \cdot 10^{-8} \, \mathrm{\Omega \cdot m}$. Hodnoty se tedy v rámci nejistoty shodují. 
+
+Pro měď je změřená hodnota $\bar{\rho} = (1.72 \pm 0.06) \cdot 10^{-8} \, \mathrm{\Omega \cdot m}$ a tabulková pro \SI{0}{\celsius} je podle \cite{mikulcak} $\rho' = 1.8 \cdot 10^{-8} \, \mathrm{\Omega \cdot m}$. S teplotním součinitelem odporu $\alpha = 4.0 \cdot 10^{-3} \, \mathrm{K^{-1}}$ je přepočtená hodnota $\rho'' = 2.0 \cdot 10^{-8} \, \mathrm{\Omega \cdot m}$. Měrný odpor bude jistě záviset na čistotě materiálu, u mědi jakožto velmi dobrého vodiče, jež je vyznačuje nízkým měrným odporem, obzvláště. Vzhledem k tomu, že řádově si hodnoty odpovídají, lze experimentálně určenou hodnotu považovat za správnou.
+
+Experimentální hodnota měrného odporu kanthalu je $\bar{\rho} = (138 \pm 6) \cdot 10^{-8} \, \mathrm{\Omega \cdot m}$ a tabulková při \SI{0}{\celsius} je podle \cite{mikulcak} $\rho' = 140 \cdot 10^{-8} \, \mathrm{\Omega \cdot m}$ s teplotním součinitelem odporu $\alpha = 0.06 \cdot 10^{-3} \, \mathrm{K^{-1}}$, tedy hodnota pro teplotu \SI{22.8}{\celsius} bude téměř stejná. V rámci nejistoty (která je u kanthalu daná především nejistotou průměru drátu) se obě hodnoty shodují. Zkoumaná slitina má tedy pravděpodobně velmi podobné složení jako slitina z tabulek.
+
+Měrný odpor železa byl určen jako $\bar{\rho} = (21.7 \pm 1.1) \cdot 10^{-8} \, \mathrm{\Omega \cdot m}$. Tabulková hodnota je podle \cite{zelezo} \\ $\rho' = 9.8 \cdot 10^{-8} \, \mathrm{\Omega \cdot m}$ při \SI{20}{\celsius} a teplotní součinitel odporu je $\alpha = 6 \cdot 10^{-3} \, \mathrm{K^{-1}}$. Po přepočtu na teplotu během měření vychází hodnota $\rho'' = 10.0 \cdot 10^{-8} \, \mathrm{\Omega \cdot m}$. I přepočtená hodnota je tedy přibližně poloviční oproti té experimentální. Mechanické a elektrické vlastnosti železa však velmi významným způsobem závisejí nejen na čistotě, ale také na mechanickém a tepelném zpracování a postupu výroby. Vzhledem k tomu, že měrný odpor byl měřen třemi různými způsoby a výsledek tak pravděpodobně není ovlivněn hrubou chybou, můžeme soudit, že železný drát použitý při měření byl vyroben odlišným způsobem než výrobek studovaný v tabulkách \cite{zelezo}.
+
+Měrný odpor mosazi byl zjištěn jako $\bar{\rho} = (6.9 \pm 0.3) \cdot 10^{-8} \, \mathrm{\Omega \cdot m}$. Tabulková hodnota při \SI{0}{\celsius} z \cite{mikulcak} je $\rho' = 8 \cdot 10^{-8} \, \mathrm{\Omega \cdot m}$ a teplotní součinitel odporu je $\alpha = 1.5 \cdot 10^{-3} \, \mathrm{K^{-1}}$. Přepočtená hodnota na \SI{22.8}{\celsius} je $\rho'' = 8.3 \cdot 10^{-8} \, \mathrm{\Omega \cdot m}$. Experimentální a tabulková hodnota se liší. To by mohlo být dané různým zastoupením prvků ve zkoumané slitině a té z tabulek, případně odlišným procesem výroby. Vlastnosti slitin vyrobené různými postupy se totiž mohou i docela výrazně lišit. Opět jsou však hodnoty řádově podobné.
+
+Pro chromnikl byl měrný odpor určen jako $\bar{\rho} = (104 \pm 3) \cdot 10^{-8} \, \mathrm{\Omega \cdot m}$. Tabulky \cite{mikulcak} udávají hodnotu \\ $\rho' = 110 \cdot 10^{-8} \, \mathrm{\Omega \cdot m}$ při \SI{0}{\celsius} a teplotní součitnitel odporu $\alpha = 0.18 \cdot 10^{-3} \, \mathrm{K^{-1}}$. Se změnou o \SI{22.8}{\celsius} se tedy hodnota odporu příliš nezmění. Tabulková hodnota se od té experimentální liší od 2 směrodatné odchylky. Po uvážení vlivu složení slitiny na její mechanické a elektrické vlastnosti lze i hodnotu měrného elektrického odporu chromniklu považovat za správnou.
+
 
 % ============================= ZÁVĚR ================================
 \section{Závěr}
 
+Pro dráty z různých materiálů byly různými metodami (multimetrem Keithley 2010 ve čtyřbodovém zapojení, Wheastonovým můstkem a Thomsonovým můstkem) měřeny odpory a měrné odpory.
+
+Pro wolfram byly změřeny hodnoty odporu
+\begin{equation*}
+    R_K = (136.9 \pm 0.1) \, \si{\milli\ohm}
+\end{equation*}
+\begin{equation*}
+    R_W = (142.1 \pm 0.1) \, \si{\milli\ohm}
+\end{equation*}
+\begin{equation*}
+    R_T = (137.6 \pm 0.1) \, \si{\milli\ohm}
+\end{equation*}
+a vypočteny hodnoty měrného odporu
+\begin{equation*}
+    \rho_K = (5.64 \pm 0.18) \cdot 10^{-8} \, \mathrm{\Omega \cdot m}
+\end{equation*}
+\begin{equation*}
+    \rho_W = (5.86 \pm 0.19) \cdot 10^{-8} \, \mathrm{\Omega \cdot m}
+\end{equation*}
+\begin{equation*}
+    \rho_T = (5.67 \pm 0.18) \cdot 10^{-8} \, \mathrm{\Omega \cdot m}
+\end{equation*}
+se střední hodnotou
+\begin{equation*}
+    \bar{\rho} = (5.7 \pm 0.2) \cdot 10^{-8} \, \mathrm{\Omega \cdot m} \, .
+\end{equation*}
+
+Pro měď byly změřeny hodnoty odporu
+\begin{equation*}
+    R_K = (10.59 \pm 0.09) \, \si{\milli\ohm}
+\end{equation*}
+\begin{equation*}
+    R_W = (11.3 \pm 0.1) \, \si{\milli\ohm}
+\end{equation*}
+\begin{equation*}
+    R_T = (10.9 \pm 0.1) \, \si{\milli\ohm}
+\end{equation*}
+a vypočteny hodnoty měrného odporu
+\begin{equation*}
+    \rho_K = (1.67 \pm 0.03) \cdot 10^{-8} \, \mathrm{\Omega \cdot m}
+\end{equation*}
+\begin{equation*}
+    \rho_W = (1.78 \pm 0.03) \cdot 10^{-8} \, \mathrm{\Omega \cdot m}
+\end{equation*}
+\begin{equation*}
+    \rho_T = (1.72 \pm 0.03) \cdot 10^{-8} \, \mathrm{\Omega \cdot m}
+\end{equation*}
+se střední hodnotou
+\begin{equation*}
+    \bar{\rho} = (1.72 \pm 0.06) \cdot 10^{-8} \, \mathrm{\Omega \cdot m} \, .
+\end{equation*}
+
+Pro kanthal byly změřeny hodnoty odporu
+\begin{equation*}
+    R_K = (6287.3 \pm 0.5) \, \si{\milli\ohm}
+\end{equation*}
+\begin{equation*}
+    R_W = (6284 \pm 1) \, \si{\milli\ohm}
+\end{equation*}
+\begin{equation*}
+    R_T = (6284 \pm 1) \, \si{\milli\ohm}
+\end{equation*}
+a vypočteny hodnoty měrného odporu
+\begin{equation*}
+    \rho_K = (138 \pm 6) \cdot 10^{-8} \, \mathrm{\Omega \cdot m}
+\end{equation*}
+\begin{equation*}
+    \rho_W = (138 \pm 6) \cdot 10^{-8} \, \mathrm{\Omega \cdot m}
+\end{equation*}
+\begin{equation*}
+    \rho_T = (138 \pm 6) \cdot 10^{-8} \, \mathrm{\Omega \cdot m}
+\end{equation*}
+se střední hodnotou
+\begin{equation*}
+    \bar{\rho} = (138 \pm 6) \cdot 10^{-8} \, \mathrm{\Omega \cdot m} \, .
+\end{equation*}
+
+Pro železo byly změřeny hodnoty odporu
+\begin{equation*}
+    R_K = (1475.6 \pm 0.2) \, \si{\milli\ohm}
+\end{equation*}
+\begin{equation*}
+    R_W = (1481 \pm 1) \, \si{\milli\ohm}
+\end{equation*}
+\begin{equation*}
+    R_T = (1482 \pm 1) \, \si{\milli\ohm}
+\end{equation*}
+a vypočteny hodnoty měrného odporu
+\begin{equation*}
+    \rho_K = (21.7 \pm 1.1) \cdot 10^{-8} \, \mathrm{\Omega \cdot m}
+\end{equation*}
+\begin{equation*}
+    \rho_W = (21.7 \pm 1.1) \cdot 10^{-8} \, \mathrm{\Omega \cdot m}
+\end{equation*}
+\begin{equation*}
+    \rho_T = (21.8 \pm 1.1) \cdot 10^{-8} \, \mathrm{\Omega \cdot m}
+\end{equation*}
+se střední hodnotou
+\begin{equation*}
+    \bar{\rho} = (21.7 \pm 1.1) \cdot 10^{-8} \, \mathrm{\Omega \cdot m} \, .
+\end{equation*}
+
+Pro mosaz byly změřeny hodnoty odporu
+\begin{equation*}
+    R_K = (220.8 \pm 0.1) \, \si{\milli\ohm}
+\end{equation*}
+\begin{equation*}
+    R_W = (223 \pm 1) \, \si{\milli\ohm}
+\end{equation*}
+\begin{equation*}
+    R_T = (221.4 \pm 0.1) \, \si{\milli\ohm}
+\end{equation*}
+a vypočteny hodnoty měrného odporu
+\begin{equation*}
+    \rho_K = (6.9 \pm 0.3) \cdot 10^{-8} \, \mathrm{\Omega \cdot m}
+\end{equation*}
+\begin{equation*}
+    \rho_W = (6.9 \pm 0.3) \cdot 10^{-8} \, \mathrm{\Omega \cdot m}
+\end{equation*}
+\begin{equation*}
+    \rho_T = (6.9 \pm 0.3) \cdot 10^{-8} \, \mathrm{\Omega \cdot m}
+\end{equation*}
+se střední hodnotou
+\begin{equation*}
+    \bar{\rho} = (6.9 \pm 0.3) \cdot 10^{-8} \, \mathrm{\Omega \cdot m} \, .
+\end{equation*}
+
+Pro chromnikl byly změřeny hodnoty odporu
+\begin{equation*}
+    R_K = (1179.27 \pm 0.16) \, \si{\milli\ohm}
+\end{equation*}
+\begin{equation*}
+    R_W = (1181 \pm 1) \, \si{\milli\ohm}
+\end{equation*}
+\begin{equation*}
+    R_T = (1179 \pm 1) \, \si{\milli\ohm}
+\end{equation*}
+a vypočteny hodnoty měrného odporu
+\begin{equation*}
+    \rho_K = (104 \pm 3) \cdot 10^{-8} \, \mathrm{\Omega \cdot m}
+\end{equation*}
+\begin{equation*}
+    \rho_W = (104 \pm 3) \cdot 10^{-8} \, \mathrm{\Omega \cdot m}
+\end{equation*}
+\begin{equation*}
+    \rho_T = (104 \pm 3) \cdot 10^{-8} \, \mathrm{\Omega \cdot m}
+\end{equation*}
+se střední hodnotou
+\begin{equation*}
+    \bar{\rho} = (104 \pm 3) \cdot 10^{-8} \, \mathrm{\Omega \cdot m} \, .
+\end{equation*}
 
 % =========================== LITERATURA =============================
 \begin{thebibliography}{9}
 
-\bibitem{studijni} Kolektiv ZFP KVOF MFF UK: Měření malých odporů [online]. [cit. 17.11.2025], dostupné z~https://physics.mff.cuni.cz/vyuka/zfp/\_media/zadani/texty/txt\_204.pdf
+\bibitem{studijni} Kolektiv ZFP KVOF MFF UK: Měření malých odporů [online]. [cit. 24.11.2025], dostupné z~https://physics.mff.cuni.cz/vyuka/zfp/\_media/zadani/texty/txt\_204.pdf
 
-\bibitem{pokyny} Kolektiv ZFP KVOF MFF UK: Měření malých odporů - pokyny k měření [online]. [cit. 17.11.2025], dostupné
+\bibitem{pokyny} Kolektiv ZFP KVOF MFF UK: Měření malých odporů - pokyny k měření [online]. [cit. 24.11.2025], dostupné
 z~https://physics.mff.cuni.cz/vyuka/zfp/\_media/zadani/pokyny/mereni\_204.pdf
 
 \bibitem{englich} J. Englich: Úvod do praktické fyziky I: Zpracování výsledků měření. 1. vyd. Praha: Matfyzpress, 2006
 
 \bibitem{mikulcak} Mikulčák a kolektiv: Matematické, fyzikální a chemické tabulky pro střední školy: relativní permitivita, Praha: Státní pedagogické nakladatelství, n. p., 1988
+
+\bibitem{zelezo} J. Bureš: conVERTER - převody jednotek: měrný odpor [online]. [cit. 24.11.2025], dostupné z~https://www.converter.cz/tabulky/merny-odpor.htm
 
 \end{thebibliography}
 
