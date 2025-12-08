@@ -27,17 +27,17 @@ ax.plot(U, I, label='V-A charakteristika vakuové diody')
 ax.set_xlabel('U (V)')
 ax.set_ylabel('I ($10^{-2}$ A)')
 
-ax.set_xlim(-5, 5)
-ax.set_ylim(-4, 4)
+ax.set_xlim(-2, 5)
+ax.set_ylim(-1, 3)
 xmin, xmax = ax.get_xlim()
 ymin, ymax = ax.get_ylim()
 print('xlim:', xmin, xmax, 'ylim:', ymin, ymax)
 gh = 0.85
 
-ax.axhline(2, color='black', linestyle=':', xmin=-5, xmax=0.85)#(3.5 - xmin) / (xmax - xmin))
-ax.axhline(0.08, color='black', linestyle=':', xmin=-5, xmax=0.5)
-ax.axvline(0, color='black', linestyle=':', ymin=-4, ymax=4.08/8)
-ax.axvline(3.5, color='black', linestyle=':', ymin=-4, ymax=6/8)
+ax.axhline(2, color='black', linestyle=':', xmin=-5, xmax=(3.5 - xmin) / (xmax - xmin))
+ax.axhline(0.08, color='black', linestyle=':', xmin=-5, xmax=(-xmin)/(xmax-xmin))
+ax.axvline(0, color='black', linestyle=':', ymin=-1, ymax=(0.08-ymin)/(ymax-ymin))
+ax.axvline(3.5, color='black', linestyle=':', ymin=-1, ymax=(2-ymin)/(ymax-ymin))
 ax.scatter(u0, i0, color='blue', s=15, zorder=5, label='odhadované hodnoty')
 
 ax.xaxis.set_major_locator(ticker.MultipleLocator(1))
@@ -47,7 +47,7 @@ ax.yaxis.set_minor_locator(ticker.MultipleLocator(0.2))
 
 ax.grid(which='major', linewidth=1)
 ax.grid(which='minor', linewidth=0.5, linestyle='--')
-ax.legend()
+ax.legend(loc='upper left')
 fig.savefig('uloha5/fig3.png')
 
 plt.show()
