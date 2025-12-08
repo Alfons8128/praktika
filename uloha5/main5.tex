@@ -35,9 +35,11 @@ Chybové úsečky nebyly pro svou malou velikost pro přehlednost vykresleny.}
 \begin{enumerate}
     \item Pomocí osciloskopu změřte špičkovou hodnotu napětí na svorkách sekundárního vinutí převodního transformátoru a porovnejte ji s hodnotou naměřenou na střídavém rozsahu digitálního voltmetru.
     \item Sledujte činnost jednocestného usměrňovače s křemíkovými diodami KY711
-    \item Při maximální hodnotě zatěžovacího odporu \qty{10}{\kilo\ohm} sledujte závislost stejnosměrného napětí na filtrační kapacitě C v intervalu 0–10 \unit{\micro\farad}. Hodnotu usměrněného napětí při C = \qty{10}{\micro\farad} srovnejte se špičkovou hodnotou pulzního průběhu.
-    \item Při filtrační kapacitě C = \qty{10}{\micro\farad} změřte závislost střídavé složky usměrněného napětí na odebíraném proudu. Proud upravujte nastavením odporu Rz. U jednocestného usměrňovače měřte do proudu \qty{0.6}{\milli\ampere}.
-    \item Naměřené závislosti zpracujte graficky přímo v praktiku.
+    \begin{enumerate}
+        \item Při maximální hodnotě zatěžovacího odporu \qty{10}{\kilo\ohm} sledujte závislost stejnosměrného napětí na filtrační kapacitě C v intervalu 0–10 \unit{\micro\farad}. Hodnotu usměrněného napětí při C = \qty{10}{\micro\farad} srovnejte se špičkovou hodnotou pulzního průběhu.
+        \item Při filtrační kapacitě C = \qty{10}{\micro\farad} změřte závislost střídavé složky usměrněného napětí na odebíraném proudu. Proud upravujte nastavením odporu $R_z$. U jednocestného usměrňovače měřte do proudu \qty{0.6}{\milli\ampere}.
+        \item Naměřené závislosti zpracujte graficky přímo v praktiku.
+    \end{enumerate}
     \item Na osciloskopu zobrazte voltampérovou charakteristiku vakuové diody podle schématu připojeného k úloze. Orientačně načrtněte pozorovanou charakteristiku a vyznačte měřítka na osách. Odhadněte napětí na diodě při proudu 20 mA v propustném směru.
 \end{enumerate}
 
@@ -63,7 +65,7 @@ V případě harmonického průběhu napětí (tj. $U = U_0 \sin(\omega t + \var
 
 \subsection{Filtrace a usměrňování napětí}
 
-Schéma zapojení jednocestného usměrňovače s filtrem napětí je nakresleno na obrázku \ref{sch:filtr} a vysvětleno v kapitole \ref{filtrace}. Výsledný průběh okamžité hodnoty napětí na čase je na obrázku \ref{sch:prubehy}.
+Schéma zapojení jednocestného usměrňovače s filtrem napětí je nakresleno na obrázku \ref{sch:filtr}. Výsledný průběh okamžité hodnoty napětí na čase je na obrázku \ref{sch:prubehy}.
 
 \begin{schema}
 \centering
@@ -102,18 +104,30 @@ Stejnosměrný proud $I_{ss}$ zátěží $R_z$ je dán Ohmovým zákonem \cite{s
 \begin{equation} \label{eq:ohm}
     I_{ss} = \frac{U_{ss}}{R_z} \, ,
 \end{equation}
-kde $U_{ss}$ je stenosměrné napětí na zátěži. Za předpokladu $\frac{T}{R_z C} \ll 1$ je $U_{ss} \approx U_0$ a vztah (\ref{eq:deltau} lze přepsat na
-\begin{equation} \label{deltauss}
+kde $U_{ss}$ je stenosměrné napětí na zátěži. Za předpokladu $\frac{T}{R_z C} \ll 1$ je $U_{ss} \approx U_0$ a vztah (\ref{eq:deltau}) lze přepsat na
+\begin{equation} \label{eq:deltau2}
     \Delta U = I_{ss} \frac{T}{C} \, .
 \end{equation}
 
+\section{Vakuová dioda}
 
+Vakuová diouda je tvořena katodou a anodou (obklopující katodu), které jsou uzavřeny ve vakuované buňce. \cite{diody} Ze žhavené katody jsou emitovány elektrony, bez vnějšího pole se však všechny nedostanou až na anodu a vytvoří kolem katody potenciálovou bariéru bránící dalším elektronům v cestě k anodě. Pokud jsou však katoda a anoda v obvodu vodivě propojeny, teče diodou i při nulovém napětí nepatrný proud, který způsobují elektrony, jež byly z katody emitovány s dostatečnou rychlostí. 
+
+Při zvyšování napětí mezi katodou a anodou se stále více elektronů dostává až k anodě a proud na anodě se zvyšuje. Pro nepříliš velká napětí lze závislost proudu na napětí popsat Langmuirovým třípolovinovým zákonem \cite{diody}
+\begin{equation} \label{langmuir} 
+    I = a U^{\frac{3}{2}} \, ,
+\end{equation}
+kde $a$ je konstanta daná geometrickým uspořádáním katody a anody.
 
 \subsection{Metoda měření}
 
+Všechna měření byla prováděna s transformátorem zapojeným do sítě transformující síťové napětí na nižší hodnotu. Frekvence, a tím i perioda, indukovaného sekundárního napětí je však stejná, jako původní síťová frekvence, tedy zrhuba $f = \qty{50}{Hz}$ a $T= \qty{20}{\milli\second}.$
+
 \subsubsection{Filtrace jednocestně usměrněného napětí} \label{filtrace}
 
-Jednocestný usměrňovač je na obrázku \ref{sch:filtr} vyznačen čárkovanou čarou. Skládá se z diody, která 
+ Jednocestný usměrňovač je na obrázku \ref{sch:filtr} vyznačen čárkovanou čarou. Skládá se z diody, která prouští takové napětí, které odpovídá proudu v propustném směru. Ochranný odpor brání přetížení zdroje při počátečním nabíjení kondenzátoru \cite{studijni}. Bez použití kondenzátoru by mělo napětí průběh jako na obrázku \ref{sch:bezfiltru}, s kondenzátorem jako na \ref{sch:sfiltrem}.
+
+ Během měření byl usměrňovač přímo napojen na výstupní svorky transformátoru. K němu byla paralelně zapojena filtrační kapacita $C$ a zátěžový odpor $R_z$. Proud a napětí byly měřeny pomocí multimetrů Fluke nastavených na stejnosměrné rozsahy, ukazovaly proto střední hodnotu proudu, resp. napětí, na zátěžovém odporu $R_z$. K obvodu byl navíc paralelně připojen osciloskop, který umožnoval vykreslení celého periodického průběhu okamžité hodnoty napětí.
 
 \begin{schema}[!htbp]
     \centering
@@ -124,13 +138,14 @@ Jednocestný usměrňovač je na obrázku \ref{sch:filtr} vyznačen čárkovanou
 
 \subsubsection{Voltampérová charakteristika diody} \label{va}
 
+Při měření voltampérové charakteristiky vakuové diody byl obvod zapojen podle schématu \ref{sch:va}. Napětí na diodě bylo měřeno osciloskopem a vynášeno na osu X. Proud byl určen z Ohmova zákona přes napění na rezistoru o odporu $R = \qty{100}{\ohm}$ zapojeném sériově k diodě. Napětí na rezistoru bylo opět měřeno pomocí osciloskopu, tentokrát však vynášeno na osu Y. Pro kompenzaci parazitní indukčnosti odporové dekády (představující odpor $R$) byl do obvodu paralelně k rezistoru připojen kondenzátor (kapacitní dekáda). Hodnota kapacity byla nastavena tak, aby byla v osciloskopu křivka voltampérové charakteristiky vykreslena bez hysteze, tedy skutečně jen jako tenká křivka. 
+
 \begin{figure}[!htbp]
     \centering
     \includegraphics[width=0.5\linewidth]{uloha5/va.png}
     \caption{Schéma zapojení pro zobrazení V-A charakteristiky diody \cite{studijni}}
     \label{sch:va}
 \end{figure}
-
 
 
 \subsection{Měřicí přístroje a jejich nejistoty}
@@ -158,38 +173,161 @@ Jednocestný usměrňovač je na obrázku \ref{sch:filtr} vyznačen čárkovanou
 
 \subsection{Špičková a efektivní hodnota napětí}
 
+Nejprve byl k transformátoru zapojen jen osciloskop a multimetr Fluke. Na ociloskopu se vykreslil celý průběh okamžité hodnoty střídavého napětí, z něhož byla určena špičková hodnota (amplituda) $U_0$ jako $U_0 = \qty{10 \pm 1}{V}$. Nejistota byla určena jako velikost nejmenšího dílku mřížky obrazovky osciloskopu. Multimetrem, jež na střídavém rozsahu měří efektivní hodnoty napětí, byla určena hodnota $U_{eff} = \qty{6.72 \pm 0.10}{V}$, přičemž nejistota byla převzata ze specifikací přístroje. Z rovnice (\ref{eq:stredkueff}) bylo pro hodnotu z osciloskopu vypočteno odpovídající efektivní napětí $U'_{eff} = \qty{7.1 \pm 0.7}{V}$. Nejistota byla určena podle \cite{englich} jako
+\begin{equation}
+    \sigma_{U'_{eff}} = U'_{eff} \frac{\sigma_{U_0}}{U_0} \, .    
+\end{equation}
+V rámci nejistoty osciloskopu si tedy obě hodnoty efektivního napětí odpovídají.
+
+\subsection{Filtrace napětí usměrněného jednocestným usměrňovačem}
+
+\subsubsection{Závislost stejnosměrného napětí na kapacitě}
+
+Pro studium činnosti jednocestného usměrňovače byl obvod zapojen podle schématu \ref{sch:filtr}, přičemž zátěžový odpor byl nastaven na hodnotu \qty{10}{\kilo\ohm}. Na osciloskopu byl kontrolován správný průběh napětí na čase (odpovídající obrázku \ref{sch:sfiltrem}). Multimetr Fluke byl nastaven na stejnosměrný rozsah napětí a pro různé hodnoty kapacity (od 0 do \qty{11}{\micro\farad}) bylo následně měřeno napětí (tj. střední hodnota napětí) na zátěžovém odporu $R_z$. Naměřené hodnoty shrnuje tabulka \ref{tab:1}.
+
+\begin{table}[!htbp]
+\centering
+\caption{Střední hodnota usměrněného napětí na zátěži v závislosti na připojené kapacitě}
+\begin{tabular}{cc}
+ \toprule
+ $C\, (\mathrm{\mu F})$ & $\overline{U}\, (\mathrm{V})$ \\
+ \midrule
+ $0.000 \pm 0.001$ & $2.753 \pm 0.006$ \\
+ $0.100 \pm 0.001$ & $2.840 \pm 0.006$ \\
+ $0.200 \pm 0.002$ & $3.047 \pm 0.007$ \\
+ $0.300 \pm 0.003$ & $3.373 \pm 0.007$ \\
+ $0.400 \pm 0.004$ & $3.695 \pm 0.008$ \\
+ $0.500 \pm 0.005$ & $3.983 \pm 0.008$ \\
+ $0.600 \pm 0.006$ & $4.248 \pm 0.008$ \\
+ $0.700 \pm 0.007$ & $4.518 \pm 0.009$ \\
+ $0.800 \pm 0.008$ & $4.765 \pm 0.009$ \\
+ $0.900 \pm 0.009$ & $4.974 \pm 0.009$ \\
+ $1.000 \pm 0.010$ & $5.160 \pm 0.010$ \\
+ $1.300 \pm 0.013$ & $5.620 \pm 0.010$ \\
+ $1.600 \pm 0.016$ & $5.960 \pm 0.011$ \\
+ $2.00 \pm 0.02$ & $6.34 \pm 0.03$ \\
+ $2.50 \pm 0.03$ & $6.63 \pm 0.03$ \\
+ $3.00 \pm 0.03$ & $6.89 \pm 0.03$ \\
+ $4.00 \pm 0.04$ & $7.23 \pm 0.03$ \\
+ $5.00 \pm 0.05$ & $7.45 \pm 0.03$ \\
+ $6.00 \pm 0.06$ & $7.61 \pm 0.03$ \\
+ $7.00 \pm 0.07$ & $7.73 \pm 0.03$ \\
+ $8.00 \pm 0.08$ & $7.83 \pm 0.03$ \\
+ $9.00 \pm 0.09$ & $7.88 \pm 0.03$ \\
+ $10.00 \pm 0.10$ & $7.95 \pm 0.03$ \\
+ $11.00 \pm 0.11$ & $8.00 \pm 0.03$ \\
+ \bottomrule
+\end{tabular}
+\label{tab:1}
+\end{table}
+
+Datovými body (vykreslenými v grafu \ref{fig:1}) byla proložena exponenciální závislost odpovídající rovnici (\ref{eq:filtr}). Koeficienty fitu byly určeny funkcí \verb|curve_fit| knihovny \verb|SciPy|. Ukázalo se, že je v tomto případě nutné uvažovat netriviální kapacitu pozadí, která se přičítá k hodnotě na kapacitní dekádě (viz Diskuze). Tato parazitní kapacita byla určena jako $C_0 = \qty{-0.58 \pm 0.01}{\micro\farad}$, tedy o něco snižuje kapacitu dekády. Po uvážení této kapacity jsou již datové body proloženy poměrně přesně.
 
 \begin{figure}
     \centering
-    \includegraphics[width=0.5\linewidth]{uloha5/GRAF1.png}
-    \caption{Závislost kapacity deskového kondenzátoru na napětí.}
-    \label{fig:osciloskop}
+    \includegraphics[width=0.5\linewidth]{uloha5/fig1.png}
+    \caption{Závislost střední hodnoty napětí na zátěži na připojené kapacitě.\nobars}
+    \label{fig:1}
 \end{figure}
 
+Při kapacitě $C = \qty{10}{\micro\farad}$ je střední hodnota napětí $\overline{U} = \qty{7.95 \pm 0.03}{V}$. Naopak špičková hodnota byla z osciloskopu určena jako $U_0 = \qty{11.0\pm0.4}{V}$. Obě napětí se liší o hodnotu několika standardních nejistot. Tedy i pro kapacitu \qty{10}{\micro\farad} je zvlnění napětí stále natolik výrazné, že ovlivňuje jeho střední hodnotu.
+
+\subsubsection{Závislost střídavé složky napětí na proudu}
+
+Následně byla hodnota kapacity fixována \qty{10}{\micro\farad} a naopak se na odporové dekádě měnila hodnota zátěžového odporu, což mělo za následek změnu proudu procházejího zátěží. Multimetrem zapojeným jako ampérmetr pak byla proměřována závislost střídavé složky usměrněného napětí (tzv. zvlnění) na procházejícím proudu. Zvlnění napětí bylo určováno pomocí osciloskopu. Odpor zátěže byl nastaven na nejnižší přípustnou hodnotu (z hlediska proudu procházejícího usměrňovačem) a postupně byl zvyšován.
+
+Hodnoty odporu, odpovídajícího proudu a střídavé složky napětí shrnuje tabulka \ref{tab:2}. Nejistoty odporu a proudu byly vzaty ze specifikací odpovídajících přístrojů, nejistota zvlnění byla určena jako velikost nejmenšího dílku mřížky osciloskopu.
+
+\begin{table}[!htbp]
+\centering
+\caption{Zátěžový odpor, proud procházející zátěží a zvlnění usměrněného napětí}
+\begin{tabular}{ccc}
+ \toprule
+ $R_z\, (\mathrm{k\Omega})$ & $I_{SS}\, (\mathrm{mA})$ & $\Delta U\, (\mathrm{V})$ \\
+ \midrule
+ $12.00 \pm 0.12$ & $0.67 \pm 0.04$ & $1.32 \pm 0.04$ \\
+ $13.00 \pm 0.13$ & $0.62 \pm 0.04$ & $1.22 \pm 0.04$ \\
+ $14.00 \pm 0.14$ & $0.58 \pm 0.04$ & $1.12 \pm 0.04$ \\
+ $15.00 \pm 0.15$ & $0.55 \pm 0.04$ & $1.07 \pm 0.04$ \\
+ $16.00 \pm 0.16$ & $0.51 \pm 0.04$ & $0.98 \pm 0.04$ \\
+ $17.00 \pm 0.17$ & $0.49 \pm 0.03$ & $0.94 \pm 0.04$ \\
+ $18.00 \pm 0.18$ & $0.46 \pm 0.03$ & $0.89 \pm 0.04$ \\
+ $19.00 \pm 0.19$ & $0.43 \pm 0.03$ & $0.84 \pm 0.04$ \\
+ $20.0 \pm 0.2$ & $0.41 \pm 0.03$ & $0.80 \pm 0.04$ \\
+ $22.0 \pm 0.2$ & $0.38 \pm 0.03$ & $0.74 \pm 0.02$ \\
+ $24.0 \pm 0.2$ & $0.35 \pm 0.03$ & $0.68 \pm 0.02$ \\
+ $26.0 \pm 0.3$ & $0.32 \pm 0.03$ & $0.63 \pm 0.02$ \\
+ $28.0 \pm 0.3$ & $0.30 \pm 0.03$ & $0.59 \pm 0.02$ \\
+ $30.0 \pm 0.3$ & $0.28 \pm 0.03$ & $0.54 \pm 0.02$ \\
+ $34.0 \pm 0.3$ & $0.25 \pm 0.03$ & $0.48 \pm 0.02$ \\
+ $38.0 \pm 0.4$ & $0.22 \pm 0.03$ & $0.44 \pm 0.02$ \\
+ $42.0 \pm 0.4$ & $0.20 \pm 0.03$ & $0.39 \pm 0.02$ \\
+ $46.0 \pm 0.5$ & $0.18 \pm 0.03$ & $0.36 \pm 0.02$ \\
+ $50.0 \pm 0.5$ & $0.17 \pm 0.03$ & $0.330 \pm 0.001$ \\
+ $55.0 \pm 0.6$ & $0.15 \pm 0.03$ & $0.305 \pm 0.001$ \\
+ $60.0 \pm 0.6$ & $0.14 \pm 0.03$ & $0.275 \pm 0.001$ \\
+ $70.0 \pm 0.7$ & $0.12 \pm 0.03$ & $0.235 \pm 0.001$ \\
+ $100.0 \pm 1.0$ & $0.09 \pm 0.03$ & $0.152 \pm 0.001$ \\
+ \bottomrule
+\end{tabular}
+\label{tab:2}
+\end{table}
+
+Závislost zvlnění na proudu na zátěži je vykreslena v grafu \ref{fig:2}. Datovými body byla proložena lineární závislost v souladu s rovnicí (\ref{eq:deltau2}). Její směrnice vychází z lineární regrese jako $k = \qty{1.949\pm0.003}{V\per\milli\ampere}$, což řádově odpovídá odhadu poměru $\frac{T}{C} = \qty{2000}{s\per\farad}$.
+
+
+\begin{figure}
+    \centering
+    \includegraphics[width=0.5\linewidth]{uloha5/fig2.png}
+    \caption{Závislost střídavé složky usměrněného napětí na proudu.}
+    \label{fig:2}
+\end{figure}
+
+\subsection{Voltampérová charakteristika vakuové diody}
+
+V posledním úkolu byl obvod zapojen podle schématu \ref{sch:va}, přičemž odpor $R= \qty{100}{\ohm}$ představovala odporová dekáda a kapacitu $C$ představovala kapacitní dekáda. Kapacita byla nastavena tak, aby voltampérová charakteristika diody byla v osciloskopu vykreslena bez hystereze. Katoda vakuové diody byla žhavena napětím z dalšího transformátoru, jež pro jednoduchost není na schématu \ref{sch:va} vykreslen. 
+
+Z osciloskopu bylo odečteno napětí při proudu \qty{20}{\milli\ampere} jako $U = \qty{3.5\pm0.2}{\volt}$. Při nulovém napětí na diodě byl odhadnut proud $I = \qty{0.80\pm0.05}{\milli\ampere}$. Nejistoty byly určeny jako velikosti nejmenších bodů mřížky osciloskopu.
+
+Náčrtek voltampérové charakteristiky vykreslené v osciloskopu je na obrázku \ref{fig:dioda}.
 
 % ============================ DISKUZE ===============================
 \section{Diskuze}
 
+Osciloskopem bylo změřeno špičkové napětí na výstupních svorkách transformátoru $U_0 = \qty{10\pm1}{V}$ s relativní nejistotou 10\,\%. Z něj přepočtené efektivní napětí $U'_{eff} = \qty{7.1 \pm 0.7}{V}$ (podle vztahu (\ref{eq:stredkueff})) má podle \cite{englich} stejnou relativní nejistotu. Ta je daná přesností přístroje, v tomto případě velikostí nejmenšího dílku, tedy měřítkem mřížky vykreslené v osciloskopu. Voltmetrem (multimetrem Fluke) bylo změřeno napětí $U_{eff}= \qty{6.72\pm0.10}{V}$ s relativní nejistotou přístroje jen 1,5\,\%. Bylo tak ověřeno, že v rámci nejistoty si obě hodnoty efektivních napětí z voltmetru i osciloskopu odpovídají, každá je však určená s jinou přesností. Voltmetrem lze napětí měřit daleko přesněji, ovšem jen jeho efektivní hodnotu. Zato osciloskop umožňuje prohlédnout celý časový průběh okamžité hodnoty napětí, v tomto měřítku však nelze určit napětí dostatečně přesně.
+
+Dále byla proměřována závislost střední hodnoty usměrněného napětí $\overline{U}$ na kapacitě. V osciloskopu byl pozorován průběh jako na obrázku \ref{sch:sfiltrem}, mezi jednotlivými pulzy (v době, kdy byla dioda zapojena vůči transformátoru v závěrném směru) postupně klesalo napětí, a to až do příchodu následujícího pulzu. Kondenzátor s větší kapacitou se vybíjí pomaleji, takže napětí na zátěžovém odporu klesne v čase mezi dvěma pulzy o menší hodnotu, což má za následek vyšší střední hodnotu napětí. S rostoucí kapacitou tedy střední hodnota napětí roste, ovšem s přibližně exponenciální závislostí odpovídající vztahu (\ref{eq:filtr}). Pro nekonečnou kapacitu, by dokonce mělo být $\overline{U} = U_0$. I pro kapacitu \qty{10}{\micro\farad} je však špičková hodnota $U_0$ znatelně větší než střední hodnota napětí $\overline{U}$.
+
+V grafu \ref{fig:1} je vidět, že pro nízké kapacity datové body poměrně dobře odpovídají teoretické přibližně exponenciální závislosti. Pro větší kapacity se hodnoty začnou lehce rozcházet, což je pravděpodobně způsobeno nesprávným zanedbáním doby nabíjení kondenzátoru. Pro platnost rovnice (\ref{eq:filtr}) je nutné, aby se kondenzátor nabil za zanedbatelně krátkou dobu, tedy časová konstanta nabíjení $R_{ochr} C$ musí být malá. To však nebude pro velké kapacity $C$ splněno. Pro nekonečnou kapacitu se kondenzátor dokonce bude nabíjet nekonečně dlouhou dobu.
+
+Zároveň bylo nutné datové body proložit křivkou, která je oproti rovnici (\ref{eq:filtr}) posunutá o určitou hodnotu na ose x, tj. předpokládat netriviální parazitní kapacitu zbytku obvodu, kterou je nutné sečíst s kapacitou kapacitní dekády. Tato hodnota vychází z regrese jako $C_0 = \qty{-0.58 \pm 0.01}{\micro\farad}$, tedy lze ji chápat jako netriviální indukčnost zbytku obvodu. Její přítomnost lze vysvětlit strukturou odporové dekády, kde jsou dráty namotané ve smyčkách, a tedy by mohly mít vlastní nenulovou indukčnost. Stejně tak bylo nutné tuto indukčnost kompenzovat i v úkolu k voltampérové charakteristice diody, což je důkaz, že odporová dekáda skutečně má nenulovou indukčnost.
+
+Střídavá složka usměrněného napětí naopak s rostoucí kapacitou klesá. Protože zátěžový odpor vystupuje ve vztahu (\ref{eq:filt}), a tím i ve (\ref{eq:deltau}) stejným způsobem jako kapacita, bude s rostoucím odporem klesat zvlnění napětí. Z Ohmova zákona pro zátěžový rezistor je odpor svázán se stejnosměrným proudem $I_{ss}$ vztahem (\ref{eq:ohm}), větší hodnotě proudu tedy musí odpovídat nižší hodnota odporu, a tedy i větší hodnota zvlnění $\Delta U$. Rovnice (\ref{eq:deltau2}) dokonce říká, že mezi $\Delta U$ a $I_{ss}$ je přímá úměrnost. Graf \ref{fig:2} ukazuje, že experimentální data jsou ve velmi dobrém souladu s touto teorií. Řádově lze odhadnout koeficient úměrnosti jako $\frac{T}{C} = \qty{2000}{s\per\farad}$, jeho hodnota však silně závisí na frekvenci odebíraného střídavého napětí (která v experimentu nebyla explicitně měřena) i na kapacitě (ve které se projeví indukčnost odporové dekády). Zároveň by bylo lepší měřit špičkové hodnoty proudu místo středních, protože i pro kapacitu \qty{10}{\micro\farad} je zvlnění napětí (a také proudu) nezanedbatelné, tedy neplatí předpoklad $\overline{U} \approx U_0$, nutný pro platnost vztahu (\ref{eq:deltau2}). Z lineární regrese však koeficient úměrnosti vychází jako $k = \qty{1.949\pm0.003}{V\per\milli\ampere} = \qty{1949\pm3}{V\per\ampere}$, takže alespoň řádově si hodnoty odpovídají.
+
+Nakonec byla osciloskopm vykreslena voltampérová charakteristika pro vakouovou diodu, jejiž katoda byla žhavena napětím z externího transformátoru. Proud diodou byl měřen osciloskopem jako napětí na odporové dekádě o známém odporu. Protože byla do obvodu zapojena odporová dekáda s nenulovou indukčností, bylo nutné paralelně k ní zapojit i kapacitní dekádu, která tuto indukčnost kompenzuje. Jinak by se křivka voltampérové charakteristiky v osciloskopu vykreslila místo tenké linie jako hysterezní křivka. To bylo skutečně pozorováno, kapacita byla na kapacitní dekádě upravena tak, aby obě větve hysterezní křivky splynuly v jednu. 
+
+Napětí na diodě při proudu \qty{20}{\milli\ampere} bylo odhadnuto jako $U = \qty{3.5\pm0.2}{V}$ (relativní nejistota 6\,\%) a proud při nulovém napětí jako $I = \qty{0.80\pm0.05}{\milli\ampere}$ (relativní nejistota 6\,\%). Hodnota napětí při proudu \qty{20}{\milli\ampere} a hodnota proudu při nulovém napětí byly pouze odhadnuty z křivky vykreslené na osciloskopu, nelze je tedy určit s velkou přesností. 
 
 % ============================= ZÁVĚR ================================
 \section{Závěr}
 
 Špičková hodnota střídavého napětí na výstupních svorkách transformátoru byla změřena osciloskopem jako $U_0 = \qty{10\pm1}{\volt}$. Digitálním voltmetrem byla při tomto nastavení změřena efektivní hodnota střídavého napětí $U_{eff} = \qty{6.72\pm0.10}{V}$.
 
+Byla studována závislost střední hodnoty usměrněného napětí na připojené kapacitě, jež se ukázala být exponenciální v souladu s teorií.
 
+Dále bylo ověřeno, že zvlnění usměrněného napětí je přímo úměrné proudu procházejícímu zátěží.
+
+Z voltampérové charakteristiky vakuové diody bylo při proudu \qty{20}{mA} odhadnuto napětí \qty{3.5 \pm 0.2}{V}. Dále byl odhadnut proud \qty{0.80 \pm 0.05}{\milli\ampere} při nulovém napětí.
 
 
 % =========================== LITERATURA =============================
 \begin{thebibliography}{9}
 
-\bibitem{studijni} Kolektiv ZFP KVOF MFF UK: Měření dielektrických vlastností materiálů [online]. [cit. 26.10.2025], dostupné z https://physics.mff.cuni.cz/vyuka/zfp/\_media/zadani/texty/txt\_227.pdf
+\bibitem{studijni} Kolektiv ZFP KVOF MFF UK: Měření napětí osciloskopem [online]. [cit. 8.12.2025], dostupné z https://physics.mff.cuni.cz/vyuka/zfp/\_media/zadani/texty/txt\_205.pdf
 
-\bibitem{pokyny} Kolektiv ZFP KVOF MFF UK: Měření odporu [online]. [cit. 26.10.2025], dostupné \\
-z https://physics.mff.cuni.cz/vyuka/zfp/\_media/zadani/texty/txt\_202.pdf
+\bibitem{diody} Kolektiv ZFP KVOF MFF UK: Charakteristiky diod [online]. [cit. 8.12.2025], dostupné z https://physics.mff.cuni.cz/vyuka/zfp/\_media/zadani/texty/txt\_211.pdf
 
 \bibitem{englich} J. Englich: Úvod do praktické fyziky I: Zpracování výsledků měření. 1. vyd. Praha: Matfyzpress, 2006
-
-\bibitem{mikulcak} Mikulčák a kolektiv: Matematické, fyzikální a chemické tabulky pro střední školy: relativní permitivita, Praha: Státní pedagogické nakladatelství, n. p., 1988
 
 \end{thebibliography}
 \end{document}
