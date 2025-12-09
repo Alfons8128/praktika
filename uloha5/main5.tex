@@ -51,7 +51,7 @@ Střední hodnota střídavého napětí $\overline{U}$ s periodickým průběhe
 \begin{equation} \label{eq:stredni}
     \overline{U} = \frac{1}{T} \int_0^T u(t) dt \, ,
 \end{equation}
-kde $t$ je čas, $T$ perioda a $u(t)$ je okamžitá hodnota napětí. Přístroje měřící na stejnosměrném rozsahu ukazují právě tuto střední hodnotu napětí $\bar{U}$. Zobrazovaná hodnota bude časově nezávislá, pokud intergrační doba přístroje bude menší než perioda střídavého napětí. To je u napětí odebíraného ze sítě ($f = \qty{50}{\hertz}, T = \frac{1}{f} = \qty{20}{\milli\second}$) splněno. \cite{studijni}
+kde $t$ je čas, $T$ perioda a $u(t)$ je okamžitá hodnota napětí. Přístroje měřící na stejnosměrném rozsahu ukazují právě tuto střední hodnotu napětí $\bar{U}$. Zobrazovaná hodnota bude časově nezávislá, pokud intergrační doba přístroje bude menší než perioda střídavého napětí. To je u napětí odebíraného ze sítě \\ ($f = \qty{50}{\hertz}, T = \frac{1}{f} = \qty{20}{\milli\second}$) splněno. \cite{studijni}
 
 Efektivní hodnota střídavého napětí $U_{eff}$ je naopak definována vztahem \cite{studijni}
 \begin{equation} \label{eq:efektivni}
@@ -100,7 +100,7 @@ Kondenzátor se vybíjí až do příchodu následujícího pulzu v čase $t=T$.
     \Delta U = U_0 - u(T) \approx \frac{U_0 T}{R_z C} \, .
 \end{equation}
 
-Stejnosměrný proud $I_{ss}$ zátěží $R_z$ je dán Ohmovým zákonem \cite{studijni}
+Stejnosměrný proud $I_{ss}$ procházející zátěží $R_z$ je dán Ohmovým zákonem \cite{studijni}
 \begin{equation} \label{eq:ohm}
     I_{ss} = \frac{U_{ss}}{R_z} \, ,
 \end{equation}
@@ -113,9 +113,9 @@ kde $U_{ss}$ je stenosměrné napětí na zátěži. Za předpokladu $\frac{T}{R
 
 Vakuová diouda je tvořena katodou a anodou (obklopující katodu), které jsou uzavřeny ve vakuované buňce. \cite{diody} Ze žhavené katody jsou emitovány elektrony, bez vnějšího pole se však všechny nedostanou až na anodu a vytvoří kolem katody potenciálovou bariéru bránící dalším elektronům v cestě k anodě. Pokud jsou však katoda a anoda v obvodu vodivě propojeny, teče diodou i při nulovém napětí nepatrný proud, který způsobují elektrony, jež byly z katody emitovány s dostatečnou rychlostí. 
 
-Při zvyšování napětí mezi katodou a anodou se stále více elektronů dostává až k anodě a proud na anodě se zvyšuje. Pro nepříliš velká napětí lze závislost proudu na napětí popsat Langmuirovým třípolovinovým zákonem \cite{diody}
-\begin{equation} \label{langmuir} 
-    I = a U^{\frac{3}{2}} \, ,
+Při zvyšování napětí mezi katodou a anodou se stále více elektronů dostává až k anodě a proud na anodě se zvyšuje. Pro nepříliš velká napětí lze závislost proudu na napětí popsat Langmuirovým třípolovinovým zákonem (upraveno podle \cite{diody})
+\begin{equation} \label{eq:langmuir} 
+    I = a (U-b)^{\frac{3}{2}} \, ,
 \end{equation}
 kde $a$ je konstanta daná geometrickým uspořádáním katody a anody.
 
@@ -138,7 +138,7 @@ Všechna měření byla prováděna s transformátorem zapojeným do sítě tran
 
 \subsubsection{Voltampérová charakteristika diody} \label{va}
 
-Při měření voltampérové charakteristiky vakuové diody byl obvod zapojen podle schématu \ref{sch:va}. Napětí na diodě bylo měřeno osciloskopem a vynášeno na osu X. Proud byl určen z Ohmova zákona přes napění na rezistoru o odporu $R = \qty{100}{\ohm}$ zapojeném sériově k diodě. Napětí na rezistoru bylo opět měřeno pomocí osciloskopu, tentokrát však vynášeno na osu Y. Pro kompenzaci parazitní indukčnosti odporové dekády (představující odpor $R$) byl do obvodu paralelně k rezistoru připojen kondenzátor (kapacitní dekáda). Hodnota kapacity byla nastavena tak, aby byla v osciloskopu křivka voltampérové charakteristiky vykreslena bez hysteze, tedy skutečně jen jako tenká křivka. 
+Při měření voltampérové charakteristiky vakuové diody byl obvod zapojen podle schématu \ref{sch:va}. Napětí na diodě bylo měřeno osciloskopem a vynášeno na osu X. Proud byl určen z Ohmova zákona přes napění na rezistoru o odporu $R = \qty{100}{\ohm}$ zapojeném sériově k diodě. Napětí na rezistoru bylo opět měřeno pomocí osciloskopu, tentokrát však vynášeno na osu Y. Pro kompenzaci parazitní indukčnosti odporové dekády (představující odpor $R$) byl do obvodu paralelně k rezistoru připojen kondenzátor (kapacitní dekáda). Hodnota kapacity byla nastavena tak, aby byla v osciloskopu křivka voltampérové charakteristiky vykreslena bez hystereze, tedy skutečně jen jako tenká křivka. 
 
 \begin{figure}[!htbp]
     \centering
@@ -173,7 +173,7 @@ Při měření voltampérové charakteristiky vakuové diody byl obvod zapojen p
 
 \subsection{Špičková a efektivní hodnota napětí}
 
-Nejprve byl k transformátoru zapojen jen osciloskop a multimetr Fluke. Na ociloskopu se vykreslil celý průběh okamžité hodnoty střídavého napětí, z něhož byla určena špičková hodnota (amplituda) $U_0$ jako $U_0 = \qty{10 \pm 1}{V}$. Nejistota byla určena jako velikost nejmenšího dílku mřížky obrazovky osciloskopu. Multimetrem, jež na střídavém rozsahu měří efektivní hodnoty napětí, byla určena hodnota $U_{eff} = \qty{6.72 \pm 0.10}{V}$, přičemž nejistota byla převzata ze specifikací přístroje. Z rovnice (\ref{eq:stredkueff}) bylo pro hodnotu z osciloskopu vypočteno odpovídající efektivní napětí $U'_{eff} = \qty{7.1 \pm 0.7}{V}$. Nejistota byla určena podle \cite{englich} jako
+Nejprve byl k transformátoru zapojen jen osciloskop a multimetr Fluke. Na ociloskopu se vykreslil celý průběh okamžité hodnoty střídavého napětí, z něhož byla určena špičková hodnota (amplituda) $U_0$ jako \\ $U_0 = \qty{10 \pm 1}{V}$. Nejistota byla určena jako velikost nejmenšího dílku mřížky obrazovky osciloskopu. Multimetrem, jež na střídavém rozsahu měří efektivní hodnoty napětí, byla určena hodnota $U_{eff} = \qty{6.72 \pm 0.10}{V}$, přičemž nejistota byla převzata ze specifikací přístroje. Z rovnice (\ref{eq:stredkueff}) bylo pro hodnotu z osciloskopu vypočteno odpovídající efektivní napětí $U'_{eff} = \qty{7.1 \pm 0.7}{V}$. Nejistota byla určena podle \cite{englich} jako
 \begin{equation}
     \sigma_{U'_{eff}} = U'_{eff} \frac{\sigma_{U_0}}{U_0} \, .    
 \end{equation}
@@ -289,7 +289,7 @@ V posledním úkolu byl obvod zapojen podle schématu \ref{sch:va}, přičemž o
 
 Z osciloskopu bylo odečteno napětí při proudu \qty{20}{\milli\ampere} jako $U = \qty{3.5\pm0.2}{\volt}$. Při nulovém napětí na diodě byl odhadnut proud $I = \qty{0.80\pm0.05}{\milli\ampere}$. Nejistoty byly určeny jako velikosti nejmenších bodů mřížky osciloskopu.
 
-Náčrtek celkové voltampérové charakteristiky vykreslené v osciloskopu je na obrázku \ref{fig:dioda}. Měřítko na x-ové ose je 1 V, na y-ové také, to ovšem odpovídá \qty{1e-2}{\ampere}, protože napětí bylo měřeno na odporu $R=\qty{100}{\ohm}$. Pro odhady jednotlivých vyznačených bodů však bylo měřítko upraveno tak, aby se hodnoty napětí a proudu daly z osciloskopu odečíst.
+Náčrtek celkové voltampérové charakteristiky vykreslené v osciloskopu je na obrázku \ref{fig:dioda}. Měřítko na x-ové (napěťové) ose je 1 V, na y-ové také, pokud bych vynášel napětí. To ovšem odpovídá měřítku proudu \qty{1e-2}{\ampere}, protože napětí bylo měřeno na odporu $R=\qty{100}{\ohm}$. Pro odhady jednotlivých vyznačených bodů však bylo měřítko upraveno tak, aby se hodnoty napětí a proudu daly z osciloskopu odečíst. Náčrtek byl vykreslen s využitím třípolovinového zákona (\ref{eq:langmuir}) s číselnými parametry $a= 0.25$ a $b=-0.46$, které byly určeny tak, aby křivka správně popisovala odhadnuté hodnoty z osciloskopu.
 
 \begin{figure}
     \centering
@@ -309,7 +309,7 @@ V grafu \ref{fig:1} je vidět, že pro nízké kapacity datové body poměrně d
 
 Zároveň bylo nutné datové body proložit křivkou, která je oproti rovnici (\ref{eq:filtr}) posunutá o určitou hodnotu na ose x, tj. předpokládat netriviální parazitní kapacitu zbytku obvodu, kterou je nutné sečíst s kapacitou kapacitní dekády. Tato hodnota vychází z regrese jako $C_0 = \qty{-0.58 \pm 0.01}{\micro\farad}$, tedy lze ji chápat jako netriviální indukčnost zbytku obvodu. Její přítomnost lze vysvětlit strukturou odporové dekády, kde jsou dráty namotané ve smyčkách, a tedy by mohly mít vlastní nenulovou indukčnost. Stejně tak bylo nutné tuto indukčnost kompenzovat i v úkolu k voltampérové charakteristice diody, což je důkaz, že odporová dekáda skutečně má nenulovou indukčnost.
 
-Střídavá složka usměrněného napětí naopak s rostoucí kapacitou klesá. Protože zátěžový odpor vystupuje ve vztahu (\ref{eq:filt}), a tím i ve (\ref{eq:deltau}) stejným způsobem jako kapacita, bude s rostoucím odporem klesat zvlnění napětí. Z Ohmova zákona pro zátěžový rezistor je odpor svázán se stejnosměrným proudem $I_{ss}$ vztahem (\ref{eq:ohm}), větší hodnotě proudu tedy musí odpovídat nižší hodnota odporu, a tedy i větší hodnota zvlnění $\Delta U$. Rovnice (\ref{eq:deltau2}) dokonce říká, že mezi $\Delta U$ a $I_{ss}$ je přímá úměrnost. Graf \ref{fig:2} ukazuje, že experimentální data jsou ve velmi dobrém souladu s touto teorií. Řádově lze odhadnout koeficient úměrnosti jako $\frac{T}{C} = \qty{2000}{s\per\farad}$, jeho hodnota však silně závisí na frekvenci odebíraného střídavého napětí (která v experimentu nebyla explicitně měřena) i na kapacitě (ve které se projeví indukčnost odporové dekády). Zároveň by bylo lepší měřit špičkové hodnoty proudu místo středních, protože i pro kapacitu \qty{10}{\micro\farad} je zvlnění napětí (a také proudu) nezanedbatelné, tedy neplatí předpoklad $\overline{U} \approx U_0$, nutný pro platnost vztahu (\ref{eq:deltau2}). Z lineární regrese však koeficient úměrnosti vychází jako $k = \qty{1.949\pm0.003}{V\per\milli\ampere} = \qty{1949\pm3}{V\per\ampere}$, takže alespoň řádově si hodnoty odpovídají.
+Střídavá složka usměrněného napětí naopak s rostoucí kapacitou klesá. Protože zátěžový odpor vystupuje ve vztahu (\ref{eq:filtr}), a tím i ve (\ref{eq:deltau}) stejným způsobem jako kapacita, bude s rostoucím odporem klesat zvlnění napětí. Z Ohmova zákona pro zátěžový rezistor je odpor svázán se stejnosměrným proudem $I_{ss}$ vztahem (\ref{eq:ohm}), větší hodnotě proudu tedy musí odpovídat nižší hodnota odporu, a tedy i větší hodnota zvlnění $\Delta U$. Rovnice (\ref{eq:deltau2}) dokonce říká, že mezi $\Delta U$ a $I_{ss}$ je přímá úměrnost. Graf \ref{fig:2} ukazuje, že experimentální data jsou ve velmi dobrém souladu s touto teorií. Řádově lze odhadnout koeficient úměrnosti jako $\frac{T}{C} = \qty{2000}{s\per\farad}$, jeho hodnota však silně závisí na frekvenci odebíraného střídavého napětí (která v experimentu nebyla explicitně měřena) i na kapacitě (ve které se projeví indukčnost odporové dekády). Zároveň by bylo lepší měřit špičkové hodnoty proudu místo středních, protože i pro kapacitu \qty{10}{\micro\farad} je zvlnění napětí (a také proudu) nezanedbatelné, tedy neplatí předpoklad $\overline{U} \approx U_0$, nutný pro platnost vztahu (\ref{eq:deltau2}). Z lineární regrese však koeficient úměrnosti vychází jako $k = \qty{1.949\pm0.003}{V\per\milli\ampere} = \qty{1949\pm3}{V\per\ampere}$, takže alespoň řádově si hodnoty odpovídají.
 
 Nakonec byla osciloskopm vykreslena voltampérová charakteristika pro vakouovou diodu, jejiž katoda byla žhavena napětím z externího transformátoru. Proud diodou byl měřen osciloskopem jako napětí na odporové dekádě o známém odporu. Protože byla do obvodu zapojena odporová dekáda s nenulovou indukčností, bylo nutné paralelně k ní zapojit i kapacitní dekádu, která tuto indukčnost kompenzuje. Jinak by se křivka voltampérové charakteristiky v osciloskopu vykreslila místo tenké linie jako hysterezní křivka. To bylo skutečně pozorováno, kapacita byla na kapacitní dekádě upravena tak, aby obě větve hysterezní křivky splynuly v jednu. 
 
