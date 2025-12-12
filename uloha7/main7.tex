@@ -1,0 +1,143 @@
+
+\documentclass{../concepts/prepareprotokol} %všechny balíčky pro protokol + titulní strana
+\usepackage{graphicx}
+\usepackage{newfloat}
+\usepackage{caption}
+\usepackage{booktabs}
+\usepackage{amsmath}
+\usepackage{newfloat}
+\usepackage{caption}
+\usepackage{siunitx}
+\sisetup{inter-unit-product =$\cdot$}
+\sisetup{separate-uncertainty=true}
+
+\praktikum{II} %číslo praktika (I, II nebo III)
+\autor{David Němec} %jméno autora
+\datum{8.\,12.\,2025} %datum měření
+\cislo{7} %číslo úlohy
+\nazev{Měření indukčnosti a kapacity metodou přímou} %název úlohy
+
+\DeclareFloatingEnvironment[fileext=los, placement={htbp}, name=Obrázek]{schema}
+
+\newcommand{\nobars}{
+Chybové úsečky nebyly pro svou malou velikost pro přehlednost vykresleny.}
+
+
+\begin{document}
+\renewcommand{\figurename}{Graf}
+\renewcommand{\refname}{Literatura}
+
+\maketitle
+
+% ========================== PRACOVNÍ ÚKOL ============================
+\section{Pracovní úkol}
+\begin{enumerate}
+    \item Změřte velikost kapacit kondenzátorů z kapacitní dekády.
+    \item Změřte závislost indukčnosti cívky na procházejícím proudu pro tyto případy:
+    \begin{enumerate}
+        \item cívka bez jádra (0-250 mA)
+        \item cívka s otevřeným jádrem (0-250 mA)
+        \item cívka s uzavřeným jádrem (0-250 mA)
+    \end{enumerate}
+
+    \item Změřte odpor cívky multimetrem a určete její kvalitu.
+    \item Závislosti indukčnosti cívky na proudu měřené v úkolu 2 zakreslete do grafu přímo v praktiku.
+\end{enumerate}
+
+% ============================= TEORIE ================================
+\section{Teorie}
+\subsection{Odpor a kapacita kondenzátoru}
+
+Reálný kondenzátor, který má kromě své kapacity $C$ i nenulový vlastní odpor $R_C$, lze popsat náhradním schématem (obr. \ref{sch:kondenzator}), kdy jsou paralelně zapojeny ideální kondenzátor $C$ a rezistor $R_C$. Kondenzátorem teče posuvný proud $i_p$ a rezistorem vodivostní proud $i_v$.
+
+Pokud zapojíme reálný kondenzátor ke zdroji střídavého napětí o úhlové frekvenci $\omega$ a pro jeho odpor bude platit $R_C \gg (\omega C)^{-1}$, lze kapacitu kondenzátoru určit ze vztahu \cite{studijni}
+\begin{equation}
+    C = \frac{1}{2 \pi f} \frac{I}{U} \, ,
+\end{equation}
+kde $f$ je frekvence střídavého napětí, $I$ a $U$ jsou efektivní hodnoty proudu resp. napětí.
+
+Při připojení ke stejnosměrnému napětí se kapacita kondenzátoru neprojeví a pro jeho odpor bude platit Ohmův zákon \cite{studijni4}
+\begin{equation}
+    R_C = \frac{U}{I} \, .
+\end{equation}
+
+\subsection{Odpor a indukčnost cívky}
+Reálnou cívku s indukčností $L$ a odporem $R_L$ lze popsat náhradním schématem (obr. \ref{sch:civka}), kdy jsou sériově zapojeny ideální cívka $L$ a rezistor $R_L$.
+
+Pokud zapojíme cívku ke zdroji střídavého napětí o frekvenci $f$, lze indukčnost cívky vypočíst ze vztahu \cite{studijni}
+\begin{equation}
+    L = \frac{\sqrt{\frac{U^2}{I^2}-R_L^2}}{2 \pi f} \, .
+\end{equation}
+
+Měřítkem kvality cívky je její činitel jakosti, definovaný jako (upraveno podle \cite{studijni})
+\begin{equation}
+    Q = \frac{2 \pi f L}{R_L} \, .
+\end{equation}
+
+\subsection{Čtyřbodové zapojení rezistoru}
+
+Pro přesnější měření odporu rezistoru (ale i cívky) lze využít čtyřbodového zapojení podle schématu na obrázku \ref{sch:four}. Pokud je voltmetr připojen k napěťovým svorkám $b$ a $b'$, nebude měření ovlivněno spádem napětí na přívodních vodičích mezi rezistorem a proudovými svorkami $a$ a $a'$. Za předpokladu nízkých hodnot $R$ oproti odporu voltmetru poteče přívodními vodiči k napěťovým svorkám zanedbatelný proudu a ani odpor těchto vodičů se neuplatní \cite{studijni4}.
+
+\subsection{Metoda měření}
+
+\begin{schema}[htbp]
+    \centering
+    \includegraphics[width=0.5\linewidth]{uloha4/fourpoints.png}
+    \caption{Schema yap}
+    \label{sch:4}
+\end{schema}
+
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=0.5\linewidth]{uloha27/schema.png}
+    \caption{Schéma zapojení [LITERATURA]}
+    \label{fig:schema}
+\end{figure}
+
+
+
+\subsection{Měřicí přístroje a jejich nejistoty}
+\begin{enumerate}
+    \item PŘÍSTROJ:
+    
+    POZNÁMKY
+
+\end{enumerate}
+
+
+% ======================== VÝSLEDKY MĚŘENÍ ===========================
+\section{Výsledky měření}
+
+
+\begin{figure}
+    \centering
+    \includegraphics[width=0.5\linewidth]{uloha27/GRAF1.png}
+    \caption{Závislost kapacity deskového kondenzátoru na napětí.}
+    \label{fig:osciloskop}
+\end{figure}
+
+
+% ============================ DISKUZE ===============================
+\section{Diskuze}
+
+
+% ============================= ZÁVĚR ================================
+\section{Závěr}
+
+
+% =========================== LITERATURA =============================
+\begin{thebibliography}{9}
+
+\bibitem{studijni} Kolektiv ZFP KVOF MFF UK: Měření indukčnosti a kapacity metodou přímou - studijní text [online]. [cit. 12.12.2025], dostupné z https://physics.mff.cuni.cz/vyuka/zfp/\_media/zadani/texty/txt\_207.pdf
+
+\bibitem{studijni4} Kolektiv ZFP KVOF MFF UK: Měření malých odporů [online]. [cit. 12.12.2025], dostupné z~https://physics.mff.cuni.cz/vyuka/zfp/\_media/zadani/texty/txt\_204.pdf
+
+\bibitem{pokyny} Kolektiv ZFP KVOF MFF UK: Měření indukčnosti a kapacity metodou přímou - pokyny k měření [online]. [cit. 12.12.2025], dostupné \\
+z https://physics.mff.cuni.cz/vyuka/zfp/\_media/zadani/pokyny/mereni\_207.pdf
+
+\bibitem{englich} J. Englich: Úvod do praktické fyziky I: Zpracování výsledků měření. 1. vyd. Praha: Matfyzpress, 2006
+
+\bibitem{mikulcak} Mikulčák a kolektiv: Matematické, fyzikální a chemické tabulky pro střední školy: relativní permitivita, Praha: Státní pedagogické nakladatelství, n. p., 1988
+
+\end{thebibliography}
+\end{document}
