@@ -22,6 +22,16 @@
 \newcommand{\nobars}{
 Chybové úsečky nebyly pro svou malou velikost pro přehlednost vykresleny.}
 
+\newcommand{\relative}[1]{
+\frac{\sigma_{#1}}{#1}
+}
+\newcommand{\squared}[1]{
+\left( #1 \right)^2
+}
+\newcommand{\relsqr}[1]{
+\squared{\relative{#1}}
+%\left( \frac{\sigma_{#1}}{#1} \right)^2
+}
 
 \begin{document}
 \renewcommand{\figurename}{Graf}
