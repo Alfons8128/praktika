@@ -7,6 +7,7 @@ from scipy.optimize import curve_fit
 from functools import partial
 from matplotlib.lines import Line2D
 from scipy.stats.distributions import t
+from scipy.interpolate import make_interp_spline
 
 ################# Var class ############################
 class Var:
@@ -118,6 +119,10 @@ class Var:
         new_unc = unp.exp(self.unc)
         return Var(unp.nominal_values(new_unc), unp.std_devs(new_unc), f'\\exp {self.short_name}', self.unit)
     
+    def sqrt(self):
+        new_unc = unp.sqrt(self.unc)
+        return Var(unp.nominal_values(new_unc), unp.std_devs(new_unc), f'\\sqrt{{{self.short_name}}}', self.unit)
+    
     def __setitem__(self, idx, value):
         new_unc = self.unc
         if isinstance(value, Var):
@@ -197,7 +202,7 @@ class Rel:
         self.coeffs = fitted_coeffs
         self.cov = cov_matrix
     
-    def plot_data(self, ax, err: tuple = (1,1), connect=False, label='naměřené hodnoty', 
+    def plot_data(self, ax, err: tuple = (1,1), connect=False, smooth=False, label='naměřené hodnoty', 
                   scale=1, marker='s', color='black', zorder=None):
         match err:
             case (1, 1): # x_error_bar and y_error_bar
@@ -214,6 +219,13 @@ class Rel:
 
         if connect:
             ax.plot(self.x.val, self.y.val, color='black')
+
+        if smooth:
+            # Create a smooth line using spline interpolation
+            x_smooth = np.linspace(min(self.x.val), max(self.x.val), 300)
+            spline = make_interp_spline(self.x.val, self.y.val, k=smooth)  # Cubic spline
+            y_smooth = spline(x_smooth)
+            ax.plot(x_smooth, y_smooth, color='black', linestyle='--')
 
         ax.set_xlabel(self.x.long_name)
         ax.set_ylabel(self.y.long_name)
