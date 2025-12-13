@@ -7,6 +7,7 @@
 \usepackage{amsmath}
 \usepackage{newfloat}
 \usepackage{caption}
+\usepackage{multirow}
 \usepackage{siunitx}
 \sisetup{inter-unit-product =$\cdot$}
 \sisetup{separate-uncertainty=true}
@@ -22,6 +23,9 @@
 \newcommand{\nobars}{
 Chybové úsečky nebyly pro svou malou velikost pro přehlednost vykresleny.}
 
+\newcommand{\relative}[1]{
+\left( \frac{\sigma_{#1}}{#1} \right)^2
+}
 
 \begin{document}
 \renewcommand{\figurename}{Graf}
@@ -48,59 +52,108 @@ Chybové úsečky nebyly pro svou malou velikost pro přehlednost vykresleny.}
 \section{Teorie}
 \subsection{Odpor a kapacita kondenzátoru}
 
-Reálný kondenzátor, který má kromě své kapacity $C$ i nenulový vlastní odpor $R_C$, lze popsat náhradním schématem (obr. \ref{sch:kondenzator}), kdy jsou paralelně zapojeny ideální kondenzátor $C$ a rezistor $R_C$. Kondenzátorem teče posuvný proud $i_p$ a rezistorem vodivostní proud $i_v$.
+Reálný kondenzátor, který má kromě své kapacity $C$ i nenulový vlastní odpor $R_C$, lze popsat náhradním schématem (obr. \ref{sch:nahrkond}), kdy jsou paralelně zapojeny ideální kondenzátor $C$ a rezistor $R_C$. Kondenzátorem teče posuvný proud $i_p$ a rezistorem vodivostní proud $i_v$.
 
 Pokud zapojíme reálný kondenzátor ke zdroji střídavého napětí o úhlové frekvenci $\omega$ a pro jeho odpor bude platit $R_C \gg (\omega C)^{-1}$, lze kapacitu kondenzátoru určit ze vztahu \cite{studijni}
-\begin{equation}
+\begin{equation} \label{eq:c}
     C = \frac{1}{2 \pi f} \frac{I}{U} \, ,
 \end{equation}
 kde $f$ je frekvence střídavého napětí, $I$ a $U$ jsou efektivní hodnoty proudu resp. napětí.
 
-Při připojení ke stejnosměrnému napětí se kapacita kondenzátoru neprojeví a pro jeho odpor bude platit Ohmův zákon \cite{studijni4}
-\begin{equation}
+Při připojení ke stejnosměrnému napětí se kapacita kondenzátoru neprojeví a pro jeho odpor bude platit Ohmův zákon \cite{studijni}
+\begin{equation} \label{eq:ohm}
     R_C = \frac{U}{I} \, .
 \end{equation}
+
+\begin{schema}[!htbp]
+    \centering
+    \includegraphics[width=0.5\linewidth]{uloha7/nahrkond.png}
+    \caption{Náhradní schéma reálného kondenzátoru. \cite{studijni}}
+    \label{sch:nahrkond}
+\end{schema}
+
+\begin{schema}[!htbp]
+    \centering
+    \includegraphics[width=0.5\linewidth]{uloha7/ckond.png}
+    \caption{Zapojení obvodu při měření kapacity. \cite{pokyny}}
+    \label{sch:ckond}
+\end{schema}
+
+\begin{schema}[!htbp]
+    \centering
+    \includegraphics[width=0.5\linewidth]{uloha7/rkond.png}
+    \caption{Zapojení obvodu při měření odporu kondenzátoru. \cite{pokyny}}
+    \label{sch:rkond}
+\end{schema}
 
 \subsection{Odpor a indukčnost cívky}
 Reálnou cívku s indukčností $L$ a odporem $R_L$ lze popsat náhradním schématem (obr. \ref{sch:civka}), kdy jsou sériově zapojeny ideální cívka $L$ a rezistor $R_L$.
 
 Pokud zapojíme cívku ke zdroji střídavého napětí o frekvenci $f$, lze indukčnost cívky vypočíst ze vztahu \cite{studijni}
-\begin{equation}
+\begin{equation} \label{eq:l}
     L = \frac{\sqrt{\frac{U^2}{I^2}-R_L^2}}{2 \pi f} \, .
 \end{equation}
 
 Měřítkem kvality cívky je její činitel jakosti, definovaný jako (upraveno podle \cite{studijni})
-\begin{equation}
+\begin{equation} \label{eq:q}
     Q = \frac{2 \pi f L}{R_L} \, .
 \end{equation}
 
+\begin{schema}[!htbp]
+    \centering
+    \includegraphics[width=0.5\linewidth]{uloha7/nahrcivka.png}
+    \caption{Náhradní schéma reálné cívky. \cite{studijni}}
+    \label{sch:nahrcivka}
+\end{schema}
+
+\begin{schema}[!htbp]
+    \centering
+    \includegraphics[width=0.5\linewidth]{uloha7/lcivka.png}
+    \caption{Zapojení obvodu při měření cívky bez jádra a s otevřeným jádrem. \cite{pokyny}}
+    \label{sch:lcivka}
+\end{schema}
+
+\begin{schema}[!htbp]
+    \centering
+    \includegraphics[width=0.5\linewidth]{uloha7/lcivka2.png}
+    \caption{Zapojení obvodu při měření cívky s uzavřeným jádrem. \cite{pokyny}}
+    \label{sch:lcivka2}
+\end{schema}
+
 \subsection{Čtyřbodové zapojení rezistoru}
 
-Pro přesnější měření odporu rezistoru (ale i cívky) lze využít čtyřbodového zapojení podle schématu na obrázku \ref{sch:four}. Pokud je voltmetr připojen k napěťovým svorkám $b$ a $b'$, nebude měření ovlivněno spádem napětí na přívodních vodičích mezi rezistorem a proudovými svorkami $a$ a $a'$. Za předpokladu nízkých hodnot $R$ oproti odporu voltmetru poteče přívodními vodiči k napěťovým svorkám zanedbatelný proudu a ani odpor těchto vodičů se neuplatní \cite{studijni4}.
+Pro přesnější měření odporu rezistoru (ale i cívky) lze využít čtyřbodového zapojení podle schématu na obrázku \ref{sch:four}. Pokud je voltmetr připojen k napěťovým svorkám $b$ a $b'$, nebude měření ovlivněno spádem napětí na přívodních vodičích mezi rezistorem a proudovými svorkami $a$ a $a'$. Za předpokladu nízkých hodnot $R$ oproti odporu voltmetru poteče přívodními vodiči k napěťovým svorkám zanedbatelný proudu a ani odpor těchto vodičů se neuplatní \cite{studijni}.
+
+\begin{schema}
+    \centering
+    \includegraphics[width=0.5\linewidth]{uloha7/four.png}
+    \caption{Čtyřbodové zapojení rezistoru. \cite{studijni}}
+    \label{sch:four}
+\end{schema}
 
 \subsection{Metoda měření}
 
-\begin{schema}[htbp]
-    \centering
-    \includegraphics[width=0.5\linewidth]{uloha4/fourpoints.png}
-    \caption{Schema yap}
-    \label{sch:4}
-\end{schema}
+Nejprve byl obvod zapojen podle schématu \ref{sch:rkond} pro určení odporu kondenzátoru a odhad platnosti přepokladu vztahu (\ref{eq:c}) tj. $R_C \gg (\omega C)^{-1}$. Obvod byl připojen ke stejnosměrnému napětí, kdy se kapacita kondenzátoru neprojeví v jeho impedanci (frekvence je teoreticky nulová). 
 
-\begin{figure}[htbp]
-    \centering
-    \includegraphics[width=0.5\linewidth]{uloha27/schema.png}
-    \caption{Schéma zapojení [LITERATURA]}
-    \label{fig:schema}
-\end{figure}
+Následně byl kondenzátor připojen ke střídavému napětí (odebíranému ze sítě s frekvencí \qty{50}{Hz}, které bylo transformátorem pro vyšší bezpečnost přeměněno na nižší hodnoty. Přístroj umožňující zapojování kondenzátorů do obvodu totiž nebyl chráněný vůči kontaktu.
 
+Při měření indukčnosti cívky bez jádra nebo s otevřeným jádrem byl opět jako zdroj použit transformátor snižující napětí, tentokrát ovšem z důvodu snažšího dosažení malých proudů. Při měření s cívkou s uzavřeným jádrem byl použit zdroj bez transformátoru, aby mohlo být pozorováno nasycení cívky při vyšších hodnotách proudu. Během měření s těmito vysokými hodnotami napětí bylo dbáno zvýšené opatrnosti.
 
+Odpor cívky byl měřen čtyřbodovou metodou (schéma \ref{sch:four}), jelikož byla předpokládána jeho nízká hodnota. Za použití této medoty se totiž odpor přívodních vodičů neprojeví a výsledná hodnota nebude zatížena touto systematickou chybou.
 
 \subsection{Měřicí přístroje a jejich nejistoty}
 \begin{enumerate}
-    \item PŘÍSTROJ:
+    \item Multimetr Fluke 175:
     
-    POZNÁMKY
+    Tímto multimetrem byly měřeny efektivní hodnoty střídavého napětí a proudu během měření kapacit kondenzátorů a také během měření indukčnosti cívky. Nejistota určení napětí je 1\,\% z měřené hodnoty + 3 digity a nejistota určení proudu je 1.5\,\% z měřené hodnoty + 3 digity
+
+    \item Multimetr Fluke 8808A:
+
+    Tímto multimetrem byla ověřena frekvence střídavého napětí a dále také čtyřbodovým zapojením měřen odpor cívky. Nejistota určení frekvence je 0.01\,\% z měřené hodnoty + 0.003\,\% z rozsahu, nejistota určení odporu je 0.03\,\% z měřené hodnoty + 0.004\,\% z rozsahu.
+
+    \item Analogový mikroampérmetr:
+
+    Mikroampérmetrem byl měren proud při určování odporu kondenzátoru. Nejistota byla odhadnuta jako velikost nejmenšího dílku při daném rozsahu, tedy \qty{0.1}{\micro\ampere}.
 
 \end{enumerate}
 
@@ -108,14 +161,60 @@ Pro přesnější měření odporu rezistoru (ale i cívky) lze využít čtyřb
 % ======================== VÝSLEDKY MĚŘENÍ ===========================
 \section{Výsledky měření}
 
+\subsection{Odpor a kapacita kondenzátorů}
 
-\begin{figure}
-    \centering
-    \includegraphics[width=0.5\linewidth]{uloha27/GRAF1.png}
-    \caption{Závislost kapacity deskového kondenzátoru na napětí.}
-    \label{fig:osciloskop}
-\end{figure}
+Nejprve byla multimetrem Fluke 8808A ověřena hodnota frekvence střídavého napětí odebíraného ze sítě. Hodnota byla určena jako $f = \qty{50.000 \pm 0.005}{Hz}$, přičemž nejistota byla vzata jako nejistota přístroje.
 
+Následně byl obvod zapojen podle schématu \ref{sch:rkond} a byl určen odpor kondenzátoru F s nejvyšší předpokládanou kapacitou, a tím i nejpřísnějším limitem na hodnotu odporu $R_C \gg (\omega C)^{-1}$. Efektivní hodnoty napětí a proudu byly změřeny jako $U= \qty{20.8\pm0.2}{V}$ resp. $I=\qty{5.0\pm0.1}{\micro\ampere}$. Jejich nejistoty byly vzaty jako nejistota přístroje. Odpor byl určen z Ohmova zákona (\ref{eq:ohm}) jako $R = \qty{4.16\pm1.0}{\mega\ohm}$, přičemž nejistota byla vypočtena podle \cite{englich} jako
+\begin{equation}
+    \sigma_{R_C} = R_C \sqrt{\relative{U} + \relative{I}} \, .
+\end{equation}
+
+Dále byl obvod zapojen podle schématu \ref{sch:ckond} a byla měřena závislost proudu na napětí pro připojené jednotlivé kondenzátory A, C, F a poté pro kombinaci C a F. Naměřené hodnoty ukazuje tabulka \ref{tab:kond}. Nejistoty napětí a proudu byly určeny jako nejistota měřidla (multimetru Fluke 175). Závislosti proudu na napětí pro jednotlivé kondenzátory jsou vykresleny v grafu \ref{fig:kond}. 
+
+\begin{table}[!htbp]
+\centering
+\caption{Naměřené efektivní hodnoty napětí a proudu pro jednotlivé kondenzátory}
+\begin{tabular}{cc|cc|cc|cc}
+ \toprule
+ \multicolumn{2}{c|}{kondenzátor A} & \multicolumn{2}{c|}{kondenzátor C} & \multicolumn{2}{c|}{kondenzátor F} & \multicolumn{2}{c}{kondenzátory C a F} \\
+ \midrule
+ $U_A\, (\mathrm{V})$ & $I_A\, (\mathrm{mA})$ & $U_C\, (\mathrm{V})$ & $I_C\, (\mathrm{mA})$ & $U_F\, (\mathrm{V})$ & $I_F\, (\mathrm{mA})$ & $U_{CF}\, (\mathrm{V})$ & $I_{CF}\, (\mathrm{mA})$ \\
+ \midrule
+ $8.51 \pm 0.12$ & $1.75 \pm 0.06$ & $8.45 \pm 0.11$ & $3.62 \pm 0.08$ & $8.60 \pm 0.12$ & $8.59 \pm 0.16$ & $8.66 \pm 0.12$ & $12.2 \pm 0.2$ \\
+ $7.09 \pm 0.10$ & $1.43 \pm 0.05$ & $7.00 \pm 0.10$ & $2.96 \pm 0.07$ & $7.02 \pm 0.10$ & $6.98 \pm 0.13$ & $7.00 \pm 0.10$ & $9.73 \pm 0.18$ \\  
+ $5.64 \pm 0.09$ & $1.14 \pm 0.05$ & $5.41 \pm 0.08$ & $2.27 \pm 0.06$ & $5.65 \pm 0.09$ & $5.54 \pm 0.11$ & $5.56 \pm 0.09$ & $7.75 \pm 0.15$ \\
+ $3.62 \pm 0.04$ & $0.73 \pm 0.04$ & $3.52 \pm 0.04$ & $1.47 \pm 0.05$ & $3.55 \pm 0.04$ & $3.46 \pm 0.08$ & $3.58 \pm 0.04$ & $4.92 \pm 0.10$ \\
+ $1.70 \pm 0.02$ & $0.34 \pm 0.04$ & $1.58 \pm 0.02$ & $0.65 \pm 0.04$ & $1.60 \pm 0.02$ & $1.52 \pm 0.05$ & $1.68 \pm 0.02$ & $2.28 \pm 0.06$ \\
+ \bottomrule
+\end{tabular}
+\label{tab:kond}
+\end{table}
+
+
+
+Datové body proloženy přímkami $I = k U$ a kapacity jednotlivých kondenzátorů byly určeny lineární regresí ze směrnic $k$ těchto přímek. Podle rovnice (\ref{eq:c}) je totiž platí
+\begin{equation} \label{eq:kc}
+    k= 2 \pi f C \, .
+\end{equation}
+
+Takto určené kapacity kondenzátorů pak shrnuje tabulka \ref{tab:kapacity}.
+
+\begin{table}[!htbp]
+\centering
+\caption{Směrnice lineárních závislostí proudu na napětí a vypočtené kapacity kondenzátorů}
+\begin{tabular}{c|cc}
+ \toprule
+ kondenzátor & $k\, (\mathrm{mA/V})$ & $C\, (\mathrm{\mu F})$ \\
+ \midrule
+ A & $0.203 \pm 0.004$ & $0.646 \pm 0.012$ \\
+ C & $0.423 \pm 0.006$ & $1.346 \pm 0.018$ \\
+ F & $0.99 \pm 0.01$ & $3.14 \pm 0.03$ \\
+ C+F & $1.390 \pm 0.012$ & $4.43 \pm 0.04$ \\
+ \bottomrule
+\end{tabular}
+\label{tab:kapacity}
+\end{table}
 
 % ============================ DISKUZE ===============================
 \section{Diskuze}
@@ -130,14 +229,11 @@ Pro přesnější měření odporu rezistoru (ale i cívky) lze využít čtyřb
 
 \bibitem{studijni} Kolektiv ZFP KVOF MFF UK: Měření indukčnosti a kapacity metodou přímou - studijní text [online]. [cit. 12.12.2025], dostupné z https://physics.mff.cuni.cz/vyuka/zfp/\_media/zadani/texty/txt\_207.pdf
 
-\bibitem{studijni4} Kolektiv ZFP KVOF MFF UK: Měření malých odporů [online]. [cit. 12.12.2025], dostupné z~https://physics.mff.cuni.cz/vyuka/zfp/\_media/zadani/texty/txt\_204.pdf
-
 \bibitem{pokyny} Kolektiv ZFP KVOF MFF UK: Měření indukčnosti a kapacity metodou přímou - pokyny k měření [online]. [cit. 12.12.2025], dostupné \\
 z https://physics.mff.cuni.cz/vyuka/zfp/\_media/zadani/pokyny/mereni\_207.pdf
 
 \bibitem{englich} J. Englich: Úvod do praktické fyziky I: Zpracování výsledků měření. 1. vyd. Praha: Matfyzpress, 2006
 
-\bibitem{mikulcak} Mikulčák a kolektiv: Matematické, fyzikální a chemické tabulky pro střední školy: relativní permitivita, Praha: Státní pedagogické nakladatelství, n. p., 1988
-
 \end{thebibliography}
+
 \end{document}
