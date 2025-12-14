@@ -143,7 +143,7 @@ Pro přesnější měření odporu rezistoru (ale i cívky) lze využít čtyřb
 
 Nejprve byl obvod zapojen podle schématu \ref{sch:rkond} pro určení odporu kondenzátoru a odhad platnosti přepokladu vztahu (\ref{eq:c}) tj. $R_C \gg (\omega C)^{-1}$. Obvod byl připojen ke stejnosměrnému napětí, kdy se kapacita kondenzátoru neprojeví v jeho impedanci (frekvence je teoreticky nulová). 
 
-Následně byl kondenzátor připojen ke střídavému napětí (odebíranému ze sítě s frekvencí \qty{50}{Hz}, které bylo transformátorem pro vyšší bezpečnost přeměněno na nižší hodnoty. Přístroj umožňující zapojování kondenzátorů do obvodu totiž nebyl chráněný vůči kontaktu.
+Následně byl kondenzátor připojen ke střídavému napětí (odebíranému ze sítě s frekvencí \qty{50}{Hz}), které bylo transformátorem pro vyšší bezpečnost přeměněno na nižší hodnoty. Přístroj umožňující zapojování kondenzátorů do obvodu totiž nebyl chráněný vůči kontaktu.
 
 Během všech měření s kondenzátory i cívkou bylo napětí nastaveno nejprve na nejvyšší hodnotu a následně bylo už jen snižováno, aby s jistotou nedošlo k překročení povolených hodnot proudů.
 
@@ -155,7 +155,7 @@ Odpor cívky byl měřen čtyřbodovou metodou (schéma \ref{sch:four}), jeliko�
 \begin{enumerate}
     \item Multimetr Fluke 175:
     
-    Tímto multimetrem byly měřeny efektivní hodnoty střídavého napětí a proudu během měření kapacit kondenzátorů a také během měření indukčnosti cívky. Nejistota určení napětí je 1\,\% z měřené hodnoty + 3 digity a nejistota určení proudu je 1.5\,\% z měřené hodnoty + 3 digity
+    Tímto multimetrem byly měřeny efektivní hodnoty střídavého napětí a proudu během měření kapacit kondenzátorů a také během měření indukčnosti cívky. Nejistota určení napětí je 1\,\% z měřené hodnoty + 3 digity a nejistota určení proudu je 1.5\,\% z měřené hodnoty + 3 digity.
 
     \item Multimetr Fluke 8808A:
 
@@ -175,7 +175,7 @@ Odpor cívky byl měřen čtyřbodovou metodou (schéma \ref{sch:four}), jeliko�
 
 Nejprve byla multimetrem Fluke 8808A ověřena hodnota frekvence střídavého napětí odebíraného ze sítě. Hodnota byla určena jako $f = \qty{50.000 \pm 0.005}{Hz}$, přičemž nejistota byla vzata jako nejistota přístroje.
 
-Následně byl obvod zapojen podle schématu \ref{sch:rkond} a byl určen odpor kondenzátoru F s nejvyšší předpokládanou kapacitou, a tím i nejpřísnějším limitem na hodnotu odporu $R_C \gg (\omega C)^{-1}$. Efektivní hodnoty napětí a proudu byly změřeny jako $U= \qty{20.8\pm0.2}{V}$ resp. $I=\qty{5.0\pm0.1}{\micro\ampere}$. Jejich nejistoty byly vzaty jako nejistota přístroje. Odpor byl určen z Ohmova zákona (\ref{eq:ohm}) jako $R = \qty{4.16\pm1.0}{\mega\ohm}$, přičemž nejistota byla vypočtena podle \cite{englich} jako
+Následně byl obvod zapojen podle schématu \ref{sch:rkond} a byl určen odpor kondenzátoru F s nejvyšší předpokládanou kapacitou, a tím i nejpřísnějším limitem na hodnotu odporu $R_C \gg (\omega C)^{-1}$. Efektivní hodnoty napětí a proudu byly změřeny jako $U= \qty{20.8\pm0.2}{V}$ resp. $I=\qty{5.0\pm0.1}{\micro\ampere}$. Jejich nejistoty byly vzaty jako nejistota přístroje. Odpor byl určen z Ohmova zákona (\ref{eq:ohm}) jako $R = \qty{4.16\pm0.10}{\mega\ohm}$, přičemž nejistota byla vypočtena podle \cite{englich} jako
 \begin{equation}
     \sigma_{R_C} = R_C \sqrt{\relsqr{U} + \relsqr{I}} \, .
 \end{equation}
@@ -196,7 +196,7 @@ $10.34 \pm 0.13$ & $2.15 \pm 0.06$ & $10.33 \pm 0.13$ & $4.50 \pm 0.10$ & $10.12
  $7.09 \pm 0.10$ & $1.43 \pm 0.05$ & $7.00 \pm 0.10$ & $2.96 \pm 0.07$ & $7.02 \pm 0.10$ & $6.98 \pm 0.13$ & $7.00 \pm 0.10$ & $9.73 \pm 0.18$ \\  
  $5.64 \pm 0.09$ & $1.14 \pm 0.05$ & $5.41 \pm 0.08$ & $2.27 \pm 0.06$ & $5.65 \pm 0.09$ & $5.54 \pm 0.11$ & $5.56 \pm 0.09$ & $7.75 \pm 0.15$ \\
  $3.62 \pm 0.04$ & $0.73 \pm 0.04$ & $3.52 \pm 0.04$ & $1.47 \pm 0.05$ & $3.55 \pm 0.04$ & $3.46 \pm 0.08$ & $3.58 \pm 0.04$ & $4.92 \pm 0.10$ \\
- $1.70 \pm 0.02$ & $0.34 \pm 0.04$ & $1.577 \pm 0.019$ & $0.65 \pm 0.04$ & $1.599 \pm 0.019$ & $1.52 \pm 0.05$ & $1.68 \pm 0.02$ & $2.28 \pm 0.06$ \\
+ $1.70 \pm 0.02$ & $0.34 \pm 0.04$ & $1.58 \pm 0.02$ & $0.65 \pm 0.04$ & $1.60 \pm 0.02$ & $1.52 \pm 0.05$ & $1.68 \pm 0.02$ & $2.28 \pm 0.06$ \\
  \bottomrule
 \end{tabular}
 \label{tab:kond}
@@ -244,12 +244,12 @@ Následně byly pro tři případy (cívka bez jádra, s otevřeným jádrem, s 
 
 Multimetry byly měřeny efektivní hodnoty napětí a proudu, indukčnost z nich (a z odporu $R_L$) byla vypočtena podle vztahu (\ref{eq:l}). Naměřené hodnoty proudu a napětí a vypočtené hodnoty indukčnosti pro jednotlivé případy jsou v tabulkách \ref{tab:civka1}, \ref{tab:civka2} a \ref{tab:civka3}. Nejistoty proudu a napětí byly určeny ze specifikací přístroje (viz kap. \ref{pristroje}). Nejistota indukčnosti byla vypočtena podle \cite{englich} podle vztahu
 \begin{equation}
-    \sigma_L = \frac{1}{2 \pi f} \frac{1}{\sqrt{\frac{U^2}{I^2} - R_L^2}} \sqrt{\frac{U^2}{I^4}\sigma_U^2 + \frac{U^4}{I^6} \sigma_I^2 + {R_L}^2 \sigma_{R_L}^2}
+    \sigma_L = \frac{1}{2 \pi f} \frac{1}{\sqrt{\frac{U^2}{I^2} - R_L^2}} \sqrt{\frac{U^2}{I^4}\sigma_U^2 + \frac{U^4}{I^6} \sigma_I^2 + {R_L}^2 \sigma_{R_L}^2} \, .
 \end{equation}
 
-\begin{table}[!htbp]
+\begin{table}[!hp]
 \centering
-\caption{Naměřené efektivní hodnoty proudu, napětí a vypočtené indukčnosti pro cívku bez jádra}
+\caption{Naměřené efektivní hodnoty proudu, napětí a vypočtené indukčnosti pro cívku bez jádra.}
 \begin{tabular}{ccc}
  \toprule
  $I\, (\mathrm{mA})$ & $U\, (\mathrm{V})$ & $L\, (\mathrm{mH})$ \\
@@ -269,9 +269,9 @@ Multimetry byly měřeny efektivní hodnoty napětí a proudu, indukčnost z nic
 \label{tab:civka1}
 \end{table}
 
-\begin{table}[!htbp]
+\begin{table}[!hp]
 \centering
-\caption{Naměřené efektivní hodnoty proudu, napětí a vypočtené indukčnosti pro cívku s otevřeným jádrem}
+\caption{Naměřené efektivní hodnoty proudu, napětí a vypočtené indukčnosti pro cívku s otevřeným jádrem.}
 \begin{tabular}{ccc}
  \toprule
  $I\, (\mathrm{mA})$ & $U\, (\mathrm{V})$ & $L\, (\mathrm{mH})$ \\
@@ -291,14 +291,14 @@ Multimetry byly měřeny efektivní hodnoty napětí a proudu, indukčnost z nic
 \label{tab:civka2}
 \end{table}
 
-\begin{table}[!htbp]
+\begin{table}[!hp]
 \centering
-\caption{Naměřené efektivní hodnoty proudu, napětí a vypočtené indukčnosti pro cívku s uzavřeným jádrem}
+\caption{Naměřené efektivní hodnoty proudu, napětí a vypočtené indukčnosti pro cívku s uzavřeným jádrem.}
 \begin{tabular}{ccc}
  \toprule
  $I\, (\mathrm{mA})$ & $U\, (\mathrm{V})$ & $L\, (\mathrm{H})$ \\
  \midrule
- $4.73 \pm 0.10$ & $1.132 \pm 0.014$ & $0.762 \pm 0.019$ \\
+ $4.7 \pm 0.1$ & $1.13 \pm 0.01$ & $0.76 \pm 0.02$ \\
  $10.7 \pm 0.2$ & $3.55 \pm 0.04$ & $1.05 \pm 0.02$ \\
  $21.2 \pm 0.3$ & $10.56 \pm 0.14$ & $1.59 \pm 0.03$ \\
  $35.6 \pm 0.6$ & $23.7 \pm 0.3$ & $2.12 \pm 0.04$ \\
@@ -319,21 +319,93 @@ Multimetry byly měřeny efektivní hodnoty napětí a proudu, indukčnost z nic
 
 Výsledné závislosti indukčnosti na proudu pro jednotlivé případy jsou vykresleny v grafech \ref{fig:civka1}, \ref{fig:civka2} a \ref{fig:civka3}.
 
+\begin{figure}[!hp]
+    \centering
+    \includegraphics[width=0.5\linewidth]{uloha7/fig1.png}
+    \caption{Závislost indukčnosti cívky na proudu pro cívku bez jádra. Vodorovné chybové úsečky nebyly pro svou malou velikost pro přehlednost vykresleny.}
+    \label{fig:civka1}
+\end{figure}
+
+\begin{figure}[!hp]
+    \centering
+    \includegraphics[width=0.5\linewidth]{uloha7/fig2.png}
+    \caption{Závislost indukčnosti cívky na proudu pro cívku s otevřeným jádrem.}
+    \label{fig:civka2}
+\end{figure}
+
+\begin{figure}[!htbp]
+    \centering
+    \includegraphics[width=0.5\linewidth]{uloha7/fig3.png}
+    \caption{Závislost indukčnosti cívky na proudu pro cívku s uzavřeným jádrem.}
+    \label{fig:civka3}
+\end{figure}
+
+Činitel jakosti cívky byl vypočten podle vztahu (\ref{eq:q}), přičemž jeho nejistota byla určena podle \cite{englich} jako (nejistota frekvence je zanedbatelná oproti nejistotě indukčnosti nebo odporu)
+\begin{equation}
+    \sigma_Q = Q \sqrt{\relsqr{L} + \relsqr{R_L}} \, .
+\end{equation}
+
+Pro cívku bez jádra a s otevřeným jádrem byl činitel jakosti vypočten ze střední hodnoty indukčnosti, pro cívku s uzavřeným jádrem byla použita její maximální hodnota $L_{max} = \qty{2.37\pm0.05}{\henry}$ v bodě s proudem \\ $I_{max}= \qty{65\pm10}{\milli\ampere}$. Nejistota proudu v maximu indukčnosti byla pouze odhadnuta z grafu \ref{fig:civka3}.
+Přehled indukčností a činitelů jakosti cívky pro jednotlivé případy je v tabulce \ref{tab:kvality}.
+
+\begin{table}
+    \centering
+    \caption{Indukčnosti a činitele jakosti cívky bez jádra, s otevřeným jádrem a s uzavřeným jádrem. Pro první dva případy je uvedena střední hodnota indukčnosti, pro cívku s uzavřeným jádrem maximální hodnota indukčnosti.}
+    \begin{tabular}{c|c|c}
+        \toprule
+         cívka & $L \, (\unit{\milli\henry})$ & $Q$ \\
+         \midrule
+         bez jádra & $13.5\pm0.4$ & $1.56\pm0.05$ \\
+         s otevřeným jádrem & $69.9\pm1.4$ & $8.07\pm0.16$ \\
+         s uzavřeným jádrem & $2370\pm50$ & $274\pm6$ \\
+         \bottomrule
+    \end{tabular}
+    \label{tab:kvality}
+\end{table}
 
 % ============================ DISKUZE ===============================
 \section{Diskuze}
 
+Při měření odporu kondenzátoru byl obvod zapojen podle schématu \ref{sch:rkond}, tedy s voltmetrem před ampérmetrem. Ampérmetr díky tomu měří proud přímo na kondenzátoru, nikoliv celkový proud kondenzátorem i voltmetrem. Odpor ampérmetru je navíc oproti odporu kondenzátoru zanedbatelný, takže i voltmetr ukazuje správné hodnoty. Odpor byl změřen jako $R_C = \qty{4.16\pm0.10}{\mega\ohm}$, s relativní nejistotou 2.4\,\%. Ta je daná především nejistotou určení proudu, tedy nejistotou analogového mikroampérmetru.
+
+Kapacity jednotlivých kondenzátorů A, C, F a kombinace C a F byly určeny lineární regresí ze závisloti proudu na napětí jako $C_A = \qty{0.651 \pm 0.010}{\micro\farad}$, $C_C = \qty{1.355 \pm 0.015}{\micro\farad}$, $C_F = \qty{3.16 \pm 0.03}{\micro\farad}$ a \\$C_{CF} = \qty{4.45 \pm 0.04}{\micro\farad}$, s relativními nejistotami okolo 1\,\%. Nejistota je daná nejistotou směrnice lineární závislosti proudu na napětí. 
+
+Hodnotu kapacity kombinace kondenzátorů C a F lze ověřit výpočtem. Přístroj umožnoval zapojovat kondenzátory do obvodu paralelně, tedy celková kapacita bude součtem kapacit jednotlivých kondenzátorů. Ta tedy vychází $C'_{CF} = \qty{4.51\pm0.03}{\micro\farad}$, přičemž nejistota byla vypočtena jako $\sigma_{C'_{CF}} = \sqrt{\sigma_{C_C}^2 + \sigma_{C_F}^2}$. V rámci nejistoty jsou tedy obě hodnoty $C_{CF}$ a $C'_{CF}$ v souladu.
+
+I pro nejvyšší kapacitu $C_{CF} = \qty{4.45 \pm 0.04}{\micro\farad}$ použitou během měření je splněn předpoklad \\$R_C \gg (2 \pi f C)^{-1}$, neboť hodnota $(2 \pi f C_{CF})^{-1}$ vychází $\qty{715\pm6}{\ohm}$, což je téměř 6000krát menší než \\$\qty{4.16\pm0.10}{\mega\ohm}$. Odpor byl měřen jen pro kondenzátor F, pro ostatní kondenzátory se tedy může jeho hodnota lišit. Předpoklad platnosti rovnice (\ref{eq:c}) však bude splněn, i pokud si budou odpory odpovídat pouze řádově. Vztah (\ref{eq:c}) pro výpočet kapacity lze tedy bezpečně použít pro všechny kondenzátory.
+
+Při měření indukčnosti cívky byl obvod zapojen podle schématu \ref{sch:lcivka}, tedy s voltmetrem za ampérmetrem. Odpor cívky je totiž malý a úbytek napětí na ampérmetru by mohl systematicky ovlivnit měření. Oproti voltmetru je však nyní odpor cívky zanedbatelný, tedy celkový proud ampérmetrem se velmi blíží hodnotě proudu přímo na cívce. Odpor byl změřen jako $R_L = \qty{2.721\pm0.009}{\ohm}$ s relativní nejistotou jen 0.3\,\% díky velmi přesnému přístroji Fluke 8808A. Díky použité čtyřbodové metodě měření odporu není tato hodnota zatížena systematickou chybou danou odporem přívodních vodičů.
+
+Z grafu \ref{fig:civka1} bylo ověřeno, že indukčnost cívky bez jádra nezávisí na procházejícím proudu. Hodnoty jsou v rámci nejistoty skutečně konstantní. Jejich střední hodnota vychází $L = \qty{13.5\pm0.4}{\milli\henry}$. Kvalita (činitel jakosti) cívky vypočtený z této střední hodnoty pak je $Q = 1.56\pm0.05$. Nejistoty indukčnosti a činitele jakosti jsou dané především nejistotou měření proudu.
+
+Hodnoty indukčnosti cívky s otevřeným jádrem podle grafu \ref{fig:civka2} s rostoucím proudem velmi mírně rostou, nejistota je však příliš velká na to, aby bylo možné z toho vyvozovat nějaké závěry. Pro ověření této stoupající tendence indukčnosti by bylo třeba přesnější měření (především hodnot proudu, které mají kvůli své velké relativní nejistotě největší vliv na nejistotu indukčnosti). Střední hodnota indukčnosti cívky s otevřeným jádrem vychází $L = \qty{69.9\pm1.4}{\milli\henry}$, čemuž odpovídá činitel jakosti $Q = 8.07\pm0.16$.
+
+Nakonec byla proměřována závislost indukčnosti na proudu pro cívku s uzavřeným jádrem. Bylo pozorováno (viz graf \ref{fig:civka3}), že indukčnost s rostoucím proudem rostla až do maximální hodnoty $L_{max} = \qty{2.37\pm0.05}{\henry}$, která odpovídala proudu přibližně $I_{max}= \qty{65\pm10}{\milli\ampere}$. V tomto bodě došlo k nasycení jádra a indukčnost s dalším nárůstem proudu pozvolna klesala.
+
+Činitel jakosti je největší (a to dokonce řádově) pro cívku s uzavřeným jádrem, protože v tomto případě má cívka díky jádru největší hodnotu indukčnosti. Odpor cívky byl uvažován stejný pro všechny případy. Činitel jakosti je však v tomto případě uveden pouze pro maximální hodnotu indukčnosti, pro jiné hodnoty proudu bude jeho velikost menší. Přesto je pro všechny body z rozsahu měření nejkvalitnější cívka s uzavřeným jádrem.
 
 % ============================= ZÁVĚR ================================
 \section{Závěr}
+
+\hspace{\parindent} Odpor kondenzátoru F byl změřen jako $R_C = \qty{4.16\pm0.10}{\mega\ohm}$.
+Kapacita kondenzátoru A byla určena jako \\$C_A = \qty{0.651 \pm 0.010}{\micro\farad}$,
+kondenzátoru C jako $C_C = \qty{1.355 \pm 0.015}{\micro\farad}$,
+kondenzátoru F jako \\$ C_F = \qty{3.16 \pm 0.03}{\micro\farad}$,
+a paralelní kombinace kondenzátorů C a F jako $C_{CF} = \qty{4.45 \pm 0.04}{\micro\farad}$.
+\vspace{1mm}
+
+Odpor cívky byl změřen jako $R_L = \qty{2.721\pm0.009}{\ohm}$.
+Indukčnost cívky bez jádra byla určena jako \\$L = \qty{13.5\pm0.4}{\milli\henry}$, přičemž její činitel jakosti vychází $Q = 1.56\pm0.05$,
+indukčnost cívky s~otevřeným jádrem jako $L = \qty{69.9\pm1.4}{\milli\henry}$ s činitelem jakosti $Q = 8.07\pm0.16$
+a indukčnost cívky s~uzavřeným jádrem byla určena jako $L = \qty{2.37\pm0.05}{\henry}$ s činitelem jakosti $Q = 274\pm6$.
 
 
 % =========================== LITERATURA =============================
 \begin{thebibliography}{9}
 
-\bibitem{studijni} Kolektiv ZFP KVOF MFF UK: Měření indukčnosti a kapacity metodou přímou - studijní text [online]. [cit. 12.12.2025], dostupné z https://physics.mff.cuni.cz/vyuka/zfp/\_media/zadani/texty/txt\_207.pdf
+\bibitem{studijni} Kolektiv ZFP KVOF MFF UK: Měření indukčnosti a kapacity metodou přímou - studijní text [online]. [cit. 14.12.2025], dostupné z https://physics.mff.cuni.cz/vyuka/zfp/\_media/zadani/texty/txt\_207.pdf
 
-\bibitem{pokyny} Kolektiv ZFP KVOF MFF UK: Měření indukčnosti a kapacity metodou přímou - pokyny k měření [online]. [cit. 12.12.2025], dostupné \\
+\bibitem{pokyny} Kolektiv ZFP KVOF MFF UK: Měření indukčnosti a kapacity metodou přímou - pokyny k měření [online]. [cit. 14.12.2025], dostupné \\
 z https://physics.mff.cuni.cz/vyuka/zfp/\_media/zadani/pokyny/mereni\_207.pdf
 
 \bibitem{englich} J. Englich: Úvod do praktické fyziky I: Zpracování výsledků měření. 1. vyd. Praha: Matfyzpress, 2006
