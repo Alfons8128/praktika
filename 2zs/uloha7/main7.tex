@@ -24,7 +24,14 @@
 Chybové úsečky nebyly pro svou malou velikost pro přehlednost vykresleny.}
 
 \newcommand{\relative}[1]{
-\left( \frac{\sigma_{#1}}{#1} \right)^2
+\frac{\sigma_{#1}}{#1}
+}
+\newcommand{\squared}[1]{
+\left( #1 \right)^2
+}
+\newcommand{\relsqr}[1]{
+\squared{\relative{#1}}
+%\left( \frac{\sigma_{#1}}{#1} \right)^2
 }
 
 \begin{document}
@@ -35,6 +42,7 @@ Chybové úsečky nebyly pro svou malou velikost pro přehlednost vykresleny.}
 
 % ========================== PRACOVNÍ ÚKOL ============================
 \section{Pracovní úkol}
+
 \begin{enumerate}
     \item Změřte velikost kapacit kondenzátorů z kapacitní dekády.
     \item Změřte závislost indukčnosti cívky na procházejícím proudu pro tyto případy:
@@ -87,7 +95,7 @@ Při připojení ke stejnosměrnému napětí se kapacita kondenzátoru neprojev
 \end{schema}
 
 \subsection{Odpor a indukčnost cívky}
-Reálnou cívku s indukčností $L$ a odporem $R_L$ lze popsat náhradním schématem (obr. \ref{sch:civka}), kdy jsou sériově zapojeny ideální cívka $L$ a rezistor $R_L$.
+Reálnou cívku s indukčností $L$ a odporem $R_L$ lze popsat náhradním schématem (obr. \ref{sch:nahrcivka}), kdy jsou sériově zapojeny ideální cívka $L$ a rezistor $R_L$.
 
 Pokud zapojíme cívku ke zdroji střídavého napětí o frekvenci $f$, lze indukčnost cívky vypočíst ze vztahu \cite{studijni}
 \begin{equation} \label{eq:l}
@@ -120,7 +128,7 @@ Měřítkem kvality cívky je její činitel jakosti, definovaný jako (upraveno
     \label{sch:lcivka2}
 \end{schema}
 
-\subsection{Čtyřbodové zapojení rezistoru}
+\subsection{Čtyřbodové zapojení rezistoru} \label{four}
 
 Pro přesnější měření odporu rezistoru (ale i cívky) lze využít čtyřbodového zapojení podle schématu na obrázku \ref{sch:four}. Pokud je voltmetr připojen k napěťovým svorkám $b$ a $b'$, nebude měření ovlivněno spádem napětí na přívodních vodičích mezi rezistorem a proudovými svorkami $a$ a $a'$. Za předpokladu nízkých hodnot $R$ oproti odporu voltmetru poteče přívodními vodiči k napěťovým svorkám zanedbatelný proudu a ani odpor těchto vodičů se neuplatní \cite{studijni}.
 
@@ -137,11 +145,13 @@ Nejprve byl obvod zapojen podle schématu \ref{sch:rkond} pro určení odporu ko
 
 Následně byl kondenzátor připojen ke střídavému napětí (odebíranému ze sítě s frekvencí \qty{50}{Hz}, které bylo transformátorem pro vyšší bezpečnost přeměněno na nižší hodnoty. Přístroj umožňující zapojování kondenzátorů do obvodu totiž nebyl chráněný vůči kontaktu.
 
+Během všech měření s kondenzátory i cívkou bylo napětí nastaveno nejprve na nejvyšší hodnotu a následně bylo už jen snižováno, aby s jistotou nedošlo k překročení povolených hodnot proudů.
+
 Při měření indukčnosti cívky bez jádra nebo s otevřeným jádrem byl opět jako zdroj použit transformátor snižující napětí, tentokrát ovšem z důvodu snažšího dosažení malých proudů. Při měření s cívkou s uzavřeným jádrem byl použit zdroj bez transformátoru, aby mohlo být pozorováno nasycení cívky při vyšších hodnotách proudu. Během měření s těmito vysokými hodnotami napětí bylo dbáno zvýšené opatrnosti.
 
 Odpor cívky byl měřen čtyřbodovou metodou (schéma \ref{sch:four}), jelikož byla předpokládána jeho nízká hodnota. Za použití této medoty se totiž odpor přívodních vodičů neprojeví a výsledná hodnota nebude zatížena touto systematickou chybou.
 
-\subsection{Měřicí přístroje a jejich nejistoty}
+\subsection{Měřicí přístroje a jejich nejistoty} \label{pristroje}
 \begin{enumerate}
     \item Multimetr Fluke 175:
     
@@ -167,7 +177,7 @@ Nejprve byla multimetrem Fluke 8808A ověřena hodnota frekvence střídavého n
 
 Následně byl obvod zapojen podle schématu \ref{sch:rkond} a byl určen odpor kondenzátoru F s nejvyšší předpokládanou kapacitou, a tím i nejpřísnějším limitem na hodnotu odporu $R_C \gg (\omega C)^{-1}$. Efektivní hodnoty napětí a proudu byly změřeny jako $U= \qty{20.8\pm0.2}{V}$ resp. $I=\qty{5.0\pm0.1}{\micro\ampere}$. Jejich nejistoty byly vzaty jako nejistota přístroje. Odpor byl určen z Ohmova zákona (\ref{eq:ohm}) jako $R = \qty{4.16\pm1.0}{\mega\ohm}$, přičemž nejistota byla vypočtena podle \cite{englich} jako
 \begin{equation}
-    \sigma_{R_C} = R_C \sqrt{\relative{U} + \relative{I}} \, .
+    \sigma_{R_C} = R_C \sqrt{\relsqr{U} + \relsqr{I}} \, .
 \end{equation}
 
 Dále byl obvod zapojen podle schématu \ref{sch:ckond} a byla měřena závislost proudu na napětí pro připojené jednotlivé kondenzátory A, C, F a poté pro kombinaci C a F. Naměřené hodnoty ukazuje tabulka \ref{tab:kond}. Nejistoty napětí a proudu byly určeny jako nejistota měřidla (multimetru Fluke 175). Závislosti proudu na napětí pro jednotlivé kondenzátory jsou vykresleny v grafu \ref{fig:kond}. 
@@ -181,40 +191,134 @@ Dále byl obvod zapojen podle schématu \ref{sch:ckond} a byla měřena závislo
  \midrule
  $U_A\, (\mathrm{V})$ & $I_A\, (\mathrm{mA})$ & $U_C\, (\mathrm{V})$ & $I_C\, (\mathrm{mA})$ & $U_F\, (\mathrm{V})$ & $I_F\, (\mathrm{mA})$ & $U_{CF}\, (\mathrm{V})$ & $I_{CF}\, (\mathrm{mA})$ \\
  \midrule
+$10.34 \pm 0.13$ & $2.15 \pm 0.06$ & $10.33 \pm 0.13$ & $4.50 \pm 0.10$ & $10.12 \pm 0.13$ & $10.28 \pm 0.18$ & $10.12 \pm 0.13$ & $14.4 \pm 0.2$ \\
  $8.51 \pm 0.12$ & $1.75 \pm 0.06$ & $8.45 \pm 0.11$ & $3.62 \pm 0.08$ & $8.60 \pm 0.12$ & $8.59 \pm 0.16$ & $8.66 \pm 0.12$ & $12.2 \pm 0.2$ \\
  $7.09 \pm 0.10$ & $1.43 \pm 0.05$ & $7.00 \pm 0.10$ & $2.96 \pm 0.07$ & $7.02 \pm 0.10$ & $6.98 \pm 0.13$ & $7.00 \pm 0.10$ & $9.73 \pm 0.18$ \\  
  $5.64 \pm 0.09$ & $1.14 \pm 0.05$ & $5.41 \pm 0.08$ & $2.27 \pm 0.06$ & $5.65 \pm 0.09$ & $5.54 \pm 0.11$ & $5.56 \pm 0.09$ & $7.75 \pm 0.15$ \\
  $3.62 \pm 0.04$ & $0.73 \pm 0.04$ & $3.52 \pm 0.04$ & $1.47 \pm 0.05$ & $3.55 \pm 0.04$ & $3.46 \pm 0.08$ & $3.58 \pm 0.04$ & $4.92 \pm 0.10$ \\
- $1.70 \pm 0.02$ & $0.34 \pm 0.04$ & $1.58 \pm 0.02$ & $0.65 \pm 0.04$ & $1.60 \pm 0.02$ & $1.52 \pm 0.05$ & $1.68 \pm 0.02$ & $2.28 \pm 0.06$ \\
+ $1.70 \pm 0.02$ & $0.34 \pm 0.04$ & $1.577 \pm 0.019$ & $0.65 \pm 0.04$ & $1.599 \pm 0.019$ & $1.52 \pm 0.05$ & $1.68 \pm 0.02$ & $2.28 \pm 0.06$ \\
  \bottomrule
 \end{tabular}
 \label{tab:kond}
 \end{table}
 
-
+\begin{figure}[hbtp]
+    \centering
+    \includegraphics[width=0.5\linewidth]{uloha7/kond.png}
+    \caption{Závislost efektivní hodnoty proudu na napětí pro jednotlivé kondenzátory. Svislé chybové úsečky nebyly (kromě kombinace kondenzátorů C a F) pro svou malou velikost pro přehlednost vykresleny.}
+    \label{fig:kond}
+\end{figure}
 
 Datové body proloženy přímkami $I = k U$ a kapacity jednotlivých kondenzátorů byly určeny lineární regresí ze směrnic $k$ těchto přímek. Podle rovnice (\ref{eq:c}) je totiž platí
 \begin{equation} \label{eq:kc}
     k= 2 \pi f C \, .
 \end{equation}
 
-Takto určené kapacity kondenzátorů pak shrnuje tabulka \ref{tab:kapacity}.
+Takto určené kapacity kondenzátorů pak shrnuje tabulka \ref{tab:kapacity}. Nejistoty kapacit byly vypočtené podle \cite{englich} s využitím vztahu (\ref{eq:kc}) jako
+\begin{equation}
+    \sigma_C = C \relative{k} \, ,
+\end{equation}
+protože nejistota frekvence je oproti nejistotě směrnice zanedbatelná.
 
 \begin{table}[!htbp]
 \centering
 \caption{Směrnice lineárních závislostí proudu na napětí a vypočtené kapacity kondenzátorů}
 \begin{tabular}{c|cc}
  \toprule
- kondenzátor & $k\, (\mathrm{mA/V})$ & $C\, (\mathrm{\mu F})$ \\
+ kondenzátor & $k\, (\mathrm{mA/V})$ & $C\, (\unit{\micro\farad})$ \\
  \midrule
- A & $0.203 \pm 0.004$ & $0.646 \pm 0.012$ \\
- C & $0.423 \pm 0.006$ & $1.346 \pm 0.018$ \\
- F & $0.99 \pm 0.01$ & $3.14 \pm 0.03$ \\
- C+F & $1.390 \pm 0.012$ & $4.43 \pm 0.04$ \\
+ A & $0.204 \pm 0.003$ & $0.651 \pm 0.010$ \\
+ C & $0.426 \pm 0.005$ & $1.355 \pm 0.015$ \\
+ F & $0.992 \pm 0.008$ & $3.16 \pm 0.03$ \\
+ C + F & $1.397 \pm 0.011$ & $4.45 \pm 0.04$ \\
  \bottomrule
 \end{tabular}
 \label{tab:kapacity}
 \end{table}
+
+\subsection{Odpor a indukčnost cívky}
+
+Nejprve byl multimetrem Fluke 8808A čtyřbodovou metodou (viz kap. \ref{four} a schéma \ref{sch:four}) změřen odpor cívky bez jádra. Jeho hodnota je $R_L = \qty{2.721\pm0.009}{\ohm}$, přičemž nejistota byla vzata jako nejistota měřícího přístroje.
+
+Následně byly pro tři případy (cívka bez jádra, s otevřeným jádrem, s uzavřeným jádrem) proměřeny závislosti indukčnosti cívky na procházejícím proudu. Obvod byl zapojen podle schématu \ref{sch:lcivka} pro cívku bez jádra a s otevřeným jádrem a podle schématu \ref{sch:lcivka2} pro cívku s uzavřeným jádrem. 
+
+Multimetry byly měřeny efektivní hodnoty napětí a proudu, indukčnost z nich (a z odporu $R_L$) byla vypočtena podle vztahu (\ref{eq:l}). Naměřené hodnoty proudu a napětí a vypočtené hodnoty indukčnosti pro jednotlivé případy jsou v tabulkách \ref{tab:civka1}, \ref{tab:civka2} a \ref{tab:civka3}. Nejistoty proudu a napětí byly určeny ze specifikací přístroje (viz kap. \ref{pristroje}). Nejistota indukčnosti byla vypočtena podle \cite{englich} podle vztahu
+\begin{equation}
+    \sigma_L = \frac{1}{2 \pi f} \frac{1}{\sqrt{\frac{U^2}{I^2} - R_L^2}} \sqrt{\frac{U^2}{I^4}\sigma_U^2 + \frac{U^4}{I^6} \sigma_I^2 + {R_L}^2 \sigma_{R_L}^2}
+\end{equation}
+
+\begin{table}[!htbp]
+\centering
+\caption{Naměřené efektivní hodnoty proudu, napětí a vypočtené indukčnosti pro cívku bez jádra}
+\begin{tabular}{ccc}
+ \toprule
+ $I\, (\mathrm{mA})$ & $U\, (\mathrm{V})$ & $L\, (\mathrm{mH})$ \\
+ \midrule
+ $24.1 \pm 0.4$ & $0.1214 \pm 0.0015$ & $13.5 \pm 0.4$ \\
+ $53.5 \pm 0.8$ & $0.270 \pm 0.003$ & $13.5 \pm 0.4$ \\
+ $74.1 \pm 1.4$ & $0.373 \pm 0.004$ & $13.5 \pm 0.4$ \\
+ $101.6 \pm 1.8$ & $0.511 \pm 0.005$ & $13.5 \pm 0.4$ \\
+ $126 \pm 2$ & $0.637 \pm 0.009$ & $13.5 \pm 0.4$ \\
+ $150 \pm 3$ & $0.754 \pm 0.011$ & $13.5 \pm 0.4$ \\
+ $174 \pm 3$ & $0.875 \pm 0.012$ & $13.5 \pm 0.4$ \\
+ $202 \pm 3$ & $1.018 \pm 0.013$ & $13.5 \pm 0.4$ \\
+ $221 \pm 4$ & $1.111 \pm 0.014$ & $13.5 \pm 0.4$ \\
+ $256 \pm 4$ & $1.288 \pm 0.016$ & $13.5 \pm 0.4$ \\
+ \bottomrule
+\end{tabular}
+\label{tab:civka1}
+\end{table}
+
+\begin{table}[!htbp]
+\centering
+\caption{Naměřené efektivní hodnoty proudu, napětí a vypočtené indukčnosti pro cívku s otevřeným jádrem}
+\begin{tabular}{ccc}
+ \toprule
+ $I\, (\mathrm{mA})$ & $U\, (\mathrm{V})$ & $L\, (\mathrm{mH})$ \\
+ \midrule
+ $22.1 \pm 0.4$ & $0.482 \pm 0.005$ & $69.0 \pm 1.4$ \\
+ $42.3 \pm 0.7$ & $0.934 \pm 0.012$ & $69.7 \pm 1.5$ \\
+ $74.2 \pm 1.4$ & $1.64 \pm 0.02$ & $69.6 \pm 1.6$ \\
+ $100.0 \pm 1.8$ & $2.21 \pm 0.03$ & $69.8 \pm 1.5$ \\
+ $126 \pm 2$ & $2.78 \pm 0.03$ & $69.9 \pm 1.5$ \\
+ $149 \pm 3$ & $3.30 \pm 0.04$ & $70.0 \pm 1.4$ \\
+ $175 \pm 3$ & $3.88 \pm 0.04$ & $70.1 \pm 1.4$ \\
+ $200 \pm 3$ & $4.45 \pm 0.05$ & $70.3 \pm 1.4$ \\
+ $228 \pm 4$ & $5.07 \pm 0.05$ & $70.3 \pm 1.4$ \\
+ $251 \pm 4$ & $5.58 \pm 0.06$ & $70.4 \pm 1.4$ \\
+ \bottomrule
+\end{tabular}
+\label{tab:civka2}
+\end{table}
+
+\begin{table}[!htbp]
+\centering
+\caption{Naměřené efektivní hodnoty proudu, napětí a vypočtené indukčnosti pro cívku s uzavřeným jádrem}
+\begin{tabular}{ccc}
+ \toprule
+ $I\, (\mathrm{mA})$ & $U\, (\mathrm{V})$ & $L\, (\mathrm{H})$ \\
+ \midrule
+ $4.73 \pm 0.10$ & $1.132 \pm 0.014$ & $0.762 \pm 0.019$ \\
+ $10.7 \pm 0.2$ & $3.55 \pm 0.04$ & $1.05 \pm 0.02$ \\
+ $21.2 \pm 0.3$ & $10.56 \pm 0.14$ & $1.59 \pm 0.03$ \\
+ $35.6 \pm 0.6$ & $23.7 \pm 0.3$ & $2.12 \pm 0.04$ \\
+ $48.2 \pm 0.8$ & $35.1 \pm 0.4$ & $2.32 \pm 0.04$ \\
+ $60.5 \pm 1.2$ & $45.1 \pm 0.5$ & $2.37 \pm 0.05$ \\
+ $71.9 \pm 1.4$ & $53.5 \pm 0.6$ & $2.37 \pm 0.05$ \\
+ $82.0 \pm 1.5$ & $60.6 \pm 0.9$ & $2.35 \pm 0.06$ \\
+ $103.8 \pm 1.9$ & $73.6 \pm 1.0$ & $2.26 \pm 0.05$ \\
+ $126 \pm 2$ & $85.2 \pm 1.2$ & $2.14 \pm 0.05$ \\
+ $148 \pm 3$ & $94.6 \pm 1.2$ & $2.03 \pm 0.04$ \\
+ $170 \pm 3$ & $103.2 \pm 1.3$ & $1.93 \pm 0.04$ \\
+ $192 \pm 3$ & $110.9 \pm 1.4$ & $1.84 \pm 0.04$ \\
+ $216 \pm 4$ & $118.1 \pm 1.5$ & $1.74 \pm 0.04$ \\
+ \bottomrule
+\end{tabular}
+\label{tab:civka3}
+\end{table}
+
+Výsledné závislosti indukčnosti na proudu pro jednotlivé případy jsou vykresleny v grafech \ref{fig:civka1}, \ref{fig:civka2} a \ref{fig:civka3}.
+
 
 % ============================ DISKUZE ===============================
 \section{Diskuze}
