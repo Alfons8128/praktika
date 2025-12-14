@@ -162,7 +162,25 @@ ax3.legend()
 fig3.savefig('uloha7/fig3.png')
 plt.close(fig3)
 
+ll1 = rel1.coeffs[0]
+ll1.err[0] = 0.4
+print(ll1)
+ll2 = rel2.coeffs[0]
+ll3 = max(l3, key=lambda x: x.val)
+lll1 = ufloat(np.mean(l1.val), np.std(l1.val, ddof=1))
+print('Induktance L1, L2, L3:', ll1, ll2, ll3)
+print(lll1)
+ll1 = ufloat(ll1.val, 0.4)
+ll2 = ufloat(ll2.val, 1.4)
 
+print('Induktance L1, L2, L3:', ll1, ll2, ll3)
+q1 = ll1 * 2 * np.pi * f / r / 1000
+q2 = ll2 * 2 * np.pi * f / r / 1000
+q3 = ll3 * 2 * np.pi * f / r
+q1.set_lname('Q', '')
+q2.set_lname('Q', '')
+q3.set_lname('Q', '')
+print('Q factors:', q1, q2, q3)
 
 plt.show()
 
