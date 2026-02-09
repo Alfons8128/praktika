@@ -55,12 +55,17 @@ for wr in w2.unc:
 ################################
 rel1 = pr.Rel(c, w, pr.F.linear)
 rel1.fit()
+fig, ax = plt.subplots()
+rel1.plot_data(ax, err=(1,1), label='cívka A')
+rel1.show_equation(ax)
+ax.legend()
+plt.show()
 print('fit params c,w:', rel1.coeffs)
 
 fit, cov  = curve_fit(pr.F.linear, c.val, w.val, sigma=w.err, absolute_sigma=True)
 d_fit = np.sqrt(np.diag(cov))
 a, b = unp.uarray([*fit],[*d_fit])
-print('Fit parameters:', pr.ufmt(a, 'eP'), pr.ufmt(b, 'eP'), pr.ufmt(b/a, 'eP'))
+print('Fit parameters:', pr.scalar_ufmt(a, 'eP'), pr.scalar_ufmt(b, 'eP'), pr.scalar_ufmt(b/a, 'eP'))
 
 fit2, cov2  = curve_fit(pr.F.linear, c2.val, w2.val, sigma=w2.err, absolute_sigma=True)
 d_fit2 = np.sqrt(np.diag(cov2))
@@ -140,7 +145,7 @@ print('Done table2', pr.to_table(c4, f14, f24, fr4, w4))
 fit3, cov3  = curve_fit(pr.F.linear, c3.val, w3.val, sigma=w3.err, absolute_sigma=True)
 d_fit3 = np.sqrt(np.diag(cov3))
 a3, b3 = unp.uarray([*fit3],[*d_fit3])
-print('Fit parameters:', pr.ufmt(a3, 'eP'), pr.ufmt(b3, 'eP'), pr.ufmt(b3/a3, 'eP'))
+print('Fit parameters:', pr.scalar_ufmt(a3, 'eP'), pr.scalar_ufmt(b3, 'eP'), pr.scalar_ufmt(b3/a3, 'eP'))
 
 fit4, cov4  = curve_fit(pr.F.linear, c4.val, w4.val, sigma=w4.err, absolute_sigma=True)
 d_fit4 = np.sqrt(np.diag(cov4))

@@ -8,6 +8,7 @@ from functools import partial
 from matplotlib.lines import Line2D
 from scipy.stats.distributions import t
 from scipy.interpolate import make_interp_spline
+import warnings
 
 ################# Var class ############################
 class Var:
@@ -22,29 +23,22 @@ class Var:
     '''
     
     def __init__(self, values: np.array, errors=0, short_name='', unit=None):
-        if isinstance(values, str):
-            self.unc = [values]
-        
-        # elif isinstance(values, unp.uarray):
-        #     self.unc = values
+        # input is Var type
+        if isinstance(values, Var):
+            self.unc = np.atleast_1d(values.unc)
 
-        elif isinstance(values, Var):
-            self.unc = values.unc
-            short_name = values.short_name
-            unit = values.unit
+        # errors in percents
+        elif isinstance(errors, str):
+            if errors.endswith('%'):
+                errors = float(errors[:-1]) / 100.0
+            else:
+                errors = float(errors)
+            errors = np.abs(values) * errors
+            self.unc = np.atleast_1d(unp.uarray(values, errors))
+
         else:
-            if isinstance(errors, str):
-                if errors.endswith('%'):
-                    errors = float(errors[:-1]) / 100.0
-                else:
-                    errors = float(errors)
-                errors = np.abs(values) * errors
-            self.unc = unp.uarray(values, errors)
-        
-        if np.shape(values) == (): # scalar
-            self.unc = unp.uarray([values], [errors])
-        
-        
+            self.unc = np.atleast_1d(unp.uarray(values, errors))
+
         self.val = unp.nominal_values(self.unc)
         self.err = unp.std_devs(self.unc)
         self.short_name = short_name
@@ -56,10 +50,16 @@ class Var:
         self.unit = unit
         self.long_name = f'${self.short_name}\\, (\\mathrm{{{self.unit}}})$' if self.unit else f'${self.short_name}$'
 
-    def __repr__(self):
+    def __str__(self):
         if self.unit:
-            return f'{self.short_name} = ({", ".join(scalar_ufmt(x, 'L') for x in self.unc)}) \\times {self.unit}'
-        return f'{self.short_name} = ({", ".join(scalar_ufmt(x, 'L') for x in self.unc)})'
+            return f'{self.short_name} = ({", ".join(scalar_ufmt(x, 'P') for x in self.unc)}) {self.unit}'
+        return f'{self.short_name} = ({", ".join(scalar_ufmt(x, 'P') for x in self.unc)})'
+    
+    def latex(self):
+        if self.unit:
+            return f'{self.short_name} = ({", ".join(scalar_ufmt(x, "L") for x in self.unc)}) \\cdot {self.unit}'
+        return f'{self.short_name} = ({", ".join(scalar_ufmt(x, "L") for x in self.unc)})'
+        
 
     def __add__(self, other):
         if isinstance(other, Var):
@@ -186,7 +186,7 @@ class Rel:
         self.y = y
         self.func = function
 
-    def fit(self, p0: list = None):
+    def fit(self, p0: list = None, get_unit: bool = True):
         '''Fits y over x (both Var instances) using the provided function.
         Adds these attributes to Relation: coefficients (.coeffs), covariant matrix (.cov).'''
 
@@ -197,10 +197,23 @@ class Rel:
         #alpha = 0.05  # 95% confidence interval
         #t_val = t.ppf(1.0-alpha/2, max(0, len(x.val)-len(coeff_values)))
         coeff_errors = np.sqrt(np.diag(cov_matrix)) #* np.abs(t_val)
-        fitted_coeffs = Var([*coeff_values],[*coeff_errors], short_name='fit_coefficients')
+        fitted_coeffs = [Var(coeff_values[i],coeff_errors[i], short_name=f'fit_coefficient_{i}') for i in range(len(coeff_values))]
 
         self.coeffs = fitted_coeffs
         self.cov = cov_matrix
+
+        if get_unit:
+            match self.func:
+                case F.const:
+                    self.coeffs[0].unit = self.y.unit
+                case F.direct:
+                    self.coeffs[0].unit = f'{self.y.unit}/{self.x.unit}'
+                case F.linear:
+                    self.coeffs[0].unit = self.y.unit
+                    self.coeffs[1].unit = f'{self.y.unit}/{self.x.unit}'
+                case _:
+                    warnings.warn(f'Unit calculation not implemeted for {self.func.__name__} function, \
+                                  no units assigned to fitted coefficients.')
     
     def plot_data(self, ax, err: tuple = (1,1), connect=False, smooth=False, label='naměřené hodnoty', 
                   scale=1, marker='s', color='black', zorder=None):
@@ -256,10 +269,86 @@ class Rel:
         combined_handle = Line2D([], [], color='black', marker='s', linestyle=':', label=eq_string)
         ax.legend(handles=[combined_handle])
 
+############### Measuring tool uncertainty class #######
+class MeasureUnc:
+    '''Class for storing uncertainty values of certaint measuring tool.'''
+    #def __init__(self, err_type: tuple, unit: str, data: pd.DataFrame):
+    def __init__(self, err_type: str, unit: str, data: pd.DataFrame):
+        '''err_type: ('percent (of measured value)', 'digit/range')
+           data: columns are range, resolution, variable error and constant error'''
+        self.err_type = err_type
+        self.unit = unit
+        data.columns = ['ranges', 'resolution', 'variable_error', 'constant_error']
+        self.data = data
+    
+    def convert_units(self, to_unit: str):
+        from_unit = self.unit
+        if from_unit == to_unit:
+            return self
+        # implement conversion factors here
+        Prefix = {
+            'da': 1e1,
+            'h': 1e2,
+            'k': 1e3,
+            'M': 1e6,
+            'G': 1e9,
+            'T': 1e12,
+            'P': 1e15,
+            'd': 1e-1,
+            'c': 1e-2,
+            'm': 1e-3,
+            'u': 1e-6,
+            'n': 1e-9,
+            'p': 1e-12,
+            'f': 1e-15
+        }
+        
+        factors = []
+        for unit in [from_unit, to_unit]:
+            factor = 1.0
+            for prefix in Prefix.keys():
+                if unit.startswith(prefix):
+                    factor = Prefix[prefix]
+            if factor == 1.0:
+                warnings.warn(f'No prefix found for unit {unit}, assuming factor 1.')
+            #else:
+            #    raise ValueError(f'Unit conversion for {unit} not implemented.')
+            
+            factors.append(factor)
+
+        from_factor = factors[0]
+        to_factor = factors[1]
+        conv_factor = from_factor / to_factor
+        self.data[['ranges', 'resolution']] = self.data[['ranges', 'resolution']] * conv_factor
+
+        return self
+    
+    def set_uncertainty(self, var: Var):
+        '''Adds uncertainty to the provided Var instance based on the measuring tool uncertainty.'''
+        self = self.convert_units(var.unit)
+        errors = np.zeros_like(var.val)
+
+        #if self.err_type[0] == 'percent':
+        #    var_err_idx = 2
+        if self.err_type == 'digit':
+            const_base = self.data.resolution.to_numpy()
+        if self.err_type == 'range':
+            const_base = self.data.ranges.to_numpy()
+            self.data.constant_error = self.data.constant_error / 100 # convert from percent to fraction
+        
+        for i, value in enumerate(var.val):
+            net = value < self.data.ranges
+            row_idx = self.data.ranges[net].idxmin() # first range larger than value
+
+            errors[i] += np.abs(value) * (self.data.variable_error[row_idx] / 100.0) # variable percent error
+            errors[i] += const_base[row_idx] * self.data.constant_error[row_idx] # (digits)resolution/range * constant error
+
+        return Var(var.val, errors, var.short_name, var.unit)
+
 
 ########################################################
 ########### other useful functions #####################
-def read_excel(file_path, sheet_name='List2', cells='A1:Z100', header = 0):
+def read_excel(file_path, sheet_name='List1', cells='A1:Z100', header = 0):
     '''Reads an Excel file and returns a pandas DataFrame.
     Defautly, header on the first line.'''
 
@@ -280,6 +369,29 @@ def read_excel(file_path, sheet_name='List2', cells='A1:Z100', header = 0):
     df = pd.read_excel(file_path, sheet_name=sheet_name, skiprows=skiprows, nrows=nrows, usecols=cols, header=header)
 
     return df
+########################################################
+def excel_to_latex(file_path, cells='A1:Z100', sheet_name='List1', header = 0, format='.2f'):
+    '''Reads an Excel file and returns a LaTeX formatted table as a string.'''
+    df = read_excel(file_path, sheet_name=sheet_name, cells=cells, header=header)
+    cols = df.columns.to_list()
+    nrows, ncols = df.shape
+    print(df.shape)
+    string = f'\n' + \
+    '\\begin{table}[!htbp]' + '\n' + \
+    '\\centering' + '\n' + \
+    '\\caption{CAPTION}' + '\n' + \
+    '\\begin{tabular}{' + 'c'*ncols + '}' + '\n' + \
+    ' \\toprule' + '\n' + \
+    ' ' +' & '.join(cols) + ' \\\\' + '\n' + \
+    ' \\midrule' + '\n'
+    for i in range(nrows):
+        string += ' $' + '$ & $'.join(f'{df.iloc[i,j]:{format}}' for j in range(ncols)) + '$ \\\\' + '\n'
+    string += ' \\bottomrule' + '\n'
+    string += '\\end{tabular}' + '\n'
+    string += '\\label{tab:LABEL}' + '\n'
+    string += '\\end{table}' + '\n'
+
+    return string
 
 ########################################################
 def scalar_ufmt(x, apx='L'):
@@ -437,8 +549,11 @@ if __name__ == "__main__":
     dx = 0.1 * np.ones_like(x)
     x = Var(x, dx, 'artificial x', 'm')
     y = Var(y, dy, 'artificial y', 'J')
-    print('x:', x)
-    print('y:', y)
+    #print('x:', x)
+    #print('y:', y)
+    rel = Rel(x, y, F.linear)
+    rel.fit()
+    print('Fitted coeffs:', [r.latex() for r in rel.coeffs])
 
     fit, cov = curve_fit(F.linear, x.val, y.val, sigma=dy, absolute_sigma=True)
     inter = fit[0]
@@ -454,13 +569,13 @@ if __name__ == "__main__":
     
     #plt.close('all')
     plot_data(ax, x, y)
-    #plt.show()
+    plt.show()
     '''
 ########################################################
     # scalar_ufmt
     '''
     print(scalar_ufmt(ufloat(4.965,0.08)))
-    print(scalar_ufmt(ufloat(5.334,0.00134)))
+    print(scalar_ufmt(ufloat(5.334,0.00134),apx=''))
     print(scalar_ufmt(ufloat(4.222,0.00190)))
     print(scalar_ufmt(ufloat(149.5,56.6)))
     print(scalar_ufmt(ufloat(0.001495,0.000566), 'eL'))
@@ -508,6 +623,7 @@ if __name__ == "__main__":
     '''
 ########################################################
     # Relation fit and plot
+    '''
     fig, ax = plt.subplots()
     np.random.seed(0)
     x = np.linspace(0, 10, 30)
@@ -522,8 +638,40 @@ if __name__ == "__main__":
     r.plot_data(ax)
     r.plot_fit(ax)
     plt.show()
+    '''
 
+########################################################
+    # type and isinstance tests
+    '''
+    a = Var(1.0, 0.1, 'a', 'm')
+    b = ufloat(2.0, 0.4)
+    print(type(a))
+    print(isinstance(a, Var))
+    print(np.shape(a))
+    if type(a) == Var:
+        print('a has Var type')
+    if isinstance(a, Var):
+        print('a is Var instance')
+    #if isinstance(b, unp.ufloat): # does not work
+    #    print('b is ufloat instance')
 
+    c = unp.uarray(1.2, 0.03)
+    c = unp.uarray([1.2],[0.03])
+    print(np.shape(c))
+    print(c)
+    d = 3 * a
+    e = Var(3 * a)
+    print(d)
+    print(e)
+    print(d.latex())
+
+    '''
+########################################################
+    # excel_to_latex
+    '''
+    latex_table = excel_to_latex('2zs/uloha8/uloha8.xlsx', sheet_name='List1', cells='A2:C7', format='.3f')
+    print(latex_table)
+    '''
 ########################################################
 
     print('All done!')

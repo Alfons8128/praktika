@@ -8,13 +8,25 @@ import praktika as pr
 from praktika import Var
 from matplotlib.lines import Line2D
 from scipy.interpolate import make_interp_spline
+import warnings
 
 ########################### staticka va charakteristika ##########################
-va = pd.read_csv('uloha9/nemec_VA.txt', sep='\\s+', header=None)
+va = pd.read_csv('2zs/uloha9/nemec_VA.txt', sep='\\s+', header=None)
 va.columns = ['i', 'iunit', 'itype', 'u', 'uunit', 'utype']
-print(va)
+va2 = pr.read_excel('vatest.xlsx', cells='A1:D3', header=None)
+va3 = pr.read_excel('vatest.xlsx', cells='A5:D6', header=None)
+#print(va)
 i = pr.Var(va['i'], errors='1%', unit='mA', short_name='I')
 u = pr.Var(va['u'], errors='1%', unit='V', short_name='U')
+i2 = pr.Var(va['i'], unit='mA', short_name='I2')
+u2 = pr.Var(va['u'], unit='V', short_name='U2')
+
+mi = pr.MeasureUnc('digit', 'mV', va2)
+mu = pr.MeasureUnc('digit', 'mA', va3)
+#mu.convert_units('V')
+u2 = mu.set_uncertainty(u2)
+i2 = mi.set_uncertainty(i2)
+
 for val in i.unc:
     if val.nominal_value < 2:
         val.std_dev = 0.003 * val.nominal_value + 3*1e-4
@@ -34,6 +46,11 @@ for val in u.unc:
         val.std_dev = 0.005 * val.nominal_value + 3*1e-4
         continue
 
+print('proud', i - i2)
+print(i, i2)
+print('napeti', u - u2)
+print(u, u2)
+
 print('Table VA:')
 pr.to_table(i, u)
 rel = pr.Rel(i, u)
@@ -51,7 +68,7 @@ fig.savefig('uloha9/va.png', dpi=300)
 
 ########################## odpor na teplote #########################
 
-rt = pd.read_csv('uloha9/nemec_RT.txt', sep='\\s+', header=None)
+rt = pd.read_csv('2zs/uloha9/nemec_RT.txt', sep='\\s+', header=None)
 rt.columns = ['pt', 'ptunit', 'pttype', 'rt', 'rtunit', 'rttype']
 print(rt)
 pt = pr.Var(rt['pt'].to_numpy()[2:], errors='1%', unit='\\Omega', short_name='R_{Pt,100}')
@@ -92,7 +109,7 @@ rel2 = pr.Rel(oneovert, lnr, pr.F.linear)
 fig2, ax2 = plt.subplots(layout = 'constrained')
 rel2.plot_data(ax2, err=(0,0))
 rel2.fit()
-rel2.plot_fit(ax2, label=f'fitovaná lineární závislost $\\ln R = {rel2.coeffs.val[0]:.4f} + {rel2.coeffs.val[1]:.4f} \cdot \\frac{{1}}{{T}}$')
+rel2.plot_fit(ax2, label=f'fitovaná lineární závislost $\\ln R = {rel2.coeffs.val[0]:.4f} + {rel2.coeffs.val[1]:.4f} \\cdot \\frac{{1}}{{T}}$')
 ax2.legend()
 fig2.savefig('uloha9/rt.png', dpi=300)
 #plt.close(fig2)
