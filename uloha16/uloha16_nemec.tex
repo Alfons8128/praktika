@@ -1,0 +1,134 @@
+
+\documentclass{../concepts/titul_protokol_p/prepareprotokol} %všechny balíčky pro protokol + titulní strana
+\renewcommand{\today}{\number\day.\,\number\month.\,\number\year}
+\usepackage{graphicx}
+\usepackage{newfloat}
+\usepackage{caption}
+\usepackage{booktabs}
+\usepackage{amsmath}
+\usepackage{newfloat}
+\usepackage{caption}
+\usepackage{siunitx}
+\sisetup{inter-unit-product =$\cdot$}
+\sisetup{separate-uncertainty=true}
+
+\praktikum{III} %číslo praktika (I, II nebo III)
+\autor{David Němec} %jméno autora
+\datum{24.\,2.\,2026} %datum měření
+\cislo{16} %číslo úlohy
+\nazev{Měření indexu lomu Fraunhoferovou metodou} %název úlohy
+
+\DeclareFloatingEnvironment[fileext=los, placement={htbp}, name=Obrázek]{schema}
+
+\newcommand{\nobars}{
+Chybové úsečky nebyly pro svou malou velikost pro přehlednost vykresleny.}
+
+\newcommand{\relative}[1]{
+\frac{\sigma_{#1}}{#1}
+}
+\newcommand{\squared}[1]{
+\left( #1 \right)^2
+}
+\newcommand{\relsqr}[1]{
+\squared{\relative{#1}}
+%\left( \frac{\sigma_{#1}}{#1} \right)^2
+}
+
+\begin{document}
+\renewcommand{\figurename}{Graf}
+\renewcommand{\refname}{Literatura}
+
+% add another graphics path to find ZPF.pdf for title page
+% now searches for images in ./ and ../concepts/titul_protokol_p/
+\graphicspath{{../concepts/titul_protokol_p/}}
+\maketitle
+
+% ========================== PRACOVNÍ ÚKOL ============================
+\section{Pracovní úkol}
+\begin{enumerate}
+    \item Seřiďte goniometr.
+    \item Změřte lámavý úhel skleněného hranolu a proměřte indexy lomu čar spektra rtuťové výbojky.
+    \item Naměřené hodnoty zpracujte graficky do disperzní křivky. Graf vytvořte v praktiku, je povinnou součástí zápisu z měření.
+    \item Vypočtěte střední disperzi, relativní disperzi a Abbeovo číslo pro měřený materiál, proveďte srovnání s tabelovanými hodnotami optických skel.
+    \item Odvoďte výraz pro chybu nepřímého měření indexu lomu. Spočtěte její velikost a diskutujte, kolik desetinných míst indexu lomu tato metoda zaručuje.
+\end{enumerate}
+
+% ============================= TEORIE ================================
+\section{Teorie}
+\subsection{Kapacita deskového kondenzátoru}
+
+
+\subsection{Metoda měření}
+
+\begin{schema}[htbp]
+    \centering
+%    \includegraphics[width=0.5\linewidth]{uloha4/fourpoints.png}
+    \caption{Schéma mřížkového spektrometru \cite{pokyny}}
+    \label{sch:spektrometr}
+\end{schema}
+
+\begin{figure}[htbp]
+    \centering
+%    \includegraphics[width=0.5\linewidth]{uloha27/schema.png}
+    \caption{Jiný obrázek \cite{pokyny}}
+    \label{fig:obrazek}
+\end{figure}
+
+
+
+\subsection{Měřicí přístroje a jejich nejistoty}
+\begin{enumerate}
+    \item PŘÍSTROJ:
+    
+    POZNÁMKY
+
+\end{enumerate}
+
+
+% ======================== VÝSLEDKY MĚŘENÍ ===========================
+\section{Výsledky měření}
+
+
+\begin{figure}
+    \centering
+    \includegraphics[width=0.5\linewidth]{dispersion.png}
+    \caption{Disperzní křivka použitého skleněného hranolu.}
+    \label{fig:dispersion}
+\end{figure}
+
+
+% ============================ DISKUZE ===============================
+\section{Diskuze}
+
+
+% ============================= ZÁVĚR ================================
+\section{Závěr}
+
+Nakonec byly určeny disperzní vlastnosti použitého skleněného hranolu:\newline
+\begin{itemize}
+    \item střední disperze: $\Delta = 0.008(1)$
+    \item relativní disperze: $\delta = 0.0156(19)$
+    \item Abbeovo číslo: $\gamma = 64(8)$\,.
+\end{itemize}
+
+% =========================== LITERATURA =============================
+\renewcommand{\today}{\number\day.\,\number\month.\,\number\year}
+\begin{thebibliography}{9}
+
+\bibitem{studijni} Kolektiv ZFP KVOF MFF UK: Měření indexu lomu Fraunhoferovou 
+metodou - studijní text [online]. \\ 
+\text{[cit. \today]}, dostupné z~https://physics.mff.cuni.cz/vyuka/zfp/\_media/zadani/texty/txt\_316.pdf
+
+\bibitem{pokyny} Kolektiv ZFP KVOF MFF UK: Měření indexu lomu Fraunhoferovou
+metodou - pokyny k měření [online]. [cit. \today], dostupné 
+z~https://physics.mff.cuni.cz/vyuka/zfp/\_media/zadani/pokyny/mereni\_316.pdf
+
+\bibitem{englich} J. Englich: Úvod do praktické fyziky I: Zpracování výsledků měření. 1. vyd. Praha: Matfyzpress, 2006
+
+\bibitem{tabulka} Kolektiv ZFP KVOF MFF UK: Tabulka spektrálních čar rtuti [online]. [cit. \today],
+dostupné z~https://physics.mff.cuni.cz/vyuka/zfp/\_media/zadani/pokyny/tabulka\_spektralnich\_car\_rtuti.pdf
+
+
+
+\end{thebibliography}
+\end{document}

@@ -22,7 +22,7 @@ class Var:
     ufmt(format description): uses scalar ufmt function to round values to apropriate decimal digits
     '''
     
-    def __init__(self, values: np.array, errors=0, short_name='', unit=None):
+    def __init__(self, values: float | int, errors: int | str = 0, short_name: str ='', unit: str = None):
         # input is Var type
         if isinstance(values, Var):
             self.unc = np.atleast_1d(values.unc)
@@ -44,22 +44,46 @@ class Var:
         self.short_name = short_name
         self.unit = unit
         self.long_name = f'${self.short_name}\\, (\\mathrm{{{self.unit}}})$' if self.unit else f'${self.short_name}$'
+    
+    def weighted_mean(self) -> 'Var':
+        '''Calculates the weighted mean of the values with weights as the inverse of variances.
+        Returns the mean with uncertainty as a Var instance and adds it as an attribute .mean to the Var instance.'''
+        weights = 1 / (self.err ** 2)
+        mean_val = np.sum(weights * self.val) / np.sum(weights)
+        mean_err = np.sqrt(1 / np.sum(weights))
+        self.mean = Var(mean_val, mean_err, short_name=f'{self.short_name}_mean', unit=self.unit)
 
-    def set_lname(self, short_name, unit=None):
+        return self.mean
+    
+    def set_unit(self, unit: str):
+        '''Set unit for the Var instance.'''
+        self.unit = unit
+        self.long_name = f'${self.short_name}\\, (\\mathrm{{{self.unit}}})$' if self.unit else f'${self.short_name}$'
+
+    def set_lname(self, short_name: str, unit: str = None):
+        '''Set long name for matplotlib axes labels.'''
         self.short_name = short_name
         self.unit = unit
         self.long_name = f'${self.short_name}\\, (\\mathrm{{{self.unit}}})$' if self.unit else f'${self.short_name}$'
 
     def __str__(self):
-        if self.unit:
-            return f'{self.short_name} = ({", ".join(scalar_ufmt(x, 'P') for x in self.unc)}) {self.unit}'
-        return f'{self.short_name} = ({", ".join(scalar_ufmt(x, 'P') for x in self.unc)})'
+        return ufmt(self, apx='P')
     
-    def latex(self):
-        if self.unit:
-            return f'{self.short_name} = ({", ".join(scalar_ufmt(x, "L") for x in self.unc)}) \\cdot {self.unit}'
-        return f'{self.short_name} = ({", ".join(scalar_ufmt(x, "L") for x in self.unc)})'
+    def ufmt(self, apx='L') -> str:
+        '''Formats all values in the Var instance using scalar_ufmt function, returns a formatted string.
         
+        appendix apx: e for exponential notation, S for notation by norm: "value(uncertainty)", 
+        L for LaTeX: "value \\pm uncertainty", P for pretty print: "value ± uncertainty".'''
+
+        return ufmt(self, apx=apx)
+    
+    def latex(self) -> str:
+        '''Returns a LaTeX formatted string of the Var instance.'''
+        return ufmt(self, apx='L')
+    
+    def norm(self) -> str:
+        '''Returns a string formatted by norm: "value(uncertainty)".'''
+        return ufmt(self, apx='S')    
 
     def __add__(self, other):
         if isinstance(other, Var):
@@ -87,10 +111,12 @@ class Var:
     def __mul__(self, other):
         if isinstance(other, Var):
             new_unc = self.unc * other.unc
+            unit = f'{self.unit}*{other.unit}' if self.unit and other.unit else self.unit or other.unit
         else:
             new_unc = self.unc * other
+            unit = self.unit
 
-        return Var(unp.nominal_values(new_unc), unp.std_devs(new_unc), self.short_name, self.unit)
+        return Var(unp.nominal_values(new_unc), unp.std_devs(new_unc), self.short_name, unit)
     
     def __rmul__(self, other):
         return self.__mul__(other)
@@ -98,10 +124,12 @@ class Var:
     def __truediv__(self, other):
         if isinstance(other, Var):
             new_unc = self.unc / other.unc
+            unit = f'{self.unit}/{other.unit}' if self.unit and other.unit else self.unit or other.unit
         else:
             new_unc = self.unc / other
+            unit = self.unit
 
-        return Var(unp.nominal_values(new_unc), unp.std_devs(new_unc), self.short_name, self.unit)
+        return Var(unp.nominal_values(new_unc), unp.std_devs(new_unc), self.short_name, unit)
     
     def __rtruediv__(self, other):
         result_unc = other / self.unc
@@ -123,6 +151,41 @@ class Var:
         new_unc = unp.sqrt(self.unc)
         return Var(unp.nominal_values(new_unc), unp.std_devs(new_unc), f'\\sqrt{{{self.short_name}}}', self.unit)
     
+    def sin(self):
+        new_unc = unp.sin(self.unc)
+        return Var(unp.nominal_values(new_unc), unp.std_devs(new_unc), f'\\sin{{{self.short_name}}}', self.unit)
+    
+    def cos(self):
+        new_unc = unp.cos(self.unc)
+        return Var(unp.nominal_values(new_unc), unp.std_devs(new_unc), f'\\cos{{{self.short_name}}}', self.unit)
+    
+    def tan(self):
+        new_unc = unp.tan(self.unc)
+        return Var(unp.nominal_values(new_unc), unp.std_devs(new_unc), f'\\tan{{{self.short_name}}}', self.unit)
+    
+    def radians(self):
+        new_unc = self.unc * np.pi / 180
+        return Var(unp.nominal_values(new_unc), unp.std_devs(new_unc), f'{self.short_name}', 'rad')
+    
+    def ensure_radians(self):
+        if self.unit == 'rad':
+            return self
+        else:
+            return self.radians()
+
+    def degrees(self):
+        new_unc = self.unc * 180 / np.pi
+        return Var(unp.nominal_values(new_unc), unp.std_devs(new_unc), f'{self.short_name}', '\\degree')
+    
+    def ensure_degrees(self):
+        if self.unit == '\\degree':
+            return self
+        else:
+            return self.degrees()
+    
+    def __len__(self):
+        return len(self.unc)
+    
     def __setitem__(self, idx, value):
         new_unc = self.unc
         if isinstance(value, Var):
@@ -134,15 +197,10 @@ class Var:
         self.unc = new_unc
         self.val = unp.nominal_values(self.unc)
         self.err = unp.std_devs(self.unc)
-
     
     def __getitem__(self, idx):
         new_unc = self.unc[idx]
         return Var(unp.nominal_values(new_unc), unp.std_devs(new_unc), self.short_name, self.unit)
-    
-    def ufmt(self, apx='L'):
-        '''Formats all values in the Var instance using ufmt function.'''
-        return [scalar_ufmt(x, apx=apx) for x in self.unc]
 
 ############### Function class #########################
 class F:
@@ -156,8 +214,21 @@ class F:
     def linear(x, intercept, slope):
         return slope * x + intercept
     
+    def quadratic(x, a0, a1, a2):
+        return a0 + a1 * x + a2 * x**2
+    
+    def pure_quadratic(x, a2):
+        return a2 * x**2
+    
+    def cubic(x, a0, a1, a2, a3):
+        return a0 + a1 * x + a2 * x**2 + a3 * x**3
+    
+    def quartic(x, a0, a1, a2, a3, a4):
+        return a0 + a1 * x + a2 * x**2 + a3 * x**3 + a4 * x**4
+    
     def polynomial(x, *coeffs):
         '''coeffs are in increasing order, i.e., coeffs[0] + coeffs[1]*x + coeffs[2]*x^2 + ...'''
+        #new_coeffs = [c.val[0] for c in coeffs]
         p = Polynomial(coeffs)
         return p(x)
 
@@ -173,34 +244,67 @@ class F:
     def resonance(x, d):
         return (d * d) / (d*d + (x - 1/x)**2)
 
+    def dispersion(x, lambda0, a, n0):
+        return n0 + a / (x + lambda0)
+
 ############### Relation class #########################
 class Rel:
     '''This class provides a relation between two variables (from class Var):
     independent x and dependent y defined by specific function. That function
     is then used for fitting the data: y = func(x).
-    Atributes: independent Var, dependent Var, function, coefficients, covariant matrix.
+    
+    Atributes: independent Var, dependent Var, function, coefficients (.coeffs: list[Var]), 
+    covariant matrix (.cov).
+    
     Methods: fit, plot_data, plot_function, show_equation.'''
 
-    def __init__(self, x: Var, y: Var, function: callable = None):
+    def __init__(self, x: Var, y: Var, function: callable = None, color='black', shape='s'):
         self.x = x
         self.y = y
         self.func = function
+        self.color = color
+        self.shape = shape
+    
+    def set_degree(self, degree: int = None):
+        '''Sets the degree of the polynomial function for fitting.'''
+        if degree is not None:
+            self.degree = degree
+        elif self.func in [F.const, F.direct, F.linear, F.quadratic, F.pure_quadratic, F.cubic, F.quartic]:
+            self.degree = {'const': 0, 'direct': 1, 'linear': 1, 'quadratic': 2, 'pure_quadratic': 2,
+                           'cubic': 3, 'quartic': 4}[self.func.__name__]
+        else:
+            self.degree = None
+            if self.func is None:
+                raise ValueError('Degree or function must be specified for fitting functions.')
 
     def fit(self, p0: list = None, get_unit: bool = True):
         '''Fits y over x (both Var instances) using the provided function.
-        Adds these attributes to Relation: coefficients (.coeffs), covariant matrix (.cov).'''
+        Adds these attributes to Relation: coefficients (.coeffs: list[Var]), covariant matrix (.cov).'''
 
         if self.func is None:
             raise ValueError('No fitting function defined for the Relation.')
+        if self.func in [F.const, F.direct, F.linear, F.quadratic, F.pure_quadratic, F.cubic, 
+                         F.quartic, F.polynomial]:
+            self.set_degree(len(p0)-1 if p0 else None)
+            params, pcov = np.polynomial.Polynomial.fit(self.x.val, self.y.val, deg=self.degree, full=True,
+                                                        w=1/self.y.err**2)
+            params = params.convert().coef
+            variances = pcov[2]
+            coeffs = [Var(param, np.sqrt(variances[i]), f'c_{i}', '') for i, param in enumerate(params)]
 
-        coeff_values, cov_matrix  = curve_fit(self.func, self.x.val, self.y.val, sigma=self.y.err, absolute_sigma=True, p0=p0)
-        #alpha = 0.05  # 95% confidence interval
-        #t_val = t.ppf(1.0-alpha/2, max(0, len(x.val)-len(coeff_values)))
-        coeff_errors = np.sqrt(np.diag(cov_matrix)) #* np.abs(t_val)
-        fitted_coeffs = [Var(coeff_values[i],coeff_errors[i], short_name=f'fit_coefficient_{i}') for i in range(len(coeff_values))]
+            self.cov = variances
+            self.coeffs = coeffs
+        else:
+            coeff_values, cov_matrix  = curve_fit(self.func, self.x.val, self.y.val, sigma=self.y.err,
+                                              absolute_sigma=True, p0=p0)
+            #alpha = 0.05  # 95% confidence interval
+            #t_val = t.ppf(1.0-alpha/2, max(0, len(x.val)-len(coeff_values)))
+            coeff_errors = np.sqrt(np.diag(cov_matrix)) #* np.abs(t_val)
+            fitted_coeffs = [Var(coeff_values[i],coeff_errors[i], 
+                             short_name=f'c_{i}') for i in range(len(coeff_values))]
 
-        self.coeffs = fitted_coeffs
-        self.cov = cov_matrix
+            self.coeffs = fitted_coeffs
+            self.cov = cov_matrix
 
         if get_unit:
             match self.func:
@@ -215,20 +319,29 @@ class Rel:
                     warnings.warn(f'Unit calculation not implemeted for {self.func.__name__} function, \
                                   no units assigned to fitted coefficients.')
     
-    def plot_data(self, ax, err: tuple = (1,1), connect=False, smooth=False, label='naměřené hodnoty', 
-                  scale=1, marker='s', color='black', zorder=None):
+    def plot_data(self, ax, err: tuple = (1,1), connect=False, smooth:int = 0, label: str ='naměřené hodnoty', 
+                  scale: float = 1, zorder: int = None):
+        '''Plots self.x and self.y data with optional error bars (err: tuple with (xerr, yerr)).
+        
+        connect for line-connecting data points, smooth for spline interpotation,
+        label for legend, scale for marker size and zorder for plotting order'''
+        #self.data_label = label
         match err:
             case (1, 1): # x_error_bar and y_error_bar
-                    ax.errorbar(self.x.val, self.y.val, xerr=self.x.err, yerr=self.y.err, marker=marker,
-                                linewidth=1, color=color, markersize=5*scale, capsize=3, label=label, linestyle='', zorder=zorder)
+                    self.data_curve = ax.errorbar(self.x.val, self.y.val, xerr=self.x.err, yerr=self.y.err, 
+                                marker=self.shape, linewidth=1, color=self.color, markersize=5*scale, 
+                                capsize=3, label=label, linestyle='', zorder=zorder)
             case (1, 0): # just x_error_bar
-                    ax.errorbar(self.x.val, self.y.val, xerr=self.x.err, marker=marker, linewidth=1, 
-                                color=color, markersize=5*scale, capsize=3, label=label, linestyle='', zorder=zorder)
+                    self.data_curve = ax.errorbar(self.x.val, self.y.val, xerr=self.x.err, marker=self.shape, linewidth=1, 
+                                color=self.color, markersize=5*scale, capsize=3, label=label, 
+                                linestyle='', zorder=zorder)
             case (0, 1): # just y_error_bar
-                    ax.errorbar(self.x.val, self.y.val, yerr=self.y.err, marker=marker, linewidth=1, 
-                                color=color, markersize=5*scale, capsize=3, label=label, linestyle='', zorder=zorder)
+                    self.data_curve = ax.errorbar(self.x.val, self.y.val, yerr=self.y.err, marker=self.shape, 
+                                linewidth=1, color=self.color, markersize=5*scale, capsize=3, 
+                                label=label, linestyle='', zorder=zorder)
             case (0, 0): # none of the errorbars
-                ax.scatter(self.x.val, self.y.val, marker=marker, s=25*scale, color=color, linewidth=1, label=label, zorder=zorder)
+                self.data_curve = ax.scatter(self.x.val, self.y.val, marker=self.shape, s=25*scale, 
+                           color=self.color, linewidth=1, label=label, zorder=zorder)
 
         if connect:
             ax.plot(self.x.val, self.y.val, color='black')
@@ -236,52 +349,86 @@ class Rel:
         if smooth:
             # Create a smooth line using spline interpolation
             x_smooth = np.linspace(min(self.x.val), max(self.x.val), 300)
-            spline = make_interp_spline(self.x.val, self.y.val, k=smooth)  # Cubic spline
+            spline = make_interp_spline(self.x.val, self.y.val, k=smooth)  # "smooth" order spline
             y_smooth = spline(x_smooth)
-            ax.plot(x_smooth, y_smooth, color='black', linestyle='--')
+            ax.plot(x_smooth, y_smooth, color=self.color, linestyle='--')
 
         ax.set_xlabel(self.x.long_name)
         ax.set_ylabel(self.y.long_name)
-        #ax.legend()
 
 
-    def plot_fit(self, ax, label='fitovaná přímka', linestyle=':', color='black', linewidth=1.5):
+    def plot_fit(self, ax, label: str = 'fitovaná přímka', linestyle: str = ':', linewidth: float = 1.5):
+        '''Plots fitted funcion using coefficients from self.fit() method.
+        
+        label for legend, linestyle and linewidth are parameters for the fit line.'''
         if self.func is None:
             raise ValueError('No fitting function defined for the Relation.')
         if not hasattr(self, 'coeffs'):
             raise ValueError('No fitted coefficients found. Please run the fit() method first.')
 
+        #self.fit_label = label
         x = np.linspace(min(self.x.val), max(self.x.val), 200)
-        ax.plot(x, self.func(x, *self.coeffs.val), linestyle=linestyle, color=color, linewidth=linewidth, label=label)
-        #ax.legend()
+
+        self.fit_curve = ax.plot(x, self.func(x, *[c.val for c in self.coeffs]), linestyle=linestyle, 
+                color=self.color, linewidth=linewidth, label=label)[-1]
+        ax.set_xlabel(self.x.long_name)
+        ax.set_ylabel(self.y.long_name)
 
 
-    def show_equation(self, ax, label=None):
+    def show_equation(self, ax, format: str = '.3f', combined = True):
+        '''Displays the fitted equation in the legend.
+        
+        format to specify wished decimal digits of coefficients (e.g. '.3f' for 3 decimal digits)'''
         match self.func:
             case F.const:
-                eq_string = f'${self.y.short_name} = {self.coeffs.val[0]:.3f}$'
+                eq_string = f'${self.y.short_name} = {self.coeffs[0].val[0]:{format}}$'
             case F.direct:
-                eq_string = f'${self.y.short_name} = {self.coeffs.val[0]:.3f} \\cdot {self.x.short_name}$'
+                eq_string = f'${self.y.short_name} = {self.coeffs[0].val[0]:{format}} \\cdot {self.x.short_name}$'
             case F.linear:
-                eq_string = f'${self.y.short_name} = {self.coeffs.val[0]:.3f} \\cdot {self.x.short_name} +' 
-                f'{self.coeffs.val[0]:.3f}$'
-
-        combined_handle = Line2D([], [], color='black', marker='s', linestyle=':', label=eq_string)
-        ax.legend(handles=[combined_handle])
-
+                eq_string = f'${self.y.short_name} = {self.coeffs[1].val[0]:{format}} \\cdot {self.x.short_name} + \
+                {self.coeffs[0].val[0]:{format}}$'
+            case F.quadratic:
+                eq_string = f'${self.y.short_name} = {self.coeffs[2].val[0]:{format}} \\cdot {self.x.short_name}^2 + \
+                {self.coeffs[1].val[0]:{format}} \\cdot {self.x.short_name} + {self.coeffs[0].val[0]:{format}}$'
+            case F.dispersion:
+                if self.coeffs[0].val[0] < 0:
+                    sign = '-'
+                    lambda0 = -self.coeffs[0].val[0]
+                eq_string = f'${self.y.short_name} = {self.coeffs[2].val[0]:{format}} + \
+                    \\frac{{{self.coeffs[1].val[0]:{format}}}} \
+                    {{{self.x.short_name} {sign} {lambda0:{format}}}}$'
+            case _:
+                eq_string = f'Fitted function: {self.func.__name__} with coefficients: ' + \
+                ', '.join(f'{c.short_name}={c.val[0]:{format}}' for c in self.coeffs)
+        
+        # display combined handle but also self.label to datapoints
+        combined_handle = Line2D([], [], color=self.color, marker=self.shape, linestyle=':', label=eq_string)
+        eq_handle = Line2D([], [], color=self.color, marker='', linestyle='', label=eq_string)
+        if combined:
+            ax.legend(handles=[combined_handle])
+        else:
+            self.fit_curve.set_label(f'{self.fit_curve.get_label()}:')
+            ax.legend(handles=[self.data_curve, self.fit_curve, eq_handle])
+        
 ############### Measuring tool uncertainty class #######
 class MeasureUnc:
-    '''Class for storing uncertainty values of certaint measuring tool.'''
-    #def __init__(self, err_type: tuple, unit: str, data: pd.DataFrame):
+    '''Class for storing uncertainty values of certaint measuring tool.
+    Variable error is 'percents of measured value', constant error is 'number of digits' (err_type = 'digit')
+    or 'percents of range' (err_type = 'range').
+
+    Attributes: err_type (str: 'digit' | 'range'), unit (str), data (pd.DataFrame with columns: 
+    ranges, resolution, variable_error and constant_error).'''
+
     def __init__(self, err_type: str, unit: str, data: pd.DataFrame):
-        '''err_type: ('percent (of measured value)', 'digit/range')
-           data: columns are range, resolution, variable error and constant error'''
         self.err_type = err_type
         self.unit = unit
         data.columns = ['ranges', 'resolution', 'variable_error', 'constant_error']
         self.data = data
     
     def convert_units(self, to_unit: str):
+        '''Converts the units of the measuring tool uncertainty to match 
+        the unit of the measured variable (to_unit).'''
+
         from_unit = self.unit
         if from_unit == to_unit:
             return self
@@ -328,8 +475,6 @@ class MeasureUnc:
         self = self.convert_units(var.unit)
         errors = np.zeros_like(var.val)
 
-        #if self.err_type[0] == 'percent':
-        #    var_err_idx = 2
         if self.err_type == 'digit':
             const_base = self.data.resolution.to_numpy()
         if self.err_type == 'range':
@@ -340,15 +485,53 @@ class MeasureUnc:
             net = value < self.data.ranges
             row_idx = self.data.ranges[net].idxmin() # first range larger than value
 
-            errors[i] += np.abs(value) * (self.data.variable_error[row_idx] / 100.0) # variable percent error
-            errors[i] += const_base[row_idx] * self.data.constant_error[row_idx] # (digits)resolution/range * constant error
+            # variable error: (percents of measured value)
+            errors[i] += np.abs(value) * (self.data.variable_error[row_idx] / 100.0) 
+            # constant error: (digits=)resolution/range * constant error
+            errors[i] += const_base[row_idx] * self.data.constant_error[row_idx] 
 
         return Var(var.val, errors, var.short_name, var.unit)
 
+    def __str__(self):
+        nrows, _ = self.data.shape
+        if self.err_type == 'digit':
+            ncols = 3
+            const_apx = 'dgt'
+        else: # 'err_type == 'range'
+            ncols = 2
+            const_apx = '\\%'
+
+        string = f'Measuring tool uncertainty (err_type: {self.err_type}, unit: {self.unit}):\n'
+        string += '\\begin{table}[!htbp]' + '\n' + \
+        '\\centering' + '\n' + \
+        '\\caption{CAPTION}' + '\n' + \
+        '\\begin{tabular}{' + 'c'*ncols + '}' + '\n' + \
+        ' \\toprule' + '\n' + \
+        ' rozsah & nejistota \\\\' + '\n' + \
+        ' \\midrule' + '\n'
+        for i in range(nrows):
+            # add ranges
+            string += f' ${self.data["ranges"][i]} \\mathrm{{{self.unit}}}$ &'
+            # add resolution value if 'digit' error type
+            if self.err_type == 'digit':
+                string += f' ${self.data["resolution"][i]} \\mathrm{{{self.unit}}}$ &'
+            # add variable and constant error
+            string += f' ${self.data["variable_error"][i]} \\%$ &'
+            string += f' ${self.data["constant_error"][i]} {const_apx}$ \\\\' + '\n'
+
+        string += ' \\bottomrule' + '\n'
+        string += '\\end{tabular}' + '\n'
+        string += '\\label{tab:LABEL}' + '\n'
+        string += '\\end{table}' + '\n'
+
+        string += '\n'
+
+        return string
 
 ########################################################
 ########### other useful functions #####################
-def read_excel(file_path, sheet_name='List1', cells='A1:Z100', header = 0):
+
+def read_excel(file_path, sheet_name='Sheet1', cells='A1:Z100', header = 0):
     '''Reads an Excel file and returns a pandas DataFrame.
     Defautly, header on the first line.'''
 
@@ -369,13 +552,14 @@ def read_excel(file_path, sheet_name='List1', cells='A1:Z100', header = 0):
     df = pd.read_excel(file_path, sheet_name=sheet_name, skiprows=skiprows, nrows=nrows, usecols=cols, header=header)
 
     return df
+
 ########################################################
-def excel_to_latex(file_path, cells='A1:Z100', sheet_name='List1', header = 0, format='.2f'):
+def excel_to_latex(file_path, sheet_name='Sheet1', cells='A1:Z100', header = 0, format='.2f'):
     '''Reads an Excel file and returns a LaTeX formatted table as a string.'''
     df = read_excel(file_path, sheet_name=sheet_name, cells=cells, header=header)
     cols = df.columns.to_list()
     nrows, ncols = df.shape
-    print(df.shape)
+
     string = f'\n' + \
     '\\begin{table}[!htbp]' + '\n' + \
     '\\centering' + '\n' + \
@@ -394,13 +578,102 @@ def excel_to_latex(file_path, cells='A1:Z100', sheet_name='List1', header = 0, f
     return string
 
 ########################################################
-def scalar_ufmt(x, apx='L'):
+def excel_to_latex_2(file_path, sheet_name='Sheet1', cells='A1:Z100', header = 0, format='.3f', 
+                     show_errors = True, apx='N') -> str:
+    '''Reads an Excel file and returns a LaTeX formatted table as a string.
+    Designed for alternating value and error columns.
+    
+    If show_errors, print values with errors in format of apx:
+    e for exponential notation, S for notation by norm: "value(uncertainty)", 
+    L for LaTeX: "value \\pm uncertainty", P for pretty print: "value ± uncertainty"
+    
+    If not show_errors, print only values. Adds recommendation for unit change,
+    for avoiding exponential notation.'''
+    
+    df = read_excel(file_path, sheet_name=sheet_name, cells=cells, header=header)
+    nrows, ncols = df.shape
+    #if ncols % 2 != 0:
+    #    raise ValueError('Number of columns must be even, with alternating value and error columns.')
+    col_names = df.columns.to_list()
+    err_indices = []
+    for i in range(len(col_names)):
+        if col_names[i].startswith('sigma'):
+            err_indices.append(i)   # index of error column
+    
+    val_col_names = [col_names[i] for i in range(ncols) if i not in err_indices] # columns with values
+
+    string = f'\n' + \
+    '\\begin{table}[!htbp]' + '\n' + \
+    '\\centering' + '\n' + \
+    '\\caption{CAPTION}' + '\n' + \
+    '\\begin{tabular}{' + 'c'*(ncols-len(err_indices)) + '}' + '\n' + \
+    ' \\toprule' + '\n' + \
+    ' ' +' & '.join(val_col_names) + ' \\\\' + '\n' + \
+    ' \\midrule' + '\n'
+    if show_errors:
+       for i in range(nrows):
+            for j in range(ncols):
+                if j+1 in err_indices: # skip, next error column will be processed together
+                    continue
+                if j in err_indices: # error column
+                    string += f' ${scalar_ufmt(ufloat(df.iloc[i,j-1], df.iloc[i,j]), apx)}$ '
+                else: # value column
+                    if format is not None: # normal value column without error
+                        string += f' ${df.iloc[i,j]:{format}}$ '
+                    else: # leave value as is
+                        string += f' ${df.iloc[i,j]}$ '
+
+                if j == ncols - 1: # last column, add newline
+                    string += ' \\\\' + '\n'
+                else: # add column separator
+                    string += '&'
+    else:
+        for i in range(nrows):
+            if format is not None:
+                string += ' $' + '$ & $'.join(f'{df.iloc[i,j]:{format}}' for j in range(ncols) if j not in err_indices) + '$ \\\\' + '\n'
+            else:
+                string += ' $' + '$ & $'.join(f'{df.iloc[i,j]}' for j in range(ncols) if j not in err_indices) + '$ \\\\' + '\n'
+    string += ' \\bottomrule' + '\n'
+    string += '\\end{tabular}' + '\n'
+    string += '\\label{tab:LABEL}' + '\n'
+    string += '\\end{table}' + '\n'
+
+    def find_order(x: list[float]):
+        max_val = max(x)
+        if max_val == 0:
+            return 0
+        mag = int(np.floor(np.log10(max_val)))
+        k = max_val / (10 ** mag)
+        if k <= 1.9:
+            highest_mag = 1
+        else:
+            highest_mag = 0
+        return mag - highest_mag
+
+    for i in err_indices: # for each error column:
+        change_by_order = find_order(df.iloc[:, i].to_list())
+        
+        if change_by_order > 0:
+            string += f'% RECOMMENDATION: Consider changing unit of "{col_names[i-1]}"' + \
+                      f' by {change_by_order} orders, at least {int(np.ceil(change_by_order / 3))} 3-orders.\n'
+
+    return string
+
+########################################################
+def scalar_ufmt(x: ufloat, apx='N'):
     '''Work only for scalar values!
     
     Rounds value and error of an ufloat number to appropriate significant figures.
     Returns formatted string. If first significant figure of error is 1 (k <= 1.9), uses two significant digits.
-    Appendix (apx) sets formatting options: e for scientific notation,
-    L for LaTeX.'''
+    Appendix (apx) sets formatting options: e for scientific exponential notation,
+    S for notation by norm: "value(uncertainty)", L for LaTeX: "value \\pm uncertainty"
+    N for notation by norm with LaTeX formatting.'''
+    
+    if apx == 'N':
+        apx = 'S'
+        convert_exponent = True
+    else:
+        convert_exponent = False
 
     if x.std_dev == 0:
         return f'{x:.2u{apx}}'
@@ -410,20 +683,58 @@ def scalar_ufmt(x, apx='L'):
     k = x.std_dev / (10 ** mag)
     sig_fig = 2 if k <= 1.9 else 1
 
-    return f'{x:.{sig_fig}u{apx}}'
+    string = f'{x:.{sig_fig}u{apx}}'
 
-########################################################
-def nice_print(Var, apx='P'):
+    # convert exponent to LaTeX notation if scientific notation is used
+    if convert_exponent and 'e' in string:
+        value_str, exp_str = string.split('e')
+        exp = int(exp_str)
+        string = f'{value_str} \\times 10^{{{exp}}}'
+
+    return string
+
+#########################################################
+def ufmt(var: Var, apx='N') -> str:
+    '''Formats all values in the Var instance using scalar_ufmt function, returns a formatted string.
+    
+    appendix apx: e for exponential notation, S for notation by norm: "value(uncertainty)", 
+    L for LaTeX: "value \\pm uncertainty", P for pretty print: "value ± uncertainty".'''
+
+    if len(var.unc) == 1 and not apx=='P': # scalar value and not pretty print
+        string = f'{var.short_name} = {scalar_ufmt(var.unc[0], apx)}'
+    else: # 1d array of values or pretty print
+        string = f'{var.short_name} = ({", ".join(scalar_ufmt(x, apx) for x in var.unc)})'
+
+    if var.unit:
+        string += f' {var.unit}'
+
+    return string
+
+#########################################################
+def nice_print(var: Var):
     '''Prints ufloat number with nicely formatted value and error.'''
-    if Var.unit:
-        print(f'{Var.short_name} = ({", ".join(scalar_ufmt(x, apx) for x in Var.unc)}) \\times {Var.unit}')
-    else:
-        print(f'{Var.short_name} = ({", ".join(scalar_ufmt(x, apx) for x in Var.unc)})')
+    print(ufmt(var, apx='P'))
 
-########################################################
-def to_table(*args, apx='L'):
+#########################################################
+def latex_print(var: Var):
+    '''Prints ufloat number with LaTeX formatted value and error.'''
+    print(ufmt(var, apx='L'))
+
+#########################################################
+def norm_print(var: Var):
+    '''Prints ufloat number with value and error formatted by norm: "value(uncertainty)".'''
+    print(ufmt(var, apx='S'))
+
+#########################################################
+def best_print(var: Var):
+    '''Prints Var instance with format by norm: "value(uncertainty)". If exponential notation,
+    converts to LaTeX format.'''
+    print(ufmt(var, apx='N'))
+
+#########################################################
+def to_table(*args, apx='N'):
     '''Converts Var instances to a formatted LaTeX table. Uses ufmt for formatting, 
-    defaultly writes uncertainties in LaTeX format.'''
+    defaultly writes uncertainties in format specified by norm (N) with LaTeX exponential notation.'''
     # df = pd.DataFrame()
     # for var in args:
     #     df[var.long_name] = [scalar_ufmt(x, apx=apx) for x in var.unc]
@@ -443,9 +754,83 @@ def to_table(*args, apx='L'):
     print('\\label{tab:LABEL}')
     print('\\end{table}')
 
-########################################################
+#########################################################
+def to_table_2(*args, apx='N') -> str:
+    '''Converts Var instances to a formatted LaTeX table. Uses ufmt for formatting, 
+    defaultly writes uncertainties in format specified by norm (N) with LaTeX exponential notation.'''
+    # df = pd.DataFrame()
+    # for var in args:
+    #     df[var.long_name] = [scalar_ufmt(x, apx=apx) for x in var.unc]
+    # return df.to_latex(index=False, column_format=len(args)*'c')
+
+    string = '\n'
+    string += '\\begin{table}[!htbp]\n'
+    string += '\\centering\n'
+    string += '\\caption{CAPTION}\n'
+    string += '\\begin{tabular}{' + 'c'*len(args) + '}\n'
+    string += ' \\toprule\n'
+    string += ' '
+    for i in range(len(args)):
+        if isinstance(args[i], Var):
+            string += str(args[i].long_name)
+        elif isinstance(args[i], pd.Series):
+            string += str(args[i].name)
+        else:
+            string += f'NAME_{i}'
+
+        if i == len(args) - 1: # last column, add newline
+            string += ' \\\\\n'
+        else: # add column separator
+            string += ' & '
+
+    string += ' \\midrule\n'
+    for i in range(len(args[0])):
+        string += ' '
+        for j in range(len(args)):
+            if isinstance(args[j], Var):
+                string += f'${scalar_ufmt(args[j].unc[i], apx=apx)}$'
+            elif isinstance(args[j], pd.Series):
+                if isinstance(args[j].iloc[i], float) or isinstance(args[j].iloc[i], int):
+                    string += f'${args[j].iloc[i]}$'
+                else:
+                    string += str(args[j].iloc[i])
+            else:
+                string += str(args[j][i])
+            
+            if j == len(args) - 1: # last column, add newline
+                string += ' \\\\\n'
+            else: # add column separator
+                string += ' & '
+
+    string += ' \\bottomrule\n'
+    string += '\\end{tabular}\n'
+    string += '\\label{tab:LABEL}\n'
+    string += '\\end{table}\n'
+
+    return string
+
+#########################################################
+def sin(var: Var) -> Var:
+    return var.sin()
+#########################################################
+def cos(var: Var) -> Var:
+    return var.cos()
+#########################################################
+def tan(var: Var) -> Var:
+    return var.tan()
+#########################################################
+def exp(var: Var) -> Var:
+    return var.exp()
+#########################################################
+def log(var: Var) -> Var:
+    return var.log()
+
+#########################################################
+#################### LEGACY CODE ########################
+
 def fit_curve(x: Var, y: Var, func=F.linear, p0: list =None):
-    '''Fits y over x (both Var instances) using the provided function (default linear).
+    '''!!! NOT SUPPORTED ANYMORE!!! -> use Rel class and its fit() method instead.
+
     Returns the fitted coefficients as uarray.'''
     #alpha = 0.05  # 95% confidence interval
     coeff_values, cov_matrix  = curve_fit(func, x.val, y.val, sigma=y.err, absolute_sigma=True, p0=p0)
@@ -455,11 +840,11 @@ def fit_curve(x: Var, y: Var, func=F.linear, p0: list =None):
 
     return fitted_coeffs
 
-########################################################
+#########################################################
 def plot(fig, ax, x, y, fit_coeffs=None, func=F.linear, xerr=True, yerr=True, fit_curve=True, 
          data_label='naměřené hodnoty', fit_label='teoretická závislost', equation=False):
 
-    '''!!!NOT SUPPORTED ANYMORE!!! 
+    '''!!!NOT SUPPORTED ANYMORE!!! -> use Rel class and its plot_data() and plot_fit() methods instead.
     
     Plots data y over x (both Var instances) with optional error bars, fit line and equation.
     Optionally show the plot.'''
@@ -487,8 +872,9 @@ def plot(fig, ax, x, y, fit_coeffs=None, func=F.linear, xerr=True, yerr=True, fi
     ax.set_xlabel(x.long_name)
     ax.set_ylabel(y.long_name)
 
-########################################################
+#########################################################
 def plot_data(ax, x: Var, y: Var, err: tuple = (1,1), label='naměřené hodnoty', scale=1, marker='s', color='black'):
+    '''!!!NOT SUPPORTED ANYMORE!!! -> use Rel class and its plot_data() method instead.'''
     match err:
         case (1, 1): # x_error_bar and y_error_bar
                 ax.errorbar(x.val, y.val, xerr=x.err, yerr=y.err, color=color, linewidth=1, 
@@ -506,19 +892,17 @@ def plot_data(ax, x: Var, y: Var, err: tuple = (1,1), label='naměřené hodnoty
     ax.set_ylabel(y.long_name)
     ax.legend()
 
-########################################################
+#########################################################
 def plot_fit(ax, x: Var, coeffs: Var, func=F.linear, label='fitovaná přímka', linestyle=':', color='black'):
+    '''!!!NOT SUPPORTED ANYMORE!!! -> use Rel class and its plot_fit() method instead.'''
     ax.plot(x.val, func(x.val, *coeffs.val), linestyle=linestyle, color=color, linewidth=1.5, label=label)
 
-########################################################
-def show_equation(ax, rel: Rel, label=None):
-    pass
+#########################################################
+################## testing ##############################
 
-########################################################
-################## testing #############################
 if __name__ == "__main__":
 
-########################################################
+#########################################################
     # read_excel
     '''
     df = read_excel('uloha8/uloha8.xlsx', sheet_name='List1', cells='A2:E7')
@@ -539,7 +923,7 @@ if __name__ == "__main__":
     print(c)
     print(f)
     '''
-########################################################
+#########################################################
     # fit and plot random data
     '''
     np.random.seed(0)
@@ -571,7 +955,7 @@ if __name__ == "__main__":
     plot_data(ax, x, y)
     plt.show()
     '''
-########################################################
+#########################################################
     # scalar_ufmt
     '''
     print(scalar_ufmt(ufloat(4.965,0.08)))
@@ -581,13 +965,13 @@ if __name__ == "__main__":
     print(scalar_ufmt(ufloat(0.001495,0.000566), 'eL'))
     print(scalar_ufmt(ufloat(14.95,0.566), 'L'))
     '''
-########################################################
+#########################################################
     # polynomial fit
     '''
     cff = fit_curve(x, y, func=F.polynomial, p0=[1,2,3])
     print('Fitted coeffs:', cff)
     '''
-########################################################
+#########################################################
     # scalar Var
     '''
     hhh = unp.uarray(1.02,0.03)
@@ -621,7 +1005,7 @@ if __name__ == "__main__":
         print('scalar')
 
     '''
-########################################################
+#########################################################
     # Relation fit and plot
     '''
     fig, ax = plt.subplots()
@@ -640,7 +1024,7 @@ if __name__ == "__main__":
     plt.show()
     '''
 
-########################################################
+#########################################################
     # type and isinstance tests
     '''
     a = Var(1.0, 0.1, 'a', 'm')
@@ -666,12 +1050,63 @@ if __name__ == "__main__":
     print(d.latex())
 
     '''
-########################################################
+#########################################################
     # excel_to_latex
     '''
     latex_table = excel_to_latex('2zs/uloha8/uloha8.xlsx', sheet_name='List1', cells='A2:C7', format='.3f')
     print(latex_table)
     '''
-########################################################
+#########################################################
+    # excel_to_latex_2
+    '''
+    print('old version:')
+    print(excel_to_latex('excel_to_latex_test.ods', 'Sheet1', 'A1:H25'))
+    print('without errors:')
+    print(excel_to_latex_2('excel_to_latex_test.ods', 'Sheet1', 'A1:H25', show_errors=False))
+    print('with errors:')
+    print(excel_to_latex_2('excel_to_latex_test.ods', 'Sheet1', 'A1:H25', show_errors=True))
+    #'''
+#########################################################
+    # formats
+    '''
+    a = ufloat(1.2345, 0.06789)
+    b = ufloat(0.0012345, 0.00006789)
+    c = ufloat(12345, 678.9)
+    print('scalar_ufmt:')
+    print(scalar_ufmt(a, 'S'))
+    print(scalar_ufmt(b, 'S'))
+    print(scalar_ufmt(c, 'S'))
+
+    print(scalar_ufmt(a, 'N'))
+    print(scalar_ufmt(b, 'N'))
+    print(scalar_ufmt(c, 'N'))
+
+    print(scalar_ufmt(a, 'L'))
+    print(scalar_ufmt(b, 'L'))
+    print(scalar_ufmt(c, 'L'))
+
+    print(scalar_ufmt(a, 'P'))
+    print(scalar_ufmt(b, 'P'))
+    print(scalar_ufmt(c, 'P'))
+
+    A = Var(a.nominal_value, a.std_dev, short_name='A', unit='m')
+    B = Var(b.nominal_value, b.std_dev, short_name='B', unit='s')
+    C = Var(c.nominal_value, c.std_dev, short_name='C', unit='J')
+    print('ufmt:')
+    print(ufmt(C, 'S'))
+    print(ufmt(C, 'L'))
+    print(ufmt(C, 'P'))
+    print(A, B, C, sep=', ')
+    best_print(A)
+    best_print(B)
+    best_print(C)
+    #'''
+
+#####################################################
+    # polynomial
+    '''
+    x=5
+    print(F.polynomial(x,1,2,3))
+    #'''
 
     print('All done!')
