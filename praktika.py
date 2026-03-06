@@ -201,7 +201,35 @@ class Var:
     def __getitem__(self, idx):
         new_unc = self.unc[idx]
         return Var(unp.nominal_values(new_unc), unp.std_devs(new_unc), self.short_name, self.unit)
+############## NonErrorVar class #######################
+class NonErrorVar(Var):
+    
+    def __init__(self, values: int, short_name: str = '', unit:str = '', fmt: str = '.3f'):
+        super().__init__(values, short_name=short_name, unit = unit)
+        self.val = np.atleast_1d(values)
+        self.unc = np.atleast_1d(values)
 
+        self.short_name = short_name
+        self.unit = unit
+        self.long_name = f'${self.short_name}\\, (\\mathrm{{{self.unit}}})$' if self.unit else f'${self.short_name}$'
+        self.fmt = fmt
+
+    def __str__(self):
+        return self.ufmt(self.fmt)
+    
+    def scalar_ufmt(self, x: float):
+        return f'{x:{self.fmt}}'
+    
+    def ufmt(self):
+        if len(self.unc) == 1: # scalar value and not pretty print
+            string = f'{self.short_name} = {self.scalar_ufmt(self.unc[0], self.fmt)}'
+        else: # 1d array of values
+            string = f'{self.short_name} = ({", ".join(self.scalar_ufmt(x, self.fmt) for x in self.unc)})'
+
+        if self.unit:
+            string += f' {self.unit}'
+
+        return string
 ############### Function class #########################
 class F:
     '''A collection of common fitting functions.'''
@@ -668,7 +696,7 @@ def scalar_ufmt(x: ufloat, apx='N'):
     Appendix (apx) sets formatting options: e for scientific exponential notation,
     S for notation by norm: "value(uncertainty)", L for LaTeX: "value \\pm uncertainty"
     N for notation by norm with LaTeX formatting.'''
-    
+
     if apx == 'N':
         apx = 'S'
         convert_exponent = True
@@ -700,6 +728,9 @@ def ufmt(var: Var, apx='N') -> str:
     appendix apx: e for exponential notation, S for notation by norm: "value(uncertainty)", 
     L for LaTeX: "value \\pm uncertainty", P for pretty print: "value ± uncertainty".'''
 
+    if isinstance(var, NonErrorVar):
+        return var.ufmt()
+    
     if len(var.unc) == 1 and not apx=='P': # scalar value and not pretty print
         string = f'{var.short_name} = {scalar_ufmt(var.unc[0], apx)}'
     else: # 1d array of values or pretty print
@@ -771,7 +802,7 @@ def to_table_2(*args, apx='N') -> str:
     string += ' \\toprule\n'
     string += ' '
     for i in range(len(args)):
-        if isinstance(args[i], Var):
+        if isinstance(args[i], Var) or isinstance(args[i], NonErrorVar):
             string += str(args[i].long_name)
         elif isinstance(args[i], pd.Series):
             string += str(args[i].name)
@@ -787,8 +818,11 @@ def to_table_2(*args, apx='N') -> str:
     for i in range(len(args[0])):
         string += ' '
         for j in range(len(args)):
-            if isinstance(args[j], Var):
+            if isinstance(args[j], NonErrorVar):
+                string += f'${args[j].scalar_ufmt(args[j].unc[i])}$'
+            elif isinstance(args[j], Var):
                 string += f'${scalar_ufmt(args[j].unc[i], apx=apx)}$'
+            
             elif isinstance(args[j], pd.Series):
                 if isinstance(args[j].iloc[i], float) or isinstance(args[j].iloc[i], int):
                     string += f'${args[j].iloc[i]}$'
@@ -1108,5 +1142,12 @@ if __name__ == "__main__":
     x=5
     print(F.polynomial(x,1,2,3))
     #'''
+#########################################################
+    # None errors
+    #'''
+    a = NonErrorVar(1.44, 'var_a', 'mm')
+    print(a)
+    #'''
+
 
     print('All done!')

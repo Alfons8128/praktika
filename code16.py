@@ -13,24 +13,27 @@ alpha1 = pr.Var(df0.iloc[0,0], df0.iloc[0,1], '\\alpha_1', '\\degree')
 alpha2 = pr.Var(df0.iloc[0,2], df0.iloc[0,3], '\\alpha_2', '\\degree')
 phi = 180 - alpha2 + alpha1
 phi.set_lname('\\phi', '\\degree')
-#print(phi)
+#pr.best_print(phi)
+#pr.best_print(alpha1)
+#pr.best_print(alpha2)
 
 col_names = df.columns.to_list()
 colors = df['barva']
 
 beta1 = pr.Var(df[f'{col_names[1]}'], df[f'{col_names[2]}'], '\\beta_1', '\\degree')
 beta2 = pr.Var(df[f'{col_names[3]}'], df[f'{col_names[4]}'], '\\beta_2', '\\degree')
-delta = (beta1 - beta2)/2
-delta.set_lname('\\delta', '\\degree')
+delta_min = (beta1 - beta2)/2
+delta_min.set_lname('\\delta', '\\degree')
 #delta_libre_office = pr.Var(df[f'{col_names[5]}'], df[f'{col_names[6]}'], '\\delta', '\\degree')
 #print(delta)
 #print(delta_libre_office)
 lambda_tab = df2['lambda']
 lambdas = pr.Var(lambda_tab, 0, '\\lambda', 'nm')
-
-n = pr.sin((delta.radians() + phi.radians())/2) / pr.sin(phi.radians()/2)
+lambda_tab2 = pr.NonErrorVar(lambda_tab, '\\lambda', 'nm')
+#print(type(lambdas), type(lambda_tab), type(lambda_tab2))
+n = pr.sin((delta_min.radians() + phi.radians())/2) / pr.sin(phi.radians()/2)
 n.set_lname('\\mathrm{N}')
-print(n)
+#print(n)
 dispersion = pr.Rel(lambdas, n, pr.F.dispersion)
 
 dispersion.fit(p0=[-160, 7.6, 1.5], get_unit=False)
@@ -53,22 +56,33 @@ fig.savefig('uloha16/dispersion.png', dpi=300)
 plt.close(fig)
 plt.show()
 
-for c in dispersion.coeffs:
-    print(c)
+#for c in dispersion.coeffs:
+#    pr.best_print(c)
+
+lambda_tab2.fmt = '.1f'
+#print(pr.to_table_2(colors, beta1, beta2, delta_min, n, lambda_tab2))
 
 lambdaF = 486.1
 lambdaC = 656.3
 lambdaD = 589.3
+lambdad = 587.6
 nF = pr.F.dispersion(lambdaF, *dispersion.coeffs)
 nC = pr.F.dispersion(lambdaC, *dispersion.coeffs)
 nD = pr.F.dispersion(lambdaD, *dispersion.coeffs)
+nd = pr.F.dispersion(lambdad, *dispersion.coeffs)
+
+pr.best_print(nC)
+pr.best_print(nd)
+pr.best_print(nD)
+pr.best_print(nF)
+
 Delta = nF - nC
 Delta.set_lname('\\Delta', '')
 delta = Delta / (nD - 1)
 delta.set_lname('\\delta', '')
 Abbe = 1 / delta
 Abbe.set_lname('\\gamma', '')
-print(f'nD = {nD}')
+print(f'nd = {nd}')
 print(f'Delta = nF - nC = {Delta}')
 print(f'delta = (nF - nC) / (nD - 1) = {delta}')
 print(f'Abbe number = (nD - 1) / (nF - nC) = {Abbe}')
