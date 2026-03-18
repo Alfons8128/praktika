@@ -305,14 +305,14 @@ class Rel:
             if self.func is None:
                 raise ValueError('Degree or function must be specified for fitting functions.')
 
-    def fit(self, p0: list = None, get_unit: bool = True):
+    def fit(self, p0: list = None, get_unit: bool = True, use_curve_fit: bool = False):
         '''Fits y over x (both Var instances) using the provided function.
         Adds these attributes to Relation: coefficients (.coeffs: list[Var]), covariant matrix (.cov).'''
 
         if self.func is None:
             raise ValueError('No fitting function defined for the Relation.')
-        if self.func in [F.const, F.direct, F.linear, F.quadratic, F.pure_quadratic, F.cubic, 
-                         F.quartic, F.polynomial]:
+        if self.func in [F.const, F.linear, F.quadratic, F.cubic, 
+                         F.quartic, F.polynomial] and not use_curve_fit:
             self.set_degree(len(p0)-1 if p0 else None)
             params, pcov = np.polynomial.Polynomial.fit(self.x.val, self.y.val, deg=self.degree, full=True,
                                                         w=1/self.y.err**2)
@@ -432,12 +432,21 @@ class Rel:
         # display combined handle but also self.label to datapoints
         combined_handle = Line2D([], [], color=self.color, marker=self.shape, linestyle=':', label=eq_string)
         eq_handle = Line2D([], [], color=self.color, marker='', linestyle='', label=eq_string)
+
+        handles, _ = ax.get_legend_handles_labels()
+
         if combined:
-            ax.legend(handles=[combined_handle])
+            handles.append(combined_handle)
+            self.handles = combined_handle
+            #ax.legend(handles=handles)
         else:
             self.fit_curve.set_label(f'{self.fit_curve.get_label()}:')
-            ax.legend(handles=[self.data_curve, self.fit_curve, eq_handle])
-        
+            self.handles = [self.data_curve, self.fit_curve, eq_handle]
+            handles.append(self.data_curve)
+            handles.append(self.fit_curve)
+            handles.append(eq_handle)
+            #ax.legend(handles=handles)
+
 ############### Measuring tool uncertainty class #######
 class MeasureUnc:
     '''Class for storing uncertainty values of certaint measuring tool.
@@ -687,6 +696,18 @@ def excel_to_latex_2(file_path, sheet_name='Sheet1', cells='A1:Z100', header = 0
 
     return string
 
+########################################################
+def make_legend(ax, *args: Rel):
+    '''Creates a legend on ax with handles from provided Relation instances.'''
+    handles = []
+    for arg in args:
+        if isinstance(arg.handles, list):
+            for handle in arg.handles:
+                handles.append(handle)
+        else:
+            handles.append(arg.handles)
+
+    ax.legend(handles=handles)
 ########################################################
 def scalar_ufmt(x: ufloat, apx='N'):
     '''Work only for scalar values!

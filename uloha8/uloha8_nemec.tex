@@ -12,6 +12,7 @@
 \usepackage{siunitx}
 \usepackage{textcomp}
 \usepackage{gensymb}
+\usepackage{verbatim}
 \sisetup{inter-unit-product =$\cdot$}
 \sisetup{separate-uncertainty=true}
 
@@ -57,32 +58,97 @@ Chybové úsečky nebyly pro~svou malou velikost pro~přehlednost vykresleny.}
 
 % ============================= TEORIE ================================
 \section{Teorie}
-\subsection{Kapacita deskového kondenzátoru}
+\subsection{Michelsonův interferometr}
 
-
-\subsection{Metoda měření}
+Průchod paprsku Michelsonovým interferometrem je znázorněn na obrázku \ref{sch:michelson}.
+Světlo ze~zdoje dopadá na polopropustnou jemně pokovenou skleněnou destičku A, kde se dělí na dva svazky.
+První se odráží směrem nahoru, odráží se od zrcadla $\mathrm{Z}_1$, prochází destičkou A a~dopadá do~dalekohledu D.
+Druhý paprsek prochází destičkou A, odráží se od zrcadla $\mathrm{Z}_2$, prochází destičkou A, odrazí
+se~od~jejího pokoveného povrchu, ještě jednou prochází destičkou A a~dopadá do~dalekohledu D, kde interferuje
+s~prvním paprskem. Pro~kompenzaci vícenásobného průchodu druhého paprsku destičkou A lze~použít 
+stejně tlustou skleněnou destičku B, která však pro~toto měření nebyla důžežitá, a~ani~nebyla použita.
 
 \begin{schema}[htbp]
     \centering
-%    \includegraphics[width=0.5\linewidth]{uloha4/fourpoints.png}
-    \caption{Schéma mřížkového spektrometru \cite{pokyny}}
-    \label{sch:spektrometr}
+    \includegraphics[width=0.5\linewidth]{interferometr_michelson.png}
+    \caption{Schéma Michelsonova interferometru \cite{pokyny}}
+    \label{sch:michelson}
 \end{schema}
 
-\begin{figure}[htbp]
-    \centering
-%    \includegraphics[width=0.5\linewidth]{uloha27/schema.png}
-    \caption{Jiný obrázek \cite{pokyny}}
-    \label{fig:obrazek}
-\end{figure}
+Při~tomto uspořádání vzniknou v~dalekohledu světlé interferenční proužky, přičemž
+interferenční maxima nastanou pro~dráhový rozdíl obou paprsků rovný celočíselnému násobku vlnové délky.
+Změna polohy zrcadla $\mathrm{Z}_1$ o~vzdálenost $\Delta l$ je se~změnou interferenčního řádu $k$ svázána 
+vztahem (upraveno podle \cite{pokyny})
+\begin{equation}
+    \Delta l = \frac{\lambda}{2} k \,,
+    \label{eq:michelson}
+\end{equation}
+kde $\lambda$ je vlnová délka použitého světla.
 
+V této úloze je změna polohy zrcadla $\mathrm{Z}_1$ řízena otočným šroubem, připojeným k~pákovému převodu,
+který zajišťuje jemnější posuv zrcadla. Uvažuji, že~pro~přepočet mezi otočením šroubu $\Delta y$
+a~změnou polohy zrcadla $\Delta l$ platí lineární vztah
+
+\begin{equation}
+    \Delta l = p \Delta y \, ,
+    \label{eq:pakovy_prevod}
+\end{equation}
+kde $p$ je převodní poměr pákového převodu, který je potřeba určit kalibrací.
+
+\subsection{Fabryho--Perotův interferometr}
+
+Fabryho--Perotův interferometr (schéma na obrázku \ref{sch:fabryperot}) se~skládá ze~dvou rovnoběžných zrcadel,
+mezi kterými se~dopadající svazek světla mnohonásobně odráží. Prošlé parsky spolu po~fokusaci čočkou
+interferují, přičemž díky přítomnosti mnoha svazků (řádově 30-40) vznikají oproti Michelsonově interferometru 
+ostřejší maxima \cite{pokyny}. Díky geometrii této úlohy vznikají interferenční kroužky, které jsou snímány
+kamerou. Otáčením šroubu se~mění vzdálenost mezi zrcadly, a~tím i~dráhový rozdíl jednotlivých paprsků,
+uprostřed obrazovky se~tak~při otáčení šroubem objevují střídavě světlé a~tmavé kroužky.
+
+\begin{schema}[htbp]
+    \centering
+    \includegraphics[width=0.5\linewidth]{interferometr_fabry_perot.png}
+    \caption{Schéma Fabryho--Perotova interferometru \cite{pokyny}}
+    \label{sch:fabryperot}
+\end{schema}
+
+Při osvícení interferometru sodíkovou výbojkou vyzařující na~dvou blízkých vlnových délkách (sodíkový dublet)
+se~na~obrazovce nacházejí dvě~sady interferenčních kroužků, které se~v~závislosti na~interferenčním řádu postupně
+přibližují, splývají a~znovu oddalují. Splynutí nastává, pokud se maxima $m$-tého řádu jedné vlnové délky
+nacházejí na~stejném místě jako maxima $(m-1)$-ho řádu druhé vlnové délky, tedy pokud pro~dráhový rozdíl
+$\Delta$ platí \cite{pokyny}
+\begin{equation}\label{eq:Delta}
+    \Delta = m \lambda_1 = (m-1) \lambda_2 \,,
+\end{equation}
+kde $\lambda_2 > \lambda_1$ jsou vlnové délky sodíkového dubletu.
+
+Splynutí nastane při~libovolném celočíselném násobku této vzdálenosti $\Delta$,
+podle \cite{pokyny} lze potom pro~$\Delta$ psát (upraveno podle \cite{pokyny})
+\begin{equation}\label{eq:fabryperot}
+    \Delta = \frac{\lambda_\mathrm{Na}^2}{\Delta \lambda_{\mathrm{Na}}} \,,
+\end{equation}
+kde $\Delta \lambda_{\mathrm{Na}} = \lambda_2 - \lambda_1$ je vzdálenost spektrálních čar sodíkového dubletu
+a~$\lambda_{\mathrm{Na}} = \qty{589.3}{\nm}$ \cite{pokyny3} je jejich střední vlnová délka.
+
+Pokud označím $\Delta l$ jako změnu vzdálenosti mezi zrcadly, při které dojde ke~$k$-tému následnému splynutí
+($k$ budu nazývat řád splynutí), bude mezi $\Delta l$ a $k$ platit vztah (upraveno podle \cite{pokyny})
+\begin{equation}\label{eq:deltal}
+    \Delta l = \frac{\Delta}{2} k \,.
+\end{equation}
 
 
 \subsection{Měřicí přístroje a jejich nejistoty}
 \begin{enumerate}
-    \item PŘÍSTROJ:
+    \item Otočný šroub u Michelsonova interferometru:
     
-    POZNÁMKY
+    Šroubem byla nastavována pozice zrcadla, a~tím i~délka jedné větve interferometru, tedy dráhový rozdíl obou
+    paprsků. Nejistotu určení
+    vzdálenosti odhaduji jako velikost nejmenšího dílku stupnice šroubu, tedy $\qty{0.01}{\mm}$.
+
+    \item Otočný šroub u Fabryho -- Perotova interferometru:
+    
+    Šroubem byla nastavována vzdálenost mezi dvěma zrcadly F.--P. interferometru, a~tím i~dráhový rozdíl
+    jednotlivých paprsků. Nejistotu vzálenosti odhaduji opět jako velikost nejmenšího dílku, tedy
+    $\qty{0.01}{\mm}$.
 
 \end{enumerate}
 
@@ -90,34 +156,269 @@ Chybové úsečky nebyly pro~svou malou velikost pro~přehlednost vykresleny.}
 % ======================== VÝSLEDKY MĚŘENÍ ===========================
 \section{Výsledky měření}
 
+\subsection{Kalibrace pákového převodu}
+
+Nejprve bylo nutné stanovit převodní poměr mezi stupnicí na~otočném šroubu a~skutečnou změnou
+polohy zrcadla $Z_1$. Použita byla rtuťová výbojka se~známou vlnovou délkou $\lambda_{Hg} = \qty{546.074}{nm}$
+\cite{nist}.
+Měření začínalo v~pozici $y = \qty{15}{mm}$, další pozice byla zaznamenána po průchodu 50 interferenčních proužků.
+Takto bylo provedeno 10 měření, důležitý byl vždy rozdíl aktuální pozice od té základní. Nejistota tohoto
+rozdílu byla určena jako \cite{englich}
+\begin{equation}\label{eq:sigmadeltay}
+    \sigma_{\Delta y} = \sqrt{2} \sigma_y \, ,
+\end{equation}
+kde $\sigma_y$ je nejistota hodnoty otočení šroubu, tedy $\qty{0.01}{mm}$.
+
+Pro větší přesnost (viz Diskuzi) byla kalibrace ještě jednou opakována.
+Naměřené hodnoty otočení šroubu shrnuje tabulka \ref{tab:kalibrace}.
+
+Pro obě kalibrace byla datovými body měřené závislosti $\Delta y$ na řádu maxima $k$ proložena
+přímka procházející počátkem, tedy tvaru $\Delta y = a \cdot k$. Lineární regresí pomocí funkce
+\texttt{curve\_fit} z~knihovny \texttt{scipy.optimize} byl určen koeficient $a$. Z~něj byl pak~z~rovnic
+(\ref{eq:michelson}) a~(\ref{eq:pakovy_prevod}) stanoven převodní poměr $p$ jako
+\begin{equation}\label{p}
+    p = \frac{\lambda_\mathrm{Hg}}{2a}
+\end{equation}
+a jeho nejistota byla vypočtena podle vztahu
+\begin{equation}
+    \sigma_p = p \relative{a} \,,
+    \label{eq:sigmap}
+\end{equation}
+přičemž nejistotu vlnové délky $\lambda_{\mathrm{Hg}}$ považuji za zanedbatelnou.
+
+Výsledné hodnoty pákového převodu pro~obě kalibrace jsou uvedeny v~tabulce
+\ref{tab:prevody}. Pro~účely dalšího zpracování byl použit průměr převodů z~obou kalibrací, jeho nejistota
+byla vypočtena jako
+\begin{equation}\label{eq:sigmapbar}
+    \sigma_{\bar{p}} = \frac{\sqrt{2}}{2} \sigma_p \, .
+\end{equation}
+
+
+\begin{table}[!htbp]
+\centering
+\caption{Kalibrace pákového převodu}
+\begin{tabular}{c|cc|cc}
+ \toprule
+  & \multicolumn{2}{|c|}{Kalibrace 1} & \multicolumn{2}{c}{Kalibrace 2} \\
+ \midrule
+ $k$ & $y\, (\mathrm{mm})$ & $\Delta y\, (\mathrm{mm})$ & $y\, (\mathrm{mm})$ & $\Delta y\, (\mathrm{mm})$ \\
+ \midrule
+ $0$ & $15.00(1)$ & $0.000(14)$ & $15.00(1)$ & $0.000(14)$ \\
+ $50$ & $15.07(1)$ & $0.070(14)$ & $15.07(1)$ & $0.070(14)$ \\
+ $100$ & $15.14(1)$ & $0.140(14)$ & $15.14(1)$ & $0.140(14)$ \\
+ $150$ & $15.21(1)$ & $0.210(14)$ & $15.21(1)$ & $0.210(14)$ \\
+ $200$ & $15.28(1)$ & $0.280(14)$ & $15.28(1)$ & $0.280(14)$ \\
+ $250$ & $15.35(1)$ & $0.350(14)$ & $15.35(1)$ & $0.350(14)$ \\
+ $300$ & $15.41(1)$ & $0.410(14)$ & $15.42(1)$ & $0.420(14)$ \\
+ $350$ & $15.48(1)$ & $0.480(14)$ & $15.49(1)$ & $0.490(14)$ \\
+ $400$ & $15.55(1)$ & $0.550(14)$ & $15.55(1)$ & $0.550(14)$ \\
+ $450$ & $15.62(1)$ & $0.620(14)$ & $15.62(1)$ & $0.620(14)$ \\
+ $500$ & $15.69(1)$ & $0.690(14)$ & $15.70(1)$ & $0.700(14)$ \\
+ \bottomrule
+\end{tabular}
+\label{tab:kalibrace}
+\end{table}
 
 \begin{figure}
     \centering
-%    \includegraphics[width=0.5\linewidth]{uloha27/GRAF1.png}
-    \caption{Závislost kapacity deskového kondenzátoru na napětí.}
-    \label{fig:osciloskop}
+    \includegraphics[width=0.7\linewidth]{kalibrace.png}
+    \caption{Kalibrace pákového převodu Michelsonova interferometru - závislost otočení šroubu
+    na~řádu interferenčního maxima.}
+    \label{fig:kalibrace}
 \end{figure}
 
+\begin{table}[!htbp]
+\centering
+\caption{Zjištěné pákové převody pro obě kalibrace}
+\begin{tabular}{ccc}
+ \toprule
+ kalibrace & $a \, (\mathrm{mm})$ & $p$ \\
+ \midrule
+ $1$ & $0.001378(14)$ & 0.198(2) \\
+ $2$ & $0.001385(14)$ & 0.197(2) \\
+ \midrule
+ průměr & $0.001382(10)$ & $0.1976(15)$ \\
+ \bottomrule
+\end{tabular}
+\label{tab:prevody}
+\end{table}
+
+\subsection{Vlnová délka He--Ne laseru}
+
+Postup z předchozího úkolu byl použit i~pro~měření vlnové délky He--Ne laseru. Pozice šroubu byla zaznamenána
+vždy~po~průchodu 50~interferenčních proužku. Naměřené hodnoty jsou shrnuty v~tabulce \ref{tab:michelson}
+a~vykresleny v~grafu \ref{fig:michelson}.
+
+Datové body byly proloženy přímkou ve tvaru $\Delta y = b \cdot k$. Koeficient $b$ byl metodou 
+nejmenších čtverců určen jako $b = \qty{0.001626(14)}{\mm}$.
+Z~koeficientu $b$ byla z rovnic
+(\ref{eq:michelson}) a~(\ref{eq:pakovy_prevod}) určena vlnová délka $\lambda_\mathrm{HeNe}$, a~to jako
+$\lambda_\mathrm{HeNe} = 643(7)\,\unit{\nm}$.
+Její nejistota byla vypočtena podle \cite{englich} jako
+\begin{equation}\label{eq:sigmaHeNe}
+    \sigma_{\lambda_\mathrm{HeNe}} = \lambda_\mathrm{HeNe}\sqrt{\relsqr{p} + \relsqr{b}}\, .
+\end{equation}
+
+\begin{table}[!htbp]
+\centering
+\caption{Otočení šroubu Michelsonova interferometru při použití He--Ne laseru}
+\begin{tabular}{ccc}
+ \toprule
+ $k$ & $y\, (\mathrm{mm})$ & $\Delta y\, (\mathrm{mm})$ \\
+ \midrule
+ $0$ & $15.00(1)$ & $0.000(14)$ \\
+ $50$ & $15.08(1)$ & $0.080(14)$ \\
+ $100$ & $15.17(1)$ & $0.170(14)$ \\
+ $150$ & $15.25(1)$ & $0.250(14)$ \\
+ $200$ & $15.33(1)$ & $0.330(14)$ \\
+ $250$ & $15.41(1)$ & $0.410(14)$ \\
+ $300$ & $15.49(1)$ & $0.490(14)$ \\
+ $350$ & $15.57(1)$ & $0.570(14)$ \\
+ $400$ & $15.65(1)$ & $0.650(14)$ \\
+ $450$ & $15.73(1)$ & $0.730(14)$ \\
+ $500$ & $15.81(1)$ & $0.810(14)$ \\
+ \bottomrule
+\end{tabular}
+\label{tab:michelson}
+\end{table}
+
+\begin{figure}
+    \centering
+    \includegraphics[width=0.7\linewidth]{michelson.png}
+    \caption{Závislost otočení šroubu Michelsonova interferometru na řádu 
+    interferenčního maxima pro He--Ne laser.}
+    \label{fig:michelson}
+\end{figure}
+
+\subsection{Vzdálenost spektrálních čar sodíkového dubletu}
+
+Při měření s Fabryho -- Perotovým interferometrem již~nebylo třeba kalibrovat převodní poměr, neboť
+otočení šroubu přímo odpovídalo změně vzdálenosti mezi zrcadly. Měření bylo zahájeno v~pozici, kdy maxima
+od~obou spektrálních čar sodíku splývala, a skončilo po pátém následném splynutí. Pozice šroubu byla
+zaznamenávána jednak v~okamžiku splynutí (celočíselný řád splynutí), jednak v~okamžiku, kdy~se~maxima 
+jedné čáry nacházela přímo mezi~maximy druhé čáry (neceločíselný řád spynutí). Naměřené
+pozice šroubu a odpovídající řády jsou uvedeny v~tabulce \ref{tab:fabryperot}.
+
+\begin{table}[!htbp]
+\centering
+\caption{Otočení šroubu Fabryho -- Perotova interferometru při měření vzdálenosti spektrálních čar sodíkového dubletu}
+\begin{tabular}{ccc}
+ \toprule
+ $\mathrm{k}$ & $l\, (\mathrm{mm})$ & $\Delta l\, (\mathrm{mm})$ \\
+ \midrule
+ $0.0$ & $3.79(1)$ & $0.000(14)$ \\
+ $0.5$ & $3.92(1)$ & $0.130(14)$ \\
+ $1.0$ & $4.06(1)$ & $0.270(14)$ \\
+ $1.5$ & $4.18(1)$ & $0.390(14)$ \\
+ $2.0$ & $4.36(1)$ & $0.570(14)$ \\
+ $2.5$ & $4.50(1)$ & $0.710(14)$ \\
+ $3.0$ & $4.65(1)$ & $0.860(14)$ \\
+ $3.5$ & $4.80(1)$ & $1.010(14)$ \\
+ $4.0$ & $4.94(1)$ & $1.150(14)$ \\
+ $4.5$ & $5.08(1)$ & $1.290(14)$ \\
+ $5.0$ & $5.20(1)$ & $1.410(14)$ \\
+ \bottomrule
+\end{tabular}
+\label{tab:fabryperot}
+\end{table}
+
+Naměřená závislost posuvu zrcadla na řádu splynutí byla proložena přímkou ve tvaru $\Delta l = c \cdot k$
+a~data i~lineární fit jsou zobrazeny v~grafu \ref{fig:fabryperot}.
+
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=0.7\linewidth]{fabryperot.png}
+    \caption{Závislost posuvu zrcadla Fabryho -- Perotova interferometru na řádu splynutí.\nobars}
+    \label{fig:fabryperot}    
+\end{figure}
+
+Koeficient $c$ byl určen metodou nejmenších čtverců jako $c = 0.2847(14)\,\unit{\mm}$. Podle rovnice
+(\ref{eq:deltal}) a~(\ref{eq:fabryperot}) je posuv zrcadla přímo úměrný řádu splynutí s~koeficientem úměrnosti 
+$\frac{\lambda_{\mathrm{Na}}^2}{2\Delta \lambda_{\mathrm{Na}}}$. Odtud
+byla vypočtena vzdálenost spektrálních čar sodíkového dubletu jako
+$\Delta \lambda_{\mathrm{Na}} = 0.610(3)\,\unit{\nm}$, přičemž její nejistota je dána vztahem
+\begin{equation}
+    \sigma_{\Delta \lambda_{\mathrm{Na}}} = \Delta \lambda_{\mathrm{Na}} \relative{c} \,,
+    \label{sigmadeltalambda}
+\end{equation}
+neboť nejistotu vlnové délky $\lambda_{\mathrm{Na}}$ považuji za zanedbatelnou.
 
 % ============================ DISKUZE ===============================
 \section{Diskuze}
 
+Při měření s Michelsonovým interferometrem nebyla použita kompenzační destička B z~obrázku \ref{sch:michelson},
+neboť nebylo důležité dosáhnout přesně stejné optické dráhy pro~oba paprsky, ale stačila znalost změny
+dráhového rozdílu, tedy změny polohy zrcadla $\mathrm{Z}_1$.
+
+Kalibrací pomocí rtuťové výbojky byl pákový převod Michelsonova interferometru stanoven jako $p = 0.1976(15)$
+s~relativní nejistotou $0.8\,\%$. Interferenční proužky byly dobře viditelné a předpokládám, že během jejich
+odečítání nedošlo k~hrubé chybě přepočítání řádu maxima. Nejistota převodního poměru tak byla daná jen 
+nejistotou stupnice otočného šroubu a statistickou nejistotou lineární regrese. Z~grafu \ref{fig:kalibrace}
+je patrné, že~fitovaná přímka popisuje meřená data velmi dobře, díky čemuž byl převodní poměr stanoven
+s~poměrně vysokou přesností.
+
+Vlnová délka He--Ne laseru byla pomocí Michelsonova interferometru určena
+jako $\lambda_\mathrm{HeNe} = 643(7)\,\unit{\nm}$ s~relativní nejistotou $1\,\%$, která je daná
+nejistotou převodního poměru a~nejistotou koeficientu úměrnosti z~lineární regrese. Kvůli velmi vysoké
+koherenci světla laseru docházelo k interakci světla na~nedokonale hladkých prvcích interferometru,
+což se~projevilo nepravidelnými granulacemi a~tmavými křivkami na~interferenčním obrazci, které
+ztěžovaly odečítání řádu maxim. Hrot sloužící k~přesné identifikaci kontrétního interferenčního proužku
+nebyl při~použití He--Ne laseru viditelný, proto bylo nutné odečítat proužky vůči okraji zorného pole dalekohledu.
+Mohlo tak snadněji dojít k~chybě přepočítání než v~případě použití rtuťové výbojky. Z~grafu \ref{fig:michelson}
+je však zřejmé, že~žádný datový bod neleží výrazně nad nebo pod fitovanou přímkou, což naznačuje,
+že~k~výrazné hrubé chybě při~odečítání řádu maxima nedošlo.
+Naměřená vlnová délka se~s~tabulkovou hodnotou $\lambda_\mathrm{HeNe,tab} = 632.8\,\unit{\nm}$ \cite{wiki}
+shoduje až v~rámci 2 standardních nejistot. Z~toho důvodu byla během experimentu provedena ještě druhá kalibrace
+pákového převodu, aby byla vyloučena hrubá chyba během první kalibrace. Obě kalibrace však vycházejí velmi podobně,
+přímky v~grafu \ref{fig:kalibrace} jsou téměř totožné. Z~toho usuzuji, že~experiment byl ovlivněn
+systematickou chybou, nebo byla nejistota měření podhodnocena. Projevit se mohla nelinearita pákového převodu
+pro~větší řád maxima (větší posuv zrcadla), i když to není z~grafů \ref{fig:kalibrace} a \ref{fig:michelson}
+patrné.
+
+Při měření s~Fabryho -- Perotovým interferometrem bylo sledováno přibližování a~oddalování obou sad
+interferenčních proužků sodíkového dubletu, přičemž významný byl okamžik splynutí obou sad maxim.
+Jelikož však světlé kroužky byly poměrně široké, nebylo vždy jednoduché určit přesný okamžik splynutí.
+Z~toho důvodu byla zaznamenávána i~pozice šroubu, kdy byla maxima jedné čáry přímo mezi~maximy druhé čáry,
+což se dalo určit poměrně přesněji. Z~grafu \ref{fig:fabryperot} je vidět, že některé datové body
+se nacházejí mírně nad~nebo pod~fitovanou přímkou, tedy pozice šroubu (a tedy změna vzdálenosti zrcadel)
+nebyla vždy určena správně. Dále mohlo být měření ovlivněno, pokud by zrcadla Fabryho -- Perotova interferometru
+nebyla přesně planparalelní. Vzhledem k~tomu, že~naměřená vzdálenost spektrálních čar
+$\Delta \lambda_{\mathrm{Na}} = 0.610(3)\,\unit{\nm}$ (s~relativní nejistotou $0.5\,\%$) se~s~tabulkovou
+hodnotou $\Delta \lambda_{\mathrm{Na,tab}} = 0.6\,\unit{\nm}$ \cite{pokyny3} shoduje, předpokládám,
+že~měření nebylo ovlivněno systematickými chybami.
 
 % ============================= ZÁVĚR ================================
 \section{Závěr}
 
+Pákový převod Michelsonova interferometru byl kalibrací pomocí rtuťové výbojky stanoven
+jako $p = 0.1976(15)$.
+
+Vlnová délka He--Ne laseru byla změřena využitím Michelsonova interferometru
+jako $\lambda_\mathrm{HeNe} = 643(7)\,\unit{\nm}$.
+
+Vzdálenost spektrálních čar sodíkového dubletu byla pomocí Fabryho -- Perotova interferometru určena
+jako $\Delta \lambda_{\mathrm{Na}} = 0.610(3)\,\unit{\nm}$.
 
 % =========================== LITERATURA =============================
 \begin{thebibliography}{9}
 
-\bibitem{studijni} Kolektiv ZFP KVOF MFF UK: \textit{Měření dielektrických vlastností materiálů} [online]. [cit. \today], dostupné z https://physics.mff.cuni.cz/vyuka/zfp/\_media/zadani/texty/txt\_227.pdf
+\bibitem{pokyny} Kolektiv ZFP KVOF MFF UK: \textit{Měření vlnových délek světla 
+interferometry - pokyny k měření} [online]. [cit. \today], dostupné
+z~https://physics.mff.cuni.cz/vyuka/zfp/\_media/zadani/pokyny/mereni\_308.pdf
 
-\bibitem{pokyny} Kolektiv ZFP KVOF MFF UK: \textit{Měření odporu} [online]. [cit. \today], dostupné \\
-z https://physics.mff.cuni.cz/vyuka/zfp/\_media/zadani/texty/txt\_202.pdf
+\bibitem{pokyny3} Kolektiv ZFP KVOF MFF UK: \textit{Mřížkový spektrometr} [online]. [cit. \today], dostupné
+z~https://physics.mff.cuni.cz/vyuka/zfp/\_media/zadani/pokyny/mereni\_303.pdf
 
-\bibitem{englich} J. Englich: \textit{Úvod do praktické fyziky I: Zpracování výsledků měření}. 1. vyd. Praha: Matfyzpress, 2006
+\bibitem{nist} NIST: \textit{NIST Basic Atomic Spectroscopic Data - Strong Lines of Mercury} [online]. [cit. \today], 
+dostupné z~https://physics.nist.gov/PhysRefData/Handbook/Tables/mercurytable2.htm
 
-\bibitem{mikulcak} Mikulčák a kolektiv: \textit{Matematické, fyzikální a chemické tabulky pro střední školy: relativní permitivita}, Praha: Státní pedagogické nakladatelství, n. p., 1988
+\bibitem{englich} J. Englich: \textit{Úvod do praktické fyziky I: Zpracování výsledků měření}. 
+1. vyd. Praha: Matfyzpress, 2006
+
+\bibitem{wiki} Wikipedia contributors. (2025, November 18). Helium--neon laser. 
+In Wikipedia, The Free Encyclopedia. [online] [cit. \today], dostupné 
+z~https://en.wikipedia.org/w/index.php?title=Helium\%E2\%80\%93neon\_laser\&oldid=1322824837
+
 
 \end{thebibliography}
 \end{document}

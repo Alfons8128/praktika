@@ -1,0 +1,171 @@
+
+\documentclass{../concepts/titul_protokol_p/prepareprotokol} %všechny balíčky pro protokol + titulní strana
+\renewcommand{\today}{\number\day.\,\number\month.\,\number\year}
+\usepackage{graphicx}
+\usepackage{newfloat}
+\usepackage{caption}
+\usepackage{booktabs}
+\usepackage{amssymb}
+\usepackage{amsmath}
+\usepackage{newfloat}
+\usepackage{caption}
+\usepackage{siunitx}
+\usepackage{textcomp}
+\usepackage{gensymb}
+\sisetup{inter-unit-product =$\cdot$}
+\sisetup{separate-uncertainty=true}
+
+\praktikum{III} %číslo praktika (I, II nebo III)
+\autor{David Němec} %jméno autora
+\datum{17.\,3.\,2026} %datum měření
+\cislo{30} %číslo úlohy
+\nazev{Využití interference k měření tloušťky tenké vrstvy a~k~měření poloměrů křivosti čoček} %název úlohy
+
+\DeclareFloatingEnvironment[fileext=los, placement={htbp}, name=Obrázek]{schema}
+
+\newcommand{\nobars}{
+Chybové úsečky nebyly pro~svou malou velikost pro~přehlednost vykresleny.}
+
+\newcommand{\relative}[1]{
+\frac{\sigma_{#1}}{#1}
+}
+\newcommand{\squared}[1]{
+\left( #1 \right)^2
+}
+\newcommand{\relsqr}[1]{
+\squared{\relative{#1}}
+%\left( \frac{\sigma_{#1}}{#1} \right)^2
+}
+
+\begin{document}
+\renewcommand{\figurename}{Graf}
+\renewcommand{\refname}{Literatura}
+
+% add another graphics path to find ZPF.pdf for title page
+% now searches for images in ./ and ../concepts/titul_protokol_p/
+\graphicspath{{../concepts/titul_protokol_p/}}
+\maketitle
+
+% ========================== PRACOVNÍ ÚKOL ============================
+\section{Pracovní úkol}
+\begin{enumerate}
+    \item Tolanského metodou změřte tloušťku tenké vrstvy ve dvou různých místech. Vyhodnoťte získané tloušťky a diskutujte, zda je vrstva v rámci chyby nepřímého měření na obou místech stejně silná.
+    \item Pomocí Newtonových interferenčních kroužků změřte oba poloměry křivosti u dvou vybraných čoček zpracováním digitální fotografie.
+    \begin{enumerate}
+        \item Zkalibrujte mikroskop. Pořiďte digitální záznam kalibračního měřítka a zpracujte ho fitováním přímo v praktiku.
+        \item Pořiďte digitální záznamy Newtonových kroužků pro jednotlivé povrchy čoček a zpracujte je fitováním přímo v praktiku.
+        \item Výsledky měření porovnejte s poloměry křivosti měřených čoček uváděnými výrobcem.
+        \item Z naměřených poloměrů křivosti spočítejte ohniskovou vzdálenost čoček a výsledky srovnejte s údaji uváděnými výrobcem. Materiál měřených čoček je optické sklo N-BK7, čočky nejsou tenké.
+    \end{enumerate}
+\end{enumerate}
+
+% ============================= TEORIE ================================
+\section{Teorie}
+\subsection{Tolanského metoda měření tloušťky tenké vrstvy}
+
+Schéma soustavy pro~měření tloušťky tenké vrstvy Tolanského metodou je znázorněno na~obrázku \ref{sch:tolansky}
+a vznik interferenčních proužků na~klínové vzduchové mezeře pak~na~obrázku \ref{sch:klin}.
+Do tenké vrstvy se~provede vryp a~následně se~horní část pokryje vysoce odrazivou krycí vrstvou
+jako na~obrázku \ref{sch:vrypy}-b. Na~vzorek se~poté položí polopropustné zrcadlo tak, aby mezi zrcadlem
+a~vzorkem vznikla klínová mezera s~malým úhlem klínu, a osvítí se monochromatickým světlem
+o~vlnové délce $\lambda$ (v~této úloze světlo ze~sodíkové výbojky s~$\lambda = \qty{589.3}{\nm}$ \cite{mikulcak}).
+Tím dojde k~interferenci na~klínu a~vzniku interferenčních proužků sledujících konstantní tloušťku vzduchové mezery.
+
+Bez přítomnosti vrypu by~se~ve~vzdálenosti $x_2$ od $k$-tého proužku nacházel $(k+1)$-ní proužek.
+Díky vrypu v~tenké vrstvě je však spodní rozhranní níže (právě o~tloušťku vrstvy $t$), což způsobí, že další
+tmavý proužek vznikne již ve~vzdálenosti $x_2 - x_1$ od $k$-tého proužku. Interferenční proužky 
+se~díky tomu deformují jako na~obrázku \ref{sch:vrypy}-a, v~zorném poli mikroskopu však byl u~této úlohy vidět
+pouze jeden zlom. Z~geometrie a~interferenčních vlastností světla lze odvodit vztah 
+pro~výpočet tloušťky vrstvy $t$ \cite{tolansky}:
+\begin{equation}\label{eq:tloustka}
+    t = \frac{x_1}{x_2} \frac{\lambda}{2}
+\end{equation}
+
+\begin{schema}[htbp]
+    \centering
+    \includegraphics[width=0.5\linewidth]{tolansky.png}
+    \caption{Schéma Tolanského metody:
+    1 -- zdroj monochromatického světla (Na výbojka), 2 -- dělič svazku, 3 -- objektiv mikroskopu,
+    4 -- stavěcí šrouby mechanického držáku, 5 -- polopropustné zrcadlo, 6 -- vzorek,
+    7 -- stolek mikroskopu, 8 -- šrouby pro nastavení polopropustného zrcadla a vzorku \cite{tolansky}}
+    \label{sch:tolansky}
+\end{schema}
+
+\begin{schema}[htbp]
+    \centering
+    \includegraphics[width=0.5\linewidth]{klin.png}
+    \caption{Vznik interferenčních proužků na klínové vzduchové mezeře:
+    1 -- polopropustné zrcadlo, 2 -- vzduchová mezera (index lomu n = 1),
+    3 -- horní plocha vrypu, 4 -- spodní plocha vrypu \cite{tolansky}}
+    \label{sch:klin}
+\end{schema}
+
+\begin{schema}[htbp]
+    \centering
+    \includegraphics[width=0.5\linewidth]{vrypy.png}
+    \caption{Schéma vrypu a vzniklých interferenčních proužků:
+    (a) Obraz měřené vrstvy opatřené vrypem v~zorném poli mikroskopu.
+    (b) Schematické znázornění této vrstvy:
+    1 -- měřená vrstva s tloušťkou t, 2 -- krycí napařená vrstva reprodukující vrstvu s vrypem. \cite{tolansky}}
+    \label{sch:vrypy}
+\end{schema}
+
+
+\subsection{Měřicí přístroje a jejich nejistoty}
+\begin{enumerate}
+    \item \textbf{Mikroskop PZO se stupnicí}:
+    
+    Mikroskop byl použit k~měření tloušťky tenké vrstvy Tolanského metodou. Stupnice mikroskopu
+    umožnovala měřit s~přesností na~0.01 dílku velké stupnice (skutečný fyzikální rozměr není důležitý).
+    Vzhledem k~tomu, že interferenční proužky nebyly zcela ostré, odhaduji nejistotu hodnoty na~stupnici
+    jako 0.05 dílku velké stupnice.
+
+    \item \textbf{Mikroskop Motic BA310}:
+    
+    Tento mikroskop byl připojen ke~kameře a~použit k~pořízení digitálních záznamů Newtonových kroužků.
+    Kalibrace (přepočet počtu pixelů na~skutečnou délku) byla provedena nasnímáním kalibračního měřítka.
+    Použita byla hrubá stupnice měřítka s~dílkem \qty{0.1}{\mm}.
+
+\end{enumerate}
+
+
+% ======================== VÝSLEDKY MĚŘENÍ ===========================
+\section{Výsledky měření}
+
+
+\begin{figure}
+    \centering
+%    \includegraphics[width=0.5\linewidth]{uloha27/GRAF1.png}
+    \caption{Závislost kapacity deskového kondenzátoru na napětí.}
+    \label{fig:osciloskop}
+\end{figure}
+
+
+% ============================ DISKUZE ===============================
+\section{Diskuze}
+
+
+% ============================= ZÁVĚR ================================
+\section{Závěr}
+
+
+% =========================== LITERATURA =============================
+\begin{thebibliography}{9}
+
+%\bibitem{studijni} Kolektiv ZFP KVOF MFF UK: \textit{Měření dielektrických vlastností materiálů} [online]. [cit. \today], dostupné z https://physics.mff.cuni.cz/vyuka/zfp/\_media/zadani/texty/txt\_227.pdf
+
+\bibitem{tolansky} Kolektiv ZFP KVOF MFF UK: \textit{Úloha 30 - pokyny k měření 1 (Tolanského metoda)} 
+[online]. [cit. \today], dostupné
+z~https://physics.mff.cuni.cz/vyuka/zfp/\_media/zadani/pokyny/mereni\_330.pdf
+
+\bibitem{newton} Kolektiv ZFP KVOF MFF UK: \textit{Úloha 30 - pokyny k měření 2 (Newtonovy kroužky)}
+
+\bibitem{englich} J. Englich: \textit{Úvod do praktické fyziky I: Zpracování výsledků měření}. 
+1. vyd. Praha: Matfyzpress, 2006
+
+\bibitem{mikulcak} Mikulčák a kolektiv: \textit{Matematické, fyzikální a chemické tabulky 
+pro střední školy: Vlnové délky některých intenzivních čar ve~spektrech}, 
+Praha: Státní pedagogické nakladatelství, n. p., 1988
+
+\end{thebibliography}
+\end{document}
