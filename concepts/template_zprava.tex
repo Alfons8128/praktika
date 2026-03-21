@@ -1,6 +1,6 @@
 
 \documentclass{../concepts/titul_zprava_p/prepareprotokolZprava} %všechny balíčky pro protokol + titulní strana
-\renewcommand{\today}{\number\day.\,\number\month.\,\number\year}
+
 \usepackage{graphicx}
 \usepackage{newfloat}
 \usepackage{caption}
@@ -13,7 +13,7 @@
 \usepackage{textcomp}
 \usepackage{gensymb}
 \sisetup{inter-unit-product =$\cdot$}
-\sisetup{separate-uncertainty=true}
+%\sisetup{separate-uncertainty=true}
 
 \praktikum{III} %číslo praktika (I, II nebo III)
 \autor{David Němec} %jméno autora
@@ -40,6 +40,7 @@ Chybové úsečky nebyly pro~svou malou velikost pro~přehlednost vykresleny.}
 \begin{document}
 \renewcommand{\figurename}{Graf}
 \renewcommand{\refname}{Literatura}
+\renewcommand{\today}{\number\day.\,\number\month.\,\number\year}
 
 % add another graphics path to find ZPF.pdf for title page
 % now searches for images in ./ and ../concepts/titul_protokol_p/

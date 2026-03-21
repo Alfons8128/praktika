@@ -1,6 +1,6 @@
 
 \documentclass{../concepts/titul_protokol_p/prepareprotokol} %všechny balíčky pro protokol + titulní strana
-\renewcommand{\today}{\number\day.\,\number\month.\,\number\year}
+
 \usepackage{graphicx}
 \usepackage{newfloat}
 \usepackage{caption}
@@ -11,6 +11,7 @@
 \usepackage{caption}
 \usepackage{siunitx}
 \usepackage{textcomp}
+\usepackage{comment}
 \usepackage{gensymb}
 \sisetup{inter-unit-product =$\cdot$}
 \sisetup{separate-uncertainty=true}
@@ -40,11 +41,13 @@ Chybové úsečky nebyly pro~svou malou velikost pro~přehlednost vykresleny.}
 \begin{document}
 \renewcommand{\figurename}{Graf}
 \renewcommand{\refname}{Literatura}
+\renewcommand{\today}{\number\day.\,\number\month.\,\number\year}
 
 % add another graphics path to find ZPF.pdf for title page
 % now searches for images in ./ and ../concepts/titul_protokol_p/
 \graphicspath{{../concepts/titul_protokol_p/}}
 \maketitle
+
 
 % ========================== PRACOVNÍ ÚKOL ============================
 \section{Pracovní úkol}
@@ -68,7 +71,7 @@ a vznik interferenčních proužků na~klínové vzduchové mezeře pak~na~obrá
 Do tenké vrstvy se~provede vryp a~následně se~horní část pokryje vysoce odrazivou krycí vrstvou
 jako na~obrázku \ref{sch:vrypy}-b. Na~vzorek se~poté položí polopropustné zrcadlo tak, aby mezi zrcadlem
 a~vzorkem vznikla klínová mezera s~malým úhlem klínu, a osvítí se monochromatickým světlem
-o~vlnové délce $\lambda$ (v~této úloze světlo ze~sodíkové výbojky s~$\lambda = \qty{589.3}{\nm}$ \cite{mikulcak}).
+o~vlnové délce $\lambda$ (v~této úloze světlo ze~sodíkové výbojky s~$\lambda = \qty{589.3}{\nm}$ \cite{vlnovedelky}).
 Tím dojde k~interferenci na~klínu a~vzniku interferenčních proužků sledujících konstantní tloušťku vzduchové mezery.
 
 Bez přítomnosti vrypu by~se~ve~vzdálenosti $x_2$ od $k$-tého proužku nacházel $(k+1)$-ní proužek.
@@ -110,6 +113,48 @@ pro~výpočet tloušťky vrstvy $t$ \cite{tolansky}:
     \label{sch:vrypy}
 \end{schema}
 
+\subsection{Měření poloměru křivosti čoček pomocí Newtonových kroužků}
+
+Pokud se na~čočku s~poloměrem křivosti $R$ položí planparalelní sklíčko a~osvítí se monochromatickým
+světlem o~vlnové délce $\lambda$, dojde ke~vzniku interferenčních kroužků sledujících konstantní tloušťku
+vzduchové mezery mezi čočkou a~sklíčkem. V~malé vzdálenosti $\rho$ od~středu čočky bude pro~tloušťku
+vzduchové mezery přibližně platit \cite{newton}
+\begin{equation}
+    \label{eq:tloustkanarho}
+    t(\rho) = \frac{\rho^2}{2 R} \,.
+\end{equation}
+
+Průběh intenzity světla ve vzdálenosti $\rho$ od středu čočky lze pak popsat funkcí \cite{newton}
+\begin{equation}
+    \label{eq:intenzita}
+    I(\rho) = A \sin^2 \left[ \frac{2 \pi}{\lambda} \left( d + \frac{\rho^2}{2 R}\right)\right] + B \,,
+\end{equation}
+kde $A$ je amplituda intenzity, $B$ je intenzita pozadí a $d$ je dodatečná mezera mezi~čočkou
+a~planparalelní destičkou způsobená různými nečistotami.
+
+Ke správnému přepočtu mezi skutečnou vzdáleností a~vzdáleností v~pixelech na~digitálním záznamu
+interferenčních kroužků je nutné pořídit také záznam kalibračního měřítka. Černé čárky označující
+jednotlivé dílky se~na~záznamu intenzity projeví ostrým poklesem, který lze popsat funkcí ve~tvaru \cite{newton}
+\begin{equation}
+    \label{eq:meritko}
+    I(x) = A \left\lfloor \frac{x}{T} - x_0 + s - \left\lfloor \frac{x}{T} - x_0 \right\rfloor \right\rfloor + B \,,
+\end{equation}
+kde $\lfloor a \rfloor$ označuje dolní celou část čísla $a$, $A$ je amplituda intenzity, $B$ je intenzita pozadí,
+$T$ je perioda (tedy počet pixelů na jeden dílek kalibračního měřítka), $x$ je souřadnice aktuálního pixelu,
+$x_0$ je souřadnice počátku a $s$ je střída
+(určuje jakou část periody je skoková funkce rovna jedné).
+
+
+\subsection{Ohnisková vzdálenost tlusté čočky}
+
+Je-li prostředí před~i~za~čočkou stejné s~indexem lomu $n=1$, lze ohniskovou vzdálenost 
+$f$ tlusté čočky vypočítat jako
+\begin{equation}
+    \label{eq:ohniskovavzdalenost}
+    f = \frac{n}{n-1} \frac{R_1 R_2}{n (R_2 - R_1) + (n-1) d} \,,
+\end{equation}
+kde $n$ je index lomu čočky, $R_1$ a $R_2$ jsou poloměry křivosti přední a~zadní lámavé plochy čočky
+a~$d$ je tloušťka čočky v~místě optické osy (ve~středu čočky) \cite{wiki}.
 
 \subsection{Měřicí přístroje a jejich nejistoty}
 \begin{enumerate}
@@ -132,22 +177,170 @@ pro~výpočet tloušťky vrstvy $t$ \cite{tolansky}:
 % ======================== VÝSLEDKY MĚŘENÍ ===========================
 \section{Výsledky měření}
 
+\subsection{Měření tloušťky tenké vrstvy Tolstého metodou}
 
-\begin{figure}
+Nejprve byl pod~mikroskopem se~stupnicí pozorován vzorek tenké vrstvy s~vrypem, osvícený sodíkovou výbojkou o~vlnové
+délce $\lambda_\mathrm{Na} = \qty{589.3}{nm}$ \cite{vlnovedelky}. Na~třech různých místech vzorku byly
+změřeny pozice tmavých interferenčních proužků vůči stupnici mikroskopu. Pro~kontrolu byly na~třetím místě
+proměřeny dva sousední proužky (označil jsem je jako $3$ a $3'$). Vždy byla určena jen pozice pravého 
+kraje tmavého proužku, jelikož byla nejlépe čitelná. 
+
+Vzdálenost $x_1$ je podle obrázku \ref{sch:vrypy}-a rovna
+rozdílu pozic tmavého proužku před~vrypem ($x_{1l}$) a toho samého proužku za~vrypem ($x_{1r}$), zatímco $x_2$
+se určí jako rozdíl pozic dvou sousedních proužků ($x_{2r}$ a $x_{2l}$).
+Protože ve~výpočtu tloušťky $t$
+podle vztahu (\ref{eq:tloustka}) jsou vzdálenosti $x_1$ a~$x_2$ v~poměru, není nutné znát skutečné
+fyzikální jednotky těchto vzdáleností, stačí uvažovat jen jejich relativní velikost vzhledem
+k~dílkům velké stupnice mikroskopu (označeným d.m.).
+
+Naměřené pozice pravých okrajů tmavých interferenčních proužků vůči stupnici mikroskopu a~z~nich vypočtené
+tloušťky vzorku jsou uvedeny v tabulce \ref{tab:tloustky}. Nejistota určení tloušťky byla podle \cite{englich}
+vypočtena jako
+\begin{equation}
+    \label{eq:sigmat}
+    \sigma_t = t \sqrt{\relsqr{x_1} + \relsqr{x_2}} \,,
+\end{equation}
+kde $\sigma_{x_1} = \sigma_{x_2} = \sqrt{2} \sigma_x = \sqrt{2} \cdot 0.05 \, (\mathrm{d.m.})$ jsou nejistoty
+vzdáleností $x_1$ resp. $x_2$ dané nejistotou určení pozice okraje proužku $\sigma_x = 0.05 \,(\mathrm{d.m.})$.
+
+
+\begin{table}[!htbp]
+\centering
+\caption{Pozice interferenčních proužků a~z~nich vypočtené tloušťky tenké vrstvy. Jednotka d.m.
+je dílek velké stupnice mikroskopu.}
+\begin{tabular}{cccccccc}
+ \toprule
+ místo & $x_{1l}\, (\mathrm{d.m.})$ & $x_{1r}\, (\mathrm{d.m.})$ & 
+ $x_{1r}\, (\mathrm{d.m.})$ & $x_{2l}\, (\mathrm{d.m.})$ & 
+ $x_{2r}\, (\mathrm{d.m.})$ & $x_{2r}\, (\mathrm{d.m.})$ & $t \, (\unit{\micro \meter})$\\
+ \midrule
+ $1$ & $2.83(5)$ & $5.74(5)$ & $2.91(7)$ & $2.83(5)$ & $4.44(5)$ & $1.61(7)$ & $0.53(3)$ \\
+ $2$ & $3.49(5)$ & $4.80(5)$ & $1.31(7)$ & $3.49(5)$ & $4.88(5)$ & $1.39(7)$ & $0.28(2)$ \\
+ $3$ & $4.32(5)$ & $5.80(5)$ & $1.48(7)$ & $4.32(5)$ & $6.58(5)$ & $2.26(7)$ & $0.193(11)$ \\
+ $3'$ & $1.97(5)$ & $3.47(5)$ & $1.50(7)$ & $1.97(5)$ & $4.35(5)$ & $2.38(7)$ & $0.186(10)$ \\
+ \bottomrule
+\end{tabular}
+\label{tab:tloustky}
+\end{table}
+
+V místě $3$ tedy podle tabulky \ref{tab:tloustky} uvažuji tloušťku $0.19(1) \unit{\micro\meter}$.
+
+%=======================================
+\subsection{Měření poloměrů křivosti čoček pomocí Newtonových kroužků}
+
+Ke zjištění poloměrů křivosti čoček byl použit digitální záznam obrazu z~mikroskopu a~následně 
+zpracování pomocí programu Origin. Obraz byl rozdělen do~tří kanálů (červený, zelený a modrý), přičemž
+pro~kalibraci byl využit zelený kanál a pro~analýzu interferenčních kroužků od~čoček byl použit červený kanál.
+Průběh intenzity v~daném barevném kanálu ve~vodorovném řezu byl během kalibrace fitován předpřipravenou funkcí
+\texttt{Scale} (ve~tvaru (\ref{eq:meritko})) a~poté během analýzy Newtonových kroužků funkcí \texttt{NewtonRings}
+(ve~tvaru (\ref{eq:intenzita})). Některé parametry (např. amplituda a intenzita pozadí) navíc
+nebyly uvažovány jako konstantní, ale byly opatřeny lineární a~kvadratickou korekcí na~vzdálenost od~středu
+digitálního záznamu. Průběhy intenzit s~nafitovanými parametry funkcí \texttt{Scale}
+a~\texttt{Newtonrings} jsou vykresleny na~obrázcích \ref{fig:fit_meritko} a~\ref{fig:fit_cocky}.
+
+\textbf{TO DO Origin fity meritka a krouzku}
+
+Hlavním parametrem získaným z~fitu kalibrace je přepočet mezi~pixely obrazu
+a~skutečnou jednotkou vzdálenosti $T_0$. Ten byl určen jako $T_0 = 552.16(9) \, \mathrm{px\,mm^{-1}}$.
+V~jednotkách $\mathrm{px\,m^{-1}}$ byl následně dosazován jako pevný parametr funkce \texttt{Newtonrings}.
+Hlavním výstupním parametrem z~fitu interferenčních kroužků čoček byly poloměry křivosti jednotlivých lámavých
+ploch čoček. Kladný poloměr lámavé plochy, kde je čočka vypuklá, značím $R_1$ a~záporný poloměr, kde je čočka
+vydutá, značím $R_2$.
+
+\textbf{TO DO nejistota polomeru krivosti}
+
+Výsledné poloměry křivosti i~s~jejich nejistotami a~srovnání s~poloměry křivosti udávanými výrobcem jsou v~tabulce
+\ref{tab:polomery}.
+
+\textbf{TO DO tabulka polomeru}
+
+\begin{table}[!htbp]
     \centering
-%    \includegraphics[width=0.5\linewidth]{uloha27/GRAF1.png}
-    \caption{Závislost kapacity deskového kondenzátoru na napětí.}
-    \label{fig:osciloskop}
-\end{figure}
+    \caption{Experimentálně určené poloměry křivosti obou čoček a~srovnání s~hodnotami udávanými výrobcem.}
+    \begin{tabular}{c|cc|cc}
+        \toprule
+         & \multicolumn{2}{c|}{experimentální} & \multicolumn{2}{c}{tabulkové} \\
+        \midrule
+        čočka & $R_{1} \, (\mathrm{mm})$ & $R_{2} \, (\mathrm{mm})$ & 
+        $R_{1} \, (\mathrm{mm})$ & $R_{2} \, (\mathrm{mm})$ \\
+        \midrule
+        F50 & $neco$ & $neco$ & $30.06$ & $-172.0$ \\
+        F100 & $neco$ & $neco$ & $60.02$ & $-353.30$ \\
+        \bottomrule
+    \end{tabular}
+    \label{tab:polomery}
+\end{table}
 
+%==================================================
+\subsection{Určení ohniskové vzdálenosti čoček}
+
+Výrobce udává, že obě čočky jsou vyrobené z~optického skla N-BK7, které má pro vlnovou délku 
+$\lambda_\mathrm{Na} = 589.3$ \cite{vlnovedelky} index lomu $n = 1.51673$ \cite{schott}.
+Z indexu lomu, tlouštěk čoček (udávaných výrobcem, dostupných v~pokynech u~úlohy) a~naměřených poloměrů 
+křivosti čoček byly nakonec podle vztahu \ref{eq:ohniskovavzdalenost}
+vypočteny jejich ohniskové vzdálenosti. V tabulce \ref{tab:cockyvysledky} jsou uvedeny tabulkové tloušťky,
+tabulkové ohniskové vzdálenosti a~experimentálně určené ohniskové vzdálenosti zkoumaných čoček. Nejistota
+ohniskové vzdálenosti byla vypočtena podle \cite{englich} jako
+\begin{equation}
+    \label{eq:sigmaf}
+    \sigma_f = \frac{n}{n-1} \frac{R_2 \cdot \left( n (R_2 - R_1) + (n-1) d \right) - 
+    \textbf{TO DO}}{\left( n (R_2 - R_1) + (n-1) d \right)^2}
+\end{equation}
+
+\textbf{TO DO ohniskova vzdalenost}
+
+\begin{table}[!htbp]
+    \centering
+    \caption{Tloušťky čoček a jejich tabulkové i experimentálně určené ohniskové vzdálenosti.}
+    \begin{tabular}{cccc}
+        \toprule
+        čočka & $d \, (\mathrm{mm})$ & $f_\mathrm{tab} \, (\mathrm{mm})$ & $f_\mathrm{exp} \, (\mathrm{mm})$ \\
+        \midrule
+        F50 & $6.5$ & $50.0$ & $neco$ \\
+        F100 & $4.0$ & $100.0$ & $neco$ \\
+        \bottomrule
+    \end{tabular}
+    \label{tab:cockyvysledky}
+\end{table}
 
 % ============================ DISKUZE ===============================
 \section{Diskuze}
 
+\textbf{TO DO }
+
+Výrobce doporučuje provádět měření s~d~čárou Helia o~vlnové délkou $\lambda_d = \qty{587.6}{nm}$, pro~kterou
+má optické sklo index lomu $n_\mathrm{d} = 1.51680$. Měření však probíhalo se~sodíkovou výbojkou
+vyzařující na vlnové délce $\lambda_\mathrm{Na} = 589.3$ \cite{vlnovedelky} (spektrální čára D), 
+které odpovídá nepatrně menší index lomu $n_\mathrm{D} = 1.51673$ \cite{schott}.
 
 % ============================= ZÁVĚR ================================
 \section{Závěr}
 
+Tloušťky tenké vrstvy byly na třech místech vzorku změřeny Tolského metodou jako
+\begin{itemize}
+    \item $t_1 = 0.53(3) \,\unit{\micro\meter}$,
+    \item $t_2 = 0.28(2) \,\unit{\micro\meter}$,
+    \item $t_3 = 0.19(1) \,\unit{\micro\meter}$.
+\end{itemize}
+
+Mikroskop Motic s~digitálním záznamem byl okalibrován pomocí kalibračního měřítka s~hodnotou přepočtu
+mezi pixely a~jednotkou délky $T_0 = 552.16(9) \, \mathrm{px \, mm^{-1}}$.
+
+\vspace{2mm}
+Poloměry křivosti čoček F50 a F100 byly zkoumáním průběhu (digitálně zaznamenané) intenzity 
+Newtonových kroužků určeny jako \textbf{TO DO nejistoty polomeru}
+\vspace{-1mm}
+\begin{itemize}
+    \item čočka F50: $R_1 = 30.27(nejistota) \,\unit{mm}$, $R_2 = -172.38(nejistota) \,\unit{mm}$,
+    \item čočka 100: $R_1 = 60.35(nejistota) \,\unit{mm}$, $R_2 = -354.4(nejistota) \,\unit{mm}$.
+\end{itemize}
+
+Z poloměrů křivosti a tlouštěk čoček byla nakonec vypočteny jejich ohniskové vzdálenosti \textbf{TO DO ohniskove vzdalenosti}
+\vspace{-1mm}
+\begin{itemize}
+    \item čočka F50: $f = cislo \,\unit{mm}$,
+    \item čočka F100: $f = cislo \,\unit{mm}$.
+\end{itemize}
 
 % =========================== LITERATURA =============================
 \begin{thebibliography}{9}
@@ -158,14 +351,27 @@ pro~výpočet tloušťky vrstvy $t$ \cite{tolansky}:
 [online]. [cit. \today], dostupné
 z~https://physics.mff.cuni.cz/vyuka/zfp/\_media/zadani/pokyny/mereni\_330.pdf
 
+\bibitem{vlnovedelky} Kolektiv ZFP KVOF MFF UK: \textit{Úloha 16 - studijní text} 
+[online]. [cit. \today], dostupné
+z~https://physics.mff.cuni.cz/vyuka/zfp/\_media/zadani/texty/txt\_316.pdf
+
 \bibitem{newton} Kolektiv ZFP KVOF MFF UK: \textit{Úloha 30 - pokyny k měření 2 (Newtonovy kroužky)}
+
+\bibitem{wiki} Wikipedie: Otevřená encyklopedie: \textit{Čočka (optika)} [online]. c2025 
+[cit. \today], dostupné z~https://cs.wikipedia.org/w/index.php?title=\%C4\%8Co\%C4\%8Dka\_(optika)\&oldid=24858620
 
 \bibitem{englich} J. Englich: \textit{Úvod do praktické fyziky I: Zpracování výsledků měření}. 
 1. vyd. Praha: Matfyzpress, 2006
 
-\bibitem{mikulcak} Mikulčák a kolektiv: \textit{Matematické, fyzikální a chemické tabulky 
-pro střední školy: Vlnové délky některých intenzivních čar ve~spektrech}, 
-Praha: Státní pedagogické nakladatelství, n. p., 1988
+\bibitem{schott} SCHOTT, The SCHOTT Group: \textit{Optical Glass Datasheet SCHOTT N-BK7}  [online]. [cit. \today], dostupné
+z~https://media.schott.com/api/public/content/41e799d0bf874807a0bb8e702fbb75b5?v=54856406
+
+
+%\bibitem{mikulcak} Mikulčák a kolektiv: \textit{Matematické, fyzikální a chemické tabulky 
+%pro střední školy: Vlnové délky některých intenzivních čar ve~spektrech}, 
+%Praha: Státní pedagogické nakladatelství, n. p., 1988
 
 \end{thebibliography}
+
+
 \end{document}
