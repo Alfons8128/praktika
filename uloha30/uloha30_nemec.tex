@@ -13,6 +13,7 @@
 \usepackage{textcomp}
 \usepackage{comment}
 \usepackage{gensymb}
+\usepackage{subcaption}
 \sisetup{inter-unit-product =$\cdot$}
 \sisetup{separate-uncertainty=true}
 
@@ -71,7 +72,7 @@ a vznik interferenčních proužků na~klínové vzduchové mezeře pak~na~obrá
 Do tenké vrstvy se~provede vryp a~následně se~horní část pokryje vysoce odrazivou krycí vrstvou
 jako na~obrázku \ref{sch:vrypy}-b. Na~vzorek se~poté položí polopropustné zrcadlo tak, aby mezi zrcadlem
 a~vzorkem vznikla klínová mezera s~malým úhlem klínu, a osvítí se monochromatickým světlem
-o~vlnové délce $\lambda$ (v~této úloze světlo ze~sodíkové výbojky s~$\lambda = \qty{589.3}{\nm}$ \cite{vlnovedelky}).
+o~vlnové délce $\lambda$ (v~této úloze světlo ze~sodíkové výbojky s~$\lambda_\mathrm{Na} = \qty{589.3}{\nm}$ \cite{vlnovedelky}).
 Tím dojde k~interferenci na~klínu a~vzniku interferenčních proužků sledujících konstantní tloušťku vzduchové mezery.
 
 Bez přítomnosti vrypu by~se~ve~vzdálenosti $x_2$ od $k$-tého proužku nacházel $(k+1)$-ní proužek.
@@ -134,7 +135,7 @@ a~planparalelní destičkou způsobená různými nečistotami.
 
 Ke správnému přepočtu mezi skutečnou vzdáleností a~vzdáleností v~pixelech na~digitálním záznamu
 interferenčních kroužků je nutné pořídit také záznam kalibračního měřítka. Černé čárky označující
-jednotlivé dílky se~na~záznamu intenzity projeví ostrým poklesem, který lze popsat funkcí ve~tvaru \cite{newton}
+jednotlivé dílky se~na~záznamu intenzity projeví ostrými skoky, které lze popsat funkcí ve~tvaru \cite{newton}
 \begin{equation}
     \label{eq:meritko}
     I(x) = A \left\lfloor \frac{x}{T} - x_0 + s - \left\lfloor \frac{x}{T} - x_0 \right\rfloor \right\rfloor + B \,,
@@ -228,7 +229,10 @@ V místě $3$ tedy podle tabulky \ref{tab:tloustky} uvažuji tloušťku $0.19(1)
 %=======================================
 \subsection{Měření poloměrů křivosti čoček pomocí Newtonových kroužků}
 
-Ke zjištění poloměrů křivosti čoček byl použit digitální záznam obrazu z~mikroskopu a~následně 
+Ve~druhém úkolu byla studována interference na~klínové mezeře mezi zakřivenou lámavou plochou čočky
+a~planparalelní skleněnou destičkou.
+Ke zjištění poloměrů křivosti čoček byl použit digitální záznam obrazu z~mikroskopu (obrázek 
+\ref{sch:fotky}) a~následně 
 zpracování pomocí programu Origin. Obraz byl rozdělen do~tří kanálů (červený, zelený a modrý), přičemž
 pro~kalibraci byl využit zelený kanál a pro~analýzu interferenčních kroužků od~čoček byl použit červený kanál.
 Průběh intenzity v~daném barevném kanálu ve~vodorovném řezu byl během kalibrace fitován předpřipravenou funkcí
@@ -236,23 +240,106 @@ Průběh intenzity v~daném barevném kanálu ve~vodorovném řezu byl během ka
 (ve~tvaru (\ref{eq:intenzita})). Některé parametry (např. amplituda a intenzita pozadí) navíc
 nebyly uvažovány jako konstantní, ale byly opatřeny lineární a~kvadratickou korekcí na~vzdálenost od~středu
 digitálního záznamu. Průběhy intenzit s~nafitovanými parametry funkcí \texttt{Scale}
-a~\texttt{Newtonrings} jsou vykresleny na~obrázcích \ref{fig:fit_meritko} a~\ref{fig:fit_cocky}.
+a~\texttt{Newtonrings} jsou vykresleny na~obrázcích \ref{fig:fit_meritko}, \ref{fig:fit_cockaf50} 
+a~\ref{fig:fit_cockaf100}.
 
-\textbf{TO DO Origin fity meritka a krouzku}
+% ========================== fotky z mikroskopu
+\begin{schema}[!htbp]
+    \centering
+    \begin{subschema}{\textwidth}
+        \centering
+        \includegraphics[width=0.3\textwidth]{obr_meritko.png}
+        \caption{Kalibračního měřítko.}
+        \label{obr_meritko}
+    \end{subschema}
+
+    \vspace{3mm}
+
+    \begin{subschema}{0.45\textwidth}
+        \centering
+        \includegraphics[width=0.5\linewidth]{obr_f50plus.png}
+        \caption{Čočka F50: vypuklé rozhranní.}
+        \label{obr_f50plus}
+    \end{subschema}
+    \hfill
+    \begin{subschema}{0.45\textwidth}
+        \centering
+        \includegraphics[width=0.5\linewidth]{obr_f50minus.png}
+        \caption{Čočka F50: vyduté rozhranní.}
+        \label{obr_f50minus}
+    \end{subschema}
+
+    \vspace{3mm}
+
+        \begin{subschema}{0.45\textwidth}
+        \centering
+        \includegraphics[width=0.5\linewidth]{obr_f100plus.png}
+        \caption{Čočka F100: vypuklé rozhranní.}
+        \label{obr_f100plus}
+    \end{subschema}
+    \hfill
+    \begin{subschema}{0.45\textwidth}
+        \centering
+        \includegraphics[width=0.5\linewidth]{obr_f100minus.png}
+        \caption{Čočka F100: vyduté rozhranní.}
+        \label{obr_f100minus}
+    \end{subschema}
+
+    \caption{Digitální záznamy kalibračního měřítka a Newtonových kroužků.}
+    \label{sch:fotky}
+\end{schema}
+
+%================================== fity z Originu
+\begin{figure}[!htbp]
+    \centering
+    \includegraphics[width=0.8\linewidth]{meritko.png}
+    \caption{Fitovaný intenzitní profil v zeleném kanálu pro kalibrační měřítko.}
+    \label{fig:fit_meritko}
+\end{figure}
+
+\begin{figure}[!htbp]
+    \centering
+    \begin{subfigure}{\textwidth}
+        \centering
+        \includegraphics[height=8cm]{f50plus.png}
+        \caption{Čočka F50: vypuklé rozhranní.}
+    \end{subfigure}
+    
+    \begin{subfigure}{\textwidth}
+        \centering
+        \includegraphics[height=6cm]{f50minus.png}
+        \caption{Čočka F50: vyduté rozhranní.}
+    \end{subfigure}
+    \caption{Fitované intenzitní profily v červeném kanálu pro čočku F50.}
+    \label{fig:fit_cockaf50}
+\end{figure}
+
+\begin{figure}[!htbp]
+    \begin{subfigure}{\textwidth}
+        \centering
+        \includegraphics[height=6cm]{f100plus.png}
+        \caption{Čočka F100: vypuklé rozhranní.}
+    \end{subfigure}
+    
+    \begin{subfigure}{\textwidth}
+        \centering
+        \includegraphics[height=6cm]{f100minus.png}
+        \caption{Čočka F100: vyduté rozhranní.}
+    \end{subfigure}
+    \caption{Fitované intenzitní profily v červeném kanálu pro čočku F100.}
+    \label{fig:fit_cockaf100}
+\end{figure}
 
 Hlavním parametrem získaným z~fitu kalibrace je přepočet mezi~pixely obrazu
 a~skutečnou jednotkou vzdálenosti $T_0$. Ten byl určen jako $T_0 = 552.16(9) \, \mathrm{px\,mm^{-1}}$.
-V~jednotkách $\mathrm{px\,m^{-1}}$ byl následně dosazován jako pevný parametr funkce \texttt{Newtonrings}.
+V~jednotkách $\mathrm{px\,m^{-1}}$ byl následně dosazován jako pevný parametr funkce \texttt{NewtonRings}.
 Hlavním výstupním parametrem z~fitu interferenčních kroužků čoček byly poloměry křivosti jednotlivých lámavých
 ploch čoček. Kladný poloměr lámavé plochy, kde je čočka vypuklá, značím $R_1$ a~záporný poloměr, kde je čočka
 vydutá, značím $R_2$.
 
-\textbf{TO DO nejistota polomeru krivosti}
-
 Výsledné poloměry křivosti i~s~jejich nejistotami a~srovnání s~poloměry křivosti udávanými výrobcem jsou v~tabulce
-\ref{tab:polomery}.
-
-\textbf{TO DO tabulka polomeru}
+\ref{tab:polomery}. Nejistota poloměru křivosti nebyla upravováva o~nejistotu kalibrace, jelikož ta byla řádově
+menší (viz Diskuzi).
 
 \begin{table}[!htbp]
     \centering
@@ -264,8 +351,8 @@ Výsledné poloměry křivosti i~s~jejich nejistotami a~srovnání s~poloměry k
         čočka & $R_{1} \, (\mathrm{mm})$ & $R_{2} \, (\mathrm{mm})$ & 
         $R_{1} \, (\mathrm{mm})$ & $R_{2} \, (\mathrm{mm})$ \\
         \midrule
-        F50 & $neco$ & $neco$ & $30.06$ & $-172.0$ \\
-        F100 & $neco$ & $neco$ & $60.02$ & $-353.30$ \\
+        F50 & $30.270(5)$ & $-172.38(9)$ & $30.06$ & $-172.0$ \\
+        F100 & $60.350(13)$ & $-354.4(4)$ & $60.02$ & $-353.30$ \\
         \bottomrule
     \end{tabular}
     \label{tab:polomery}
@@ -275,19 +362,20 @@ Výsledné poloměry křivosti i~s~jejich nejistotami a~srovnání s~poloměry k
 \subsection{Určení ohniskové vzdálenosti čoček}
 
 Výrobce udává, že obě čočky jsou vyrobené z~optického skla N-BK7, které má pro vlnovou délku 
-$\lambda_\mathrm{Na} = 589.3$ \cite{vlnovedelky} index lomu $n = 1.51673$ \cite{schott}.
+$\lambda_\mathrm{Na} = \qty{589.3}{nm}$ \cite{vlnovedelky} index lomu $n = 1.51673$ \cite{schott}.
 Z indexu lomu, tlouštěk čoček (udávaných výrobcem, dostupných v~pokynech u~úlohy) a~naměřených poloměrů 
-křivosti čoček byly nakonec podle vztahu \ref{eq:ohniskovavzdalenost}
+křivosti čoček byly nakonec podle vztahu (\ref{eq:ohniskovavzdalenost})
 vypočteny jejich ohniskové vzdálenosti. V tabulce \ref{tab:cockyvysledky} jsou uvedeny tabulkové tloušťky,
 tabulkové ohniskové vzdálenosti a~experimentálně určené ohniskové vzdálenosti zkoumaných čoček. Nejistota
 ohniskové vzdálenosti byla vypočtena podle \cite{englich} jako
 \begin{equation}
     \label{eq:sigmaf}
-    \sigma_f = \frac{n}{n-1} \frac{R_2 \cdot \left( n (R_2 - R_1) + (n-1) d \right) - 
-    \textbf{TO DO}}{\left( n (R_2 - R_1) + (n-1) d \right)^2}
+    \sigma_f = \frac{n |R_2|}{n-1} \frac{\sqrt{\left[ n (R_2 - R_1) + (n-1) d + n R_1 R_2 \right]^2 \sigma_{R_1}^2 +
+    \left[ n (R_2 - R_1) + (n-1) d - n R_1 R_2 \right]^2 \sigma_{R_2}^2 }}
+    {\left[ n (R_2 - R_1) + (n-1) d \right]^2} \,,
 \end{equation}
+přičemž nejistoty indexu lomu a tlouštěk čoček neuvažuji.
 
-\textbf{TO DO ohniskova vzdalenost}
 
 \begin{table}[!htbp]
     \centering
@@ -296,8 +384,8 @@ ohniskové vzdálenosti byla vypočtena podle \cite{englich} jako
         \toprule
         čočka & $d \, (\mathrm{mm})$ & $f_\mathrm{tab} \, (\mathrm{mm})$ & $f_\mathrm{exp} \, (\mathrm{mm})$ \\
         \midrule
-        F50 & $6.5$ & $50.0$ & $neco$ \\
-        F100 & $4.0$ & $100.0$ & $neco$ \\
+        F50 & $6.5$ & $50.0$ & $50.380(11)$ \\
+        F100 & $4.0$ & $100.0$ & $100.13(3)$ \\
         \bottomrule
     \end{tabular}
     \label{tab:cockyvysledky}
@@ -306,12 +394,103 @@ ohniskové vzdálenosti byla vypočtena podle \cite{englich} jako
 % ============================ DISKUZE ===============================
 \section{Diskuze}
 
-\textbf{TO DO }
+\textit{Měření tloušťky tenké vrstvy.}
+Tloušťka tenké vrstvy byla na~třech místech změřena jako $\qty{0.53(3)}{nm}$, $\qty{0.28(2)}{nm}$
+a~$\qty{0.19(1)}{nm}$ s~relativními nejistotami $6\,\%$, $7\,\%$ a $5\,\%$. Ty jsou dané především nejistotou
+určení pozice bodů vůči stupnici mikroskopu. Kvůli neostrosti interferenčních proužků se~jejich okraj,
+a~tím i~jejich vzdálenost, nedala určit dostatečně přesně. Jinak však mikroskop umožnoval odečítat pozice
+se~zrhuba pětinásobnou přesností. Hodnoty tloušťky se~na~různých místech liší o~více než několik standardních
+nejistot, lze tedy s~jistotou tvrdit, že vrstva má proměnnou tloušťku. Pro~kontrolu, že nedošlo ke~hrubé chybě
+nebo že nejistota nebyla přeci jen podceněna, byl ve~třetím místě proměřen i~vedlejší interferenční proužek.
+V~rámci nejistoty se~v~tomto místě obě hodnoty tloušťky shodují, hrubou chybu lze tedy vyloučit.
 
-Výrobce doporučuje provádět měření s~d~čárou Helia o~vlnové délkou $\lambda_d = \qty{587.6}{nm}$, pro~kterou
+Předpokládám, že tloušťka vzorku je menší než vlnová délka použité sodíkové výbojky 
+$\lambda_\mathrm{Na} = \qty{589.3}{nm}$ \cite{vlnovedelky}. Jinak by~bylo nutné použít ještě jiný
+monochromatický zdroj o~jiné vlnové délce, protože by hodnota tloušťky nebyla jednoznačná. Tloušťky lišící
+se~o~celočíselné násobky vlnové délky totiž nelze rozlišit při~provedení experimentu pouze s~jednou
+vlnovou délkou.
+
+%============================
+\textit{Kalibrace mikroskopu pro analýzu Newtonových kroužků.}
+Před vlastním zkoumáním Newtonových kroužků čoček bylo nutné zkalibrovat mikroskop s~digitálním záznamem, tedy
+především určit hodnotu přepočtu mezi vzdáleností v~pixelech a~skutečnou vzdáleností. K~tomu byl pořízen
+záznam hrubé stupnice kalibračního měřítka s~dílkem o~velikosti $\qty{0.1}{mm}$. Jemná stupnice by~byla příliš
+náročná na~fitování funkcí ve~tvaru (\ref{eq:meritko}). Z~obrázku \ref{fig:fit_meritko} je patrné, že fitovaná
+funkce popisuje intenzitní profil relativně přesně, především z~hlediska určení periody $T_0$. Ta vychází
+$T_0 = 552.16(9) \, \mathrm{px \, mm^{-1}}$ s~relativní nejistotou jen asi $0.02\,\%$.
+
+%==============================
+\textit{Měření poloměrů křivosti čoček.}
+Podobným způsobem jako u~kalibrace byl pořízen digitální záznam interferenčních proužků čoček, přičemž
+intenzitní profil byl prokládán funkcí ve~tvaru (\ref{eq:intenzita}). Z~grafů \ref{fig:fit_cockaf50}
+a~\ref{fig:fit_cockaf100} je patrné, že naměřená závislost intenzity na~vzdálenosti od~středu čočky
+dobře odpovídá té teoretické. Výstupním parametrem z~fitování byly poloměry křivosti lámavých ploch čoček,
+jež se~podařily určit s~relativní nejistotou v~řádfu setin až~desetin procent. Nejméně přesně se~podařilo
+určit poloměr křivosti vyduté lámavé plochy čočky F100, pravděpodobně kvůli tomu, že na~digitálním záznamu
+bylo jen několik interferenčních kroužků. To bylo dané velkým poloměrem křivosti, kroužky byly daleko
+od~sebe a~nevešly se~do~zorného pole mikroskopu.
+
+%==============================
+\textit{Úprava nejistoty poloměru křivosti čočky.}
+Při fitování závislosti intenzity na~souřadnici podle vztahu (\ref{eq:intenzita}) programem Origin byl
+parametr $T_0$ nastaven jako pevný, program tedy neuvažoval jeho nejistotu. Se~změnou parametru $T_0$
+dojde ke~změně poloměru kroužku, čímž se~musí v~souladu se~vztahem (\ref{eq:intenzita}) změnit
+i~hodnota poloměru křivosti. Jeho skutečná nejistota tedy bude větší než ta získaná z~fitu 
+funkce \texttt{NewtonRings}. Podle \cite{englich} je nutné nejistotu poloměru upravit podle vztahu
+\begin{equation}
+    \label{sigmaR}
+    \sigma_R' = R \sqrt{ 4\cdot \relsqr{T_0} + \relsqr{R}} \,.
+\end{equation}
+Při~vyčíslení je však relativní nejistota $T_0$ oproti relativní nejistotě $R$ mnohem menší, 
+takže se~ve~výsledné nejistotě
+$\sigma_R'$ téměř neprojeví. Po~zaokrouhlení na~jednu resp. dvě platné cifry dokonce platí $\sigma_R' = \sigma_R$.
+Proto není potřeba dále upravovat nejistotu poloměru křivosti čočky získanou z~fitu.
+
+%===================================
+\textit{Srovnání s tabulkovými hodnotami poloměrů křivosti čoček.}
+Podle tabulky \ref{tab:polomerydiskuze} vycházejí experimentálně určené poloměry křivosti řádově stejně
+jako hodnoty udávané výrobcem, v~rámci nejistoty měření se~však neshodují. Buď byla fitovacím programem
+podhodnocena nejistota (při fitování nelineární funkce, bez použití lineární regrese, to nelze vyloučit),
+nebo bylo měření ovlivněno systematickou chybou. Všechny poloměry křivosti vychází systematicky
+větší než tabulkové hodnoty. Je možné, že~pro~interferenční kroužky
+s~větším poloměrem již nebyl splněn předpoklad pro~platnost aproximativního vztahu (\ref{eq:tloustkanarho}).
+Roli by~však mohla hrát i~nedokonalost vybroušené lámavé plochy čočky nebo planparalelní destičky, 
+případně ne úplně rovnoběžné usazení destičky na~čočce. Tloušťka vzduchové mezery by~pak na~jedné
+straně byla systematicky větší a~na~druhé naopak systematicky menší.
+
+\begin{table}[!htbp]
+    \centering
+    \caption{Experimentálně určené poloměry křivosti obou čoček a~srovnání s~hodnotami udávanými výrobcem.}
+    \begin{tabular}{c|cc|cc}
+        \toprule
+         & \multicolumn{2}{c|}{experimentální} & \multicolumn{2}{c}{tabulkové} \\
+        \midrule
+        čočka & $R_{1} \, (\mathrm{mm})$ & $R_{2} \, (\mathrm{mm})$ & 
+        $R_{1} \, (\mathrm{mm})$ & $R_{2} \, (\mathrm{mm})$ \\
+        \midrule
+        F50 & $30.270(5)$ & $-172.38(9)$ & $30.06$ & $-172.0$ \\
+        F100 & $60.350(13)$ & $-354.4(4)$ & $60.02$ & $-353.30$ \\
+        \bottomrule
+    \end{tabular}
+    \label{tab:polomerydiskuze}
+\end{table}
+
+%====================================
+\textit{Srovnání s tabulkovými hodnotami ohniskových vzdáleností čoček.}
+Experimentálně vypočtené ohniskové vzdálenosti čoček F50 a~F100 jsou $f_{\text{F50}} = 50.380(11) \,\unit{mm}$ 
+a~$f_{\text{F100}} = 100.13(3) \,\unit{mm}$, zatímco výrobce udává hodnoty $50.0\,\unit{mm}$ resp. $100.0\,\unit{mm}$.
+Stejně jako u~poloměrů křivosti, i~experimentální ohniskové vzdálenosti vycházejí řádově stejně jako tabulkové
+hodnoty, avšak v~rámci nejistoty jsou systematicky větší. Při~uvážení nejistoty tloušťky čočky (kterou
+však výrobce neuvádí) se~nejistota ohniskové vzdálenosti zvětší, přesto to však nestačí k~dosažení
+shody s~tabulkovými hodnotami. Za~použití výrobcem udávaných hodnot poloměrů křivosti
+a~uvážení nejistoty v~řádu poslední platné cifry (u~poloměrů i~tlouštěk) se~ale již obě hodnoty shodují,
+nesrovnalost je tedy daná odlišnými poloměry křivosti čoček.
+
+Pro úplnost, výrobce doporučuje provádět měření s~d~čárou helia o~vlnové délkou $\lambda_d = \qty{587.6}{nm}$, pro~kterou
 má optické sklo index lomu $n_\mathrm{d} = 1.51680$. Měření však probíhalo se~sodíkovou výbojkou
-vyzařující na vlnové délce $\lambda_\mathrm{Na} = 589.3$ \cite{vlnovedelky} (spektrální čára D), 
-které odpovídá nepatrně menší index lomu $n_\mathrm{D} = 1.51673$ \cite{schott}.
+vyzařující na vlnové délce $\lambda_\mathrm{Na} = \qty{589.3}{nm}$ \cite{vlnovedelky} (spektrální čára D), 
+které odpovídá nepatrně menší index lomu $n_\mathrm{D} = 1.51673$ \cite{schott}. Obě hodnoty jsou však
+téměř totožné a~v~rámci nejistoty měření neovlivní výsledné hodnoty ohniskových vzdáleností.
 
 % ============================= ZÁVĚR ================================
 \section{Závěr}
@@ -328,18 +507,18 @@ mezi pixely a~jednotkou délky $T_0 = 552.16(9) \, \mathrm{px \, mm^{-1}}$.
 
 \vspace{2mm}
 Poloměry křivosti čoček F50 a F100 byly zkoumáním průběhu (digitálně zaznamenané) intenzity 
-Newtonových kroužků určeny jako \textbf{TO DO nejistoty polomeru}
+Newtonových kroužků určeny jako
 \vspace{-1mm}
 \begin{itemize}
-    \item čočka F50: $R_1 = 30.27(nejistota) \,\unit{mm}$, $R_2 = -172.38(nejistota) \,\unit{mm}$,
-    \item čočka 100: $R_1 = 60.35(nejistota) \,\unit{mm}$, $R_2 = -354.4(nejistota) \,\unit{mm}$.
+    \item čočka F50: $R_1 = 30.270(5) \,\unit{mm}$, $R_2 = -172.38(9) \,\unit{mm}$,
+    \item čočka F100: $R_1 = 60.350(13) \,\unit{mm}$, $R_2 = -354.4(4) \,\unit{mm}$.
 \end{itemize}
 
-Z poloměrů křivosti a tlouštěk čoček byla nakonec vypočteny jejich ohniskové vzdálenosti \textbf{TO DO ohniskove vzdalenosti}
+Z poloměrů křivosti a tlouštěk čoček byly nakonec vypočteny jejich ohniskové vzdálenosti
 \vspace{-1mm}
 \begin{itemize}
-    \item čočka F50: $f = cislo \,\unit{mm}$,
-    \item čočka F100: $f = cislo \,\unit{mm}$.
+    \item čočka F50: $f = 50.380(11) \,\unit{mm}$,
+    \item čočka F100: $f = 100.13(3) \,\unit{mm}$.
 \end{itemize}
 
 % =========================== LITERATURA =============================
@@ -347,15 +526,17 @@ Z poloměrů křivosti a tlouštěk čoček byla nakonec vypočteny jejich ohnis
 
 %\bibitem{studijni} Kolektiv ZFP KVOF MFF UK: \textit{Měření dielektrických vlastností materiálů} [online]. [cit. \today], dostupné z https://physics.mff.cuni.cz/vyuka/zfp/\_media/zadani/texty/txt\_227.pdf
 
-\bibitem{tolansky} Kolektiv ZFP KVOF MFF UK: \textit{Úloha 30 - pokyny k měření 1 (Tolanského metoda)} 
-[online]. [cit. \today], dostupné
-z~https://physics.mff.cuni.cz/vyuka/zfp/\_media/zadani/pokyny/mereni\_330.pdf
-
 \bibitem{vlnovedelky} Kolektiv ZFP KVOF MFF UK: \textit{Úloha 16 - studijní text} 
 [online]. [cit. \today], dostupné
 z~https://physics.mff.cuni.cz/vyuka/zfp/\_media/zadani/texty/txt\_316.pdf
 
+\bibitem{tolansky} Kolektiv ZFP KVOF MFF UK: \textit{Úloha 30 - pokyny k měření 1 (Tolanského metoda)} 
+[online]. [cit. \today], dostupné
+z~https://physics.mff.cuni.cz/vyuka/zfp/\_media/zadani/pokyny/mereni\_330.pdf
+
 \bibitem{newton} Kolektiv ZFP KVOF MFF UK: \textit{Úloha 30 - pokyny k měření 2 (Newtonovy kroužky)}
+[online]. [cit. \today], dostupné
+z~https://physics.mff.cuni.cz/vyuka/zfp/\_media/zadani/pokyny/mereni\_330\_2.pdf
 
 \bibitem{wiki} Wikipedie: Otevřená encyklopedie: \textit{Čočka (optika)} [online]. c2025 
 [cit. \today], dostupné z~https://cs.wikipedia.org/w/index.php?title=\%C4\%8Co\%C4\%8Dka\_(optika)\&oldid=24858620
