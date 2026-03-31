@@ -182,6 +182,11 @@ class Var:
             return self
         else:
             return self.degrees()
+    def add_sigma_b(self, sigma_b: float):
+        """Add uncertainty type B to measurement. Warning only works for scalar uncertainty!"""
+
+        errors = [ np.sqrt(error**2 + sigma_b**2) for error in self.err]
+        return Var(self.val, errors, self.short_name, self.unit)
     
     def __len__(self):
         return len(self.unc)
@@ -215,9 +220,9 @@ class NonErrorVar(Var):
         self.fmt = fmt
 
     def __str__(self):
-        return self.ufmt(self.fmt)
+        return self.ufmt()
     
-    def scalar_ufmt(self, x: float):
+    def scalar_ufmt(self, x: float, fmt: str = '.3f') -> str:
         return f'{x:{self.fmt}}'
     
     def ufmt(self):
@@ -274,6 +279,12 @@ class F:
 
     def dispersion(x, lambda0, a, n0):
         return n0 + a / (x + lambda0)
+    
+    def biased_sin(x, amplitude, bias, phase0):
+        return bias + amplitude * np.sin(np.radians(x) - np.radians(phase0))
+    
+    def elliptic_degrees(x, a, b, phi0):
+        return np.sqrt(a**2 * np.cos(np.radians(x - phi0))**2 + b**2 * np.sin(np.radians(x - phi0))**2)
 
 ############### Relation class #########################
 class Rel:
@@ -292,6 +303,7 @@ class Rel:
         self.func = function
         self.color = color
         self.shape = shape
+        self.handles = []
     
     def set_degree(self, degree: int = None):
         '''Sets the degree of the polynomial function for fitting.'''
@@ -305,24 +317,27 @@ class Rel:
             if self.func is None:
                 raise ValueError('Degree or function must be specified for fitting functions.')
 
-    def fit(self, p0: list = None, get_unit: bool = True, use_curve_fit: bool = False):
+    def fit(self, p0: list = None, get_unit: bool = True, use_curve_fit: bool = True):
         '''Fits y over x (both Var instances) using the provided function.
         Adds these attributes to Relation: coefficients (.coeffs: list[Var]), covariant matrix (.cov).'''
 
         if self.func is None:
             raise ValueError('No fitting function defined for the Relation.')
+        
+        # !!! not doing what expected !!!
         if self.func in [F.const, F.linear, F.quadratic, F.cubic, 
                          F.quartic, F.polynomial] and not use_curve_fit:
             self.set_degree(len(p0)-1 if p0 else None)
             params, pcov = np.polynomial.Polynomial.fit(self.x.val, self.y.val, deg=self.degree, full=True,
-                                                        w=1/self.y.err**2)
+                                                        w=1/self.y.err)
             params = params.convert().coef
-            variances = pcov[2]
+            variances = pcov[2] # !!! not covariance matrix !!!
             coeffs = [Var(param, np.sqrt(variances[i]), f'c_{i}', '') for i, param in enumerate(params)]
 
             self.cov = variances
             self.coeffs = coeffs
-        else:
+            
+        else: # this part is fine
             coeff_values, cov_matrix  = curve_fit(self.func, self.x.val, self.y.val, sigma=self.y.err,
                                               absolute_sigma=True, p0=p0)
             #alpha = 0.05  # 95% confidence interval
@@ -348,7 +363,7 @@ class Rel:
                                   no units assigned to fitted coefficients.')
     
     def plot_data(self, ax, err: tuple = (1,1), connect=False, smooth:int = 0, label: str ='naměřené hodnoty', 
-                  scale: float = 1, zorder: int = None):
+                  scale: float = 1, zorder: int = None, smooth_label: str ='vodítko pro oko'):
         '''Plots self.x and self.y data with optional error bars (err: tuple with (xerr, yerr)).
         
         connect for line-connecting data points, smooth for spline interpotation,
@@ -371,6 +386,10 @@ class Rel:
                 self.data_curve = ax.scatter(self.x.val, self.y.val, marker=self.shape, s=25*scale, 
                            color=self.color, linewidth=1, label=label, zorder=zorder)
 
+        ax.set_xlabel(self.x.long_name)
+        ax.set_ylabel(self.y.long_name)
+        self.handles = [self.data_curve]
+
         if connect:
             ax.plot(self.x.val, self.y.val, color='black')
 
@@ -379,10 +398,9 @@ class Rel:
             x_smooth = np.linspace(min(self.x.val), max(self.x.val), 300)
             spline = make_interp_spline(self.x.val, self.y.val, k=smooth)  # "smooth" order spline
             y_smooth = spline(x_smooth)
-            ax.plot(x_smooth, y_smooth, color=self.color, linestyle='--')
+            ax.plot(x_smooth, y_smooth, color=self.color, linestyle='--', linewidth=1, label=smooth_label)
+            
 
-        ax.set_xlabel(self.x.long_name)
-        ax.set_ylabel(self.y.long_name)
 
 
     def plot_fit(self, ax, label: str = 'fitovaná přímka', linestyle: str = ':', linewidth: float = 1.5):
@@ -401,9 +419,10 @@ class Rel:
                 color=self.color, linewidth=linewidth, label=label)[-1]
         ax.set_xlabel(self.x.long_name)
         ax.set_ylabel(self.y.long_name)
+        self.handles.append(self.fit_curve)
 
 
-    def show_equation(self, ax, format: str = '.3f', combined = True):
+    def show_equation(self, ax, format: str = '.3f', combined = False):
         '''Displays the fitted equation in the legend.
         
         format to specify wished decimal digits of coefficients (e.g. '.3f' for 3 decimal digits)'''
@@ -425,6 +444,16 @@ class Rel:
                 eq_string = f'${self.y.short_name} = {self.coeffs[2].val[0]:{format}} + \
                     \\frac{{{self.coeffs[1].val[0]:{format}}}} \
                     {{{self.x.short_name} {sign} {lambda0:{format}}}}$'
+            case F.elliptic_degrees:
+                xname = self.x.short_name
+                yname = self.y.short_name
+                a = f'{self.coeffs[0].val[0]:{format}}'
+                b = f'{self.coeffs[1].val[0]:{format}}'
+                phi0 = f'{self.coeffs[2].val[0]:.0f}'
+                eq_string = f'${yname} = \\sqrt{{ {phi0} ^2 \\cdot \
+                    \\cos^2({xname} - {phi0}) \
+                    + {b}^2 \\cdot \
+                \\sin^2({xname} - {phi0}) }}$'
             case _:
                 eq_string = f'Fitted function: {self.func.__name__} with coefficients: ' + \
                 ', '.join(f'{c.short_name}={c.val[0]:{format}}' for c in self.coeffs)
@@ -433,19 +462,23 @@ class Rel:
         combined_handle = Line2D([], [], color=self.color, marker=self.shape, linestyle=':', label=eq_string)
         eq_handle = Line2D([], [], color=self.color, marker='', linestyle='', label=eq_string)
 
-        handles, _ = ax.get_legend_handles_labels()
+        #handles, _ = ax.get_legend_handles_labels()
 
         if combined:
-            handles.append(combined_handle)
+            #handles.append(combined_handle)
             self.handles = combined_handle
             #ax.legend(handles=handles)
         else:
             self.fit_curve.set_label(f'{self.fit_curve.get_label()}:')
             self.handles = [self.data_curve, self.fit_curve, eq_handle]
-            handles.append(self.data_curve)
-            handles.append(self.fit_curve)
-            handles.append(eq_handle)
+            #handles.append(self.data_curve)
+            #handles.append(self.fit_curve)
+            #handles.append(eq_handle)
             #ax.legend(handles=handles)
+
+    def make_legend(self, ax, loc='best'):
+        """Use general function make_legend(ax, *args: Rel) just with self Rel."""
+        make_legend(ax, self, loc=loc)
 
 ############### Measuring tool uncertainty class #######
 class MeasureUnc:
@@ -697,7 +730,7 @@ def excel_to_latex_2(file_path, sheet_name='Sheet1', cells='A1:Z100', header = 0
     return string
 
 ########################################################
-def make_legend(ax, *args: Rel):
+def make_legend(ax, *args: Rel, loc='best'):
     '''Creates a legend on ax with handles from provided Relation instances.'''
     handles = []
     for arg in args:
@@ -707,7 +740,7 @@ def make_legend(ax, *args: Rel):
         else:
             handles.append(arg.handles)
 
-    ax.legend(handles=handles)
+    ax.legend(handles=handles, loc=loc)
 ########################################################
 def scalar_ufmt(x: ufloat, apx='N'):
     '''Work only for scalar values!
@@ -879,6 +912,40 @@ def exp(var: Var) -> Var:
 #########################################################
 def log(var: Var) -> Var:
     return var.log()
+#########################################################
+def mean(array: list[float] | Var) -> Var:
+    """Calculates mean value with its uncertainty. If Var used for array, uses weighted mean
+    with reciprocal squared standard uncertainty as the weight."""
+
+    if isinstance(array, Var):
+        return weighted_mean(array)
+    else:
+        N = len(array)
+        mean = np.sum(np.array(array)) / N
+        std_error = np.sqrt( np.sum(np.array([(xi - mean)**2 for xi in array])) / (N - 1))
+        mean_std_error = std_error / np.sqrt(N)
+
+        return Var(mean, mean_std_error, 'mean value')
+
+#########################################################
+def weighted_mean(array: list[float] | Var, weights=None):
+    if weights==None and not isinstance(array, Var):
+        warnings.warn('Weights not specified, use function "mean(array)" instead!')
+    
+    if isinstance(array,Var):
+        weights = [1/(sigma**2) for sigma in array.err]
+        sum_weights = np.sum(weights)
+        mean = np.sum(np.array([weights[i]*array.val[i] for i in range(len(array.val))]))/sum_weights
+        mean_std_error = 1 / np.sqrt(sum_weights)
+
+        return Var(mean, mean_std_error, f'\\overline{{{array.short_name}}}', array.unit)
+    
+    else:
+        sum_weights = np.sum(weights)
+        mean = np.sum(np.array([weights[i]*array[i] for i in range(len(array))]))/sum_weights
+        mean_std_error = 1 / np.sqrt(sum_weights)
+
+        return Var(mean, mean_std_error, 'mean value')
 
 #########################################################
 #################### LEGACY CODE ########################
