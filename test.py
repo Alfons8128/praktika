@@ -146,10 +146,62 @@ f = pr.Var(a.val, errors=0.05, short_name='f', unit='m')
 print(f)
 '''
 ###########################################################
-#'''
+'''
 a = pr.Var([0.1,2.3,4,5.1],'2%','promenna A')
 if isinstance(a, pr.Var):
     print(f'{a.short_name} je Var.')
+'''
+############################################################
+'''
+xs = pr.Var([1,2,3,4,5,6,7], 0.1, 'x', 'm')
+vals = [1.22, 1.21, 1.20, 1.19, 1.21, 1.22, 1.20]
+errs = [0.7, 0.8, 0.7, 0.7, 0.6, 0.7, 0.8]
+a = pr.Var(vals, 0.7, 'a', 'm')
+
+mean = pr.weighted_mean(a, absolute_sigma=False)
+mean_without_err = pr.mean(a.val)
+std = pr.std(a.val)
+std_mean = std / np.sqrt(len(a.val))
+pr.best_print(mean)
+pr.best_print(mean_without_err)
+print('std:', std)
+print('std_mean:', std_mean)
+print(mean.chi)
+
+rel = pr.Rel(xs, a, pr.F.const)
+rel.fit(absolute_sigma=False)
+pr.best_print(rel.coeffs[0])
+print(rel.coeffs[0].err)
+fig, ax = plt.subplots()
+rel.plot_data(ax)
+rel.plot_fit(ax)
+rel.show_equation(ax)
+rel.make_legend(ax)
+#plt.close(fig)
+plt.show()
+
+from scipy.optimize import curve_fit
+# 1. Perform the fit
+popt, pcov = curve_fit(pr.F.const, xs.val, a.val, sigma=a.err, absolute_sigma=False)
+
+# 2. Calculate Residuals
+residuals = a.val - pr.F.const(xs.val, *popt)
+
+# 3. Calculate Reduced Chi-Square
+# This is the "scaling factor" SciPy used
+chisq_red = np.sum((residuals / a.err)**2) / (len(xs.val) - len(popt))
+
+# 4. The "Right" Errors (already scaled by pcov)
+perr = np.sqrt(np.diag(pcov))
+
+print(f"Scaling factor (Reduced Chi-Square): {chisq_red:.4f}")
+print(f"Corrected Slope Error: {perr[0]}")
+
+# chisq_red > 1 => absolute_sigma=False
+# chisq_red < 1 => absolute_sigma=True
 #'''
+
+####################################################
+
 
 print('All done!')

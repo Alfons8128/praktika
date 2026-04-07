@@ -187,6 +187,11 @@ class Var:
 
         errors = [ np.sqrt(error**2 + sigma_b**2) for error in self.err]
         return Var(self.val, errors, self.short_name, self.unit)
+
+    # def scale_error(self):
+    #     '''Scales errors by sqrt of reduces chi squared (analogy to absolute_sigma=False in curve_fit 
+    #     fitting with constant function.)'''
+
     
     def __len__(self):
         return len(self.unc)
@@ -317,9 +322,13 @@ class Rel:
             if self.func is None:
                 raise ValueError('Degree or function must be specified for fitting functions.')
 
-    def fit(self, p0: list = None, get_unit: bool = True, use_curve_fit: bool = True):
+    def fit(self, p0: list = None, get_unit: bool = True, use_curve_fit: bool = True, absolute_sigma: bool = True):
         '''Fits y over x (both Var instances) using the provided function.
-        Adds these attributes to Relation: coefficients (.coeffs: list[Var]), covariant matrix (.cov).'''
+        Adds these attributes to Relation: coefficients (.coeffs: list[Var]), covariant matrix (.cov),
+        reduced chi squared (.chi).
+        
+        If fitted line matches the datapoints with their uncertainties, use absolute_sigma=True,
+        otherwise, let curve_fit scale the errors by setting absolute_sigma=False.'''
 
         if self.func is None:
             raise ValueError('No fitting function defined for the Relation.')
@@ -339,15 +348,20 @@ class Rel:
             
         else: # this part is fine
             coeff_values, cov_matrix  = curve_fit(self.func, self.x.val, self.y.val, sigma=self.y.err,
-                                              absolute_sigma=True, p0=p0)
+                                              absolute_sigma=absolute_sigma, p0=p0)
             #alpha = 0.05  # 95% confidence interval
             #t_val = t.ppf(1.0-alpha/2, max(0, len(x.val)-len(coeff_values)))
             coeff_errors = np.sqrt(np.diag(cov_matrix)) #* np.abs(t_val)
             fitted_coeffs = [Var(coeff_values[i],coeff_errors[i], 
                              short_name=f'c_{i}') for i in range(len(coeff_values))]
+            
+            residuals = self.y.val - self.func(self.x.val, *coeff_values)
+            resids_plus_errs = np.array([(residuals[i]/self.y.err[i])**2 for i in range(len(residuals))])
+            chi = np.sum( resids_plus_errs / (len(self.x.val) - len(coeff_values)) )
 
             self.coeffs = fitted_coeffs
             self.cov = cov_matrix
+            self.chi = chi
 
         if get_unit:
             match self.func:
@@ -422,33 +436,41 @@ class Rel:
         self.handles.append(self.fit_curve)
 
 
-    def show_equation(self, ax, format: str = '.3f', combined = False):
+    def show_equation(self, ax, format: str | list[str] = '.3f', combined = False):
         '''Displays the fitted equation in the legend.
         
         format to specify wished decimal digits of coefficients (e.g. '.3f' for 3 decimal digits)'''
+        if isinstance(format, str):
+            format = [format] * len(self.coeffs)
         match self.func:
             case F.const:
-                eq_string = f'${self.y.short_name} = {self.coeffs[0].val[0]:{format}}$'
+                eq_string = f'${self.y.short_name} = {self.coeffs[0].val[0]:{format[0]}}$'
             case F.direct:
-                eq_string = f'${self.y.short_name} = {self.coeffs[0].val[0]:{format}} \\cdot {self.x.short_name}$'
+                eq_string = f'${self.y.short_name} = {self.coeffs[0].val[0]:{format[0]}} \\cdot {self.x.short_name}$'
             case F.linear:
-                eq_string = f'${self.y.short_name} = {self.coeffs[1].val[0]:{format}} \\cdot {self.x.short_name} + \
-                {self.coeffs[0].val[0]:{format}}$'
+                if self.coeffs[0].val[0] < 0:
+                    sign = '-'
+                    intercept = -self.coeffs[0].val[0]
+                else:
+                    sign = '+'
+                    intercept = self.coeffs[0].val[0]
+                eq_string = f'${self.y.short_name} = {self.coeffs[1].val[0]:{format[1]}} \\cdot {self.x.short_name} \
+                    {sign} {intercept:{format[0]}}$'
             case F.quadratic:
-                eq_string = f'${self.y.short_name} = {self.coeffs[2].val[0]:{format}} \\cdot {self.x.short_name}^2 + \
-                {self.coeffs[1].val[0]:{format}} \\cdot {self.x.short_name} + {self.coeffs[0].val[0]:{format}}$'
+                eq_string = f'${self.y.short_name} = {self.coeffs[2].val[0]:{format[2]}} \\cdot {self.x.short_name}^2 + \
+                {self.coeffs[1].val[0]:{format[1]}} \\cdot {self.x.short_name} + {self.coeffs[0].val[0]:{format[0]}}$'
             case F.dispersion:
                 if self.coeffs[0].val[0] < 0:
                     sign = '-'
                     lambda0 = -self.coeffs[0].val[0]
-                eq_string = f'${self.y.short_name} = {self.coeffs[2].val[0]:{format}} + \
-                    \\frac{{{self.coeffs[1].val[0]:{format}}}} \
-                    {{{self.x.short_name} {sign} {lambda0:{format}}}}$'
+                eq_string = f'${self.y.short_name} = {self.coeffs[2].val[0]:{format[2]}} + \
+                    \\frac{{{self.coeffs[1].val[0]:{format[1]}}}} \
+                    {{{self.x.short_name} {sign} {lambda0:{format[0]}}}}$'
             case F.elliptic_degrees:
                 xname = self.x.short_name
                 yname = self.y.short_name
-                a = f'{self.coeffs[0].val[0]:{format}}'
-                b = f'{self.coeffs[1].val[0]:{format}}'
+                a = f'{self.coeffs[0].val[0]:{format[0]}}'
+                b = f'{self.coeffs[1].val[0]:{format[1]}}'
                 phi0 = f'{self.coeffs[2].val[0]:.0f}'
                 eq_string = f'${yname} = \\sqrt{{ {phi0} ^2 \\cdot \
                     \\cos^2({xname} - {phi0}) \
@@ -456,7 +478,7 @@ class Rel:
                 \\sin^2({xname} - {phi0}) }}$'
             case _:
                 eq_string = f'Fitted function: {self.func.__name__} with coefficients: ' + \
-                ', '.join(f'{c.short_name}={c.val[0]:{format}}' for c in self.coeffs)
+                ', '.join(f'{c.short_name}={c.val[0]:{format[i]}}' for i, c in enumerate(self.coeffs))
         
         # display combined handle but also self.label to datapoints
         combined_handle = Line2D([], [], color=self.color, marker=self.shape, linestyle=':', label=eq_string)
@@ -928,24 +950,70 @@ def mean(array: list[float] | Var) -> Var:
         return Var(mean, mean_std_error, 'mean value')
 
 #########################################################
-def weighted_mean(array: list[float] | Var, weights=None):
+def std(array: list[float]) -> float:
+    '''Calculates standard deviation of a list of values.'''
+    if isinstance(array, NonErrorVar) or isinstance(array, NonErrorVar):
+        values = array.val
+    else:
+        values = array
+    N = len(values)
+    mean = np.sum(np.array(values)) / N
+    std_error = np.sqrt( np.sum(np.array([(xi - mean)**2 for xi in values])) / (N - 1))
+
+    return std_error
+
+#########################################################
+def weighted_mean(array: list[float] | Var, weights=None, absolute_sigma=True) -> Var:
+    '''Calculates weighted mean value with its uncertainty. If weights not provided and array is Var,
+    weights are calculated as reciprocal squared standard uncertainty. If scale_weights, 
+    uncertainties are scaled by sqrt of reduced chi-squared of the constant fit (analogy to curve_fit absolute_sigma=False).
+    Adds reduced chi-squared value to attribute (.chi) of the returned Var instance.'''
+    if isinstance(array, NonErrorVar):
+        array = array.val
+
     if weights==None and not isinstance(array, Var):
         warnings.warn('Weights not specified, use function "mean(array)" instead!')
+        return mean(array)
     
     if isinstance(array,Var):
         weights = [1/(sigma**2) for sigma in array.err]
         sum_weights = np.sum(weights)
         mean = np.sum(np.array([weights[i]*array.val[i] for i in range(len(array.val))]))/sum_weights
+        reduced_chi_squared = None
+        if not absolute_sigma:
+            # calculate reduced chi-squared of constant fit
+            chi_squared = np.sum(np.array([weights[i]*(array.val[i] - mean)**2 for i in range(len(array.val))]))
+            dof = len(array.val) - 1
+            reduced_chi_squared = chi_squared / dof
+            # scale uncertainties by sqrt of reduced chi-squared
+            weights = [w / reduced_chi_squared for w in weights] # same as error = error * sqrt(reduced_chi_squared)
+            sum_weights = np.sum(weights)
         mean_std_error = 1 / np.sqrt(sum_weights)
 
-        return Var(mean, mean_std_error, f'\\overline{{{array.short_name}}}', array.unit)
+        var_mean = Var(mean, mean_std_error, f'\\overline{{{array.short_name}}}', array.unit)
+        var_mean.chi = reduced_chi_squared
+
+        return var_mean
     
     else:
         sum_weights = np.sum(weights)
         mean = np.sum(np.array([weights[i]*array[i] for i in range(len(array))]))/sum_weights
+        reduced_chi_squared = None
+        if not absolute_sigma:
+            # calculate reduced chi-squared of constant fit
+            chi_squared = np.sum(np.array([weights[i]*(array[i] - mean)**2 for i in range(len(array))]))
+            dof = len(array) - 1
+            reduced_chi_squared = chi_squared / dof
+            # scale uncertainties by sqrt of reduced chi-squared
+            weights = [w / reduced_chi_squared for w in weights] # same as error = error * sqrt(reduced_chi_squared)
+            sum_weights = np.sum(weights)
+            array.chi = reduced_chi_squared
         mean_std_error = 1 / np.sqrt(sum_weights)
 
-        return Var(mean, mean_std_error, 'mean value')
+        var_mean = Var(mean, mean_std_error, 'mean value') 
+        var_mean.chi = reduced_chi_squared
+
+        return var_mean
 
 #########################################################
 #################### LEGACY CODE ########################
