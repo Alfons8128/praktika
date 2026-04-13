@@ -436,7 +436,7 @@ class Rel:
         self.handles.append(self.fit_curve)
 
 
-    def show_equation(self, ax, format: str | list[str] = '.3f', combined = False):
+    def show_equation(self, ax, format: str | list[str] = '.3f', combined = False, newline=True):
         '''Displays the fitted equation in the legend.
         
         format to specify wished decimal digits of coefficients (e.g. '.3f' for 3 decimal digits)'''
@@ -481,7 +481,8 @@ class Rel:
                 ', '.join(f'{c.short_name}={c.val[0]:{format[i]}}' for i, c in enumerate(self.coeffs))
         
         # display combined handle but also self.label to datapoints
-        combined_handle = Line2D([], [], color=self.color, marker=self.shape, linestyle=':', label=eq_string)
+        combined_handle = Line2D([], [], color=self.color, marker=self.shape, linestyle=':', 
+                                 label=f'{self.data_curve.get_label()}, {eq_string}')
         eq_handle = Line2D([], [], color=self.color, marker='', linestyle='', label=eq_string)
 
         #handles, _ = ax.get_legend_handles_labels()
@@ -491,8 +492,12 @@ class Rel:
             self.handles = combined_handle
             #ax.legend(handles=handles)
         else:
-            self.fit_curve.set_label(f'{self.fit_curve.get_label()}:')
-            self.handles = [self.data_curve, self.fit_curve, eq_handle]
+            if newline:
+                self.fit_curve.set_label(f'{self.fit_curve.get_label()}:')
+                self.handles = [self.data_curve, self.fit_curve, eq_handle]
+            else:
+                self.fit_curve.set_label(f'{self.fit_curve.get_label()}: {eq_string}')
+                self.hadles = [self.data_curve, self.fit_curve]
             #handles.append(self.data_curve)
             #handles.append(self.fit_curve)
             #handles.append(eq_handle)
@@ -940,7 +945,15 @@ def mean(array: list[float] | Var) -> Var:
     with reciprocal squared standard uncertainty as the weight."""
 
     if isinstance(array, Var):
-        return weighted_mean(array)
+        #return weighted_mean(array)
+        values = array.val
+        errors = array.err
+        N = len(array)
+        mean = np.sum(np.array(values)) / N
+        variance = np.sum(np.array([(val - mean)**2 for val in values])) / (N - 1)
+        mean_std_error = np.sqrt( variance / N + np.sum(np.array([err**2 for err in errors])) / N**2)
+        return Var(mean, mean_std_error, f'\\overline{{{array.short_name}}}', array.unit)
+
     else:
         N = len(array)
         mean = np.sum(np.array(array)) / N
