@@ -67,7 +67,7 @@ class Var:
         self.long_name = f'${self.short_name}\\, (\\mathrm{{{self.unit}}})$' if self.unit else f'${self.short_name}$'
 
     def __str__(self):
-        return ufmt(self, apx='P')
+        return ufmt(self, apx='N')
     
     def ufmt(self, apx='L') -> str:
         '''Formats all values in the Var instance using scalar_ufmt function, returns a formatted string.
@@ -162,7 +162,10 @@ class Var:
     def tan(self):
         new_unc = unp.tan(self.unc)
         return Var(unp.nominal_values(new_unc), unp.std_devs(new_unc), f'\\tan{{{self.short_name}}}', self.unit)
-    
+    #def atan(self):
+    #    new_unc = um.atan2(self.unc, np.ones_like(self.unc))
+    #    return Var(unp.nominal_values(new_unc), unp.std_devs(new_unc), f'\\arctan{{{self.short_name}}}', self.unit)
+
     def radians(self):
         new_unc = self.unc * np.pi / 180
         return Var(unp.nominal_values(new_unc), unp.std_devs(new_unc), f'{self.short_name}', 'rad')
@@ -211,6 +214,12 @@ class Var:
     def __getitem__(self, idx):
         new_unc = self.unc[idx]
         return Var(unp.nominal_values(new_unc), unp.std_devs(new_unc), self.short_name, self.unit)
+    
+    def __lt__(self, other):
+        return self.val < other.val if isinstance(other, Var) else self.val < other
+    
+    def __gt__(self, other):
+        return self.val > other.val if isinstance(other, Var) else self.val > other
 ############## NonErrorVar class #######################
 class NonErrorVar(Var):
     
@@ -240,6 +249,9 @@ class NonErrorVar(Var):
             string += f' {self.unit}'
 
         return string
+    def __getitem__(self, idx):
+        new_unc = self.unc[idx]
+        return NonErrorVar(unp.nominal_values(new_unc), self.short_name, self.unit, self.fmt)
 ############### Function class #########################
 class F:
     '''A collection of common fitting functions.'''
@@ -939,6 +951,9 @@ def exp(var: Var) -> Var:
 #########################################################
 def log(var: Var) -> Var:
     return var.log()
+#########################################################
+def atan(var: Var) -> Var:
+    return var.atan()
 #########################################################
 def mean(array: list[float] | Var) -> Var:
     """Calculates mean value with its uncertainty. If Var used for array, uses weighted mean

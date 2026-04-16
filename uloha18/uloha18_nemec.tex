@@ -5,6 +5,7 @@
 \usepackage{newfloat}
 \usepackage{caption}
 \usepackage{booktabs}
+\usepackage{longtable}
 \usepackage{amssymb}
 \usepackage{amsmath}
 \usepackage{siunitx}
@@ -18,7 +19,7 @@
 
 \praktikum{III} %číslo praktika (I, II nebo III)
 \autor{David Němec} %jméno autora
-\datum{14.\,2.\,2026} %datum měření
+\datum{14.\,4.\,2026} %datum měření
 \cislo{18} %číslo úlohy
 \nazev{Laserová dopplerovská anemometrie} %název úlohy
 
@@ -70,7 +71,7 @@ Vertikální chybové úsečky nebyly pro~svou malou velikost pro~přehlednost v
     částic probíhá ve~vodě.
 \end{enumerate}
 
-% ============================= TEORIE ================================
+% ============================= TEORIE ================================ ------ asi hotovo
 \section{Vztahy a veličiny}
 
 % ============= schémata asi nejsou nutná
@@ -81,61 +82,396 @@ Vertikální chybové úsečky nebyly pro~svou malou velikost pro~přehlednost v
 %     \label{sch:pristroj}
 % \end{schema}
 
+% =========== kalibrace z geometrie ---------- asi hotovo
+Podle \cite{studijni} a~obr. \ref{sch:interferencni_pole} se vzdálenost interferenčních plošek v~průsečíku laserových paprsků
+dá vyjádřit vztahem
+\begin{equation}
+    \label{eq:df_geometrie}
+    d_F = \frac{\lambda_{He-Ne,0}}{2 \sin \frac{\theta}{2}} \approx \frac{\lambda_{He-Ne,0}}{\theta} \,,
+\end{equation}
+kde $\lambda_{He-Ne,0} = \qty{632.8}{nm}$ \cite{pokyny} je vlnová délka He-Ne laseru ve~vakuu a~$\theta \ll 1$ je úhel mezi paprsky.
 
+Úhel $\theta \ll 1$ mezi paprsky lze určit z~geometrie uspořádání, neboť podle obr. \ref{sch:geometrie} zřejmě platí
+\begin{equation}
+    \label{eq:delta_d_geometrie}
+    \Delta d = 2 \tan \frac{\theta}{2} \cdot (d + d_0) \approx \theta d + \theta d_0 \,.
+\end{equation}
 
+\begin{schema}[!htbp]
+    \centering
+    \includegraphics[width=0.5\linewidth]{interferencni_pole.png}
+    \caption{Interferenční pole v průsečíku laserových paprsků \cite{studijni}.}
+    \label{sch:interferencni_pole}
+\end{schema}
 
+\begin{schema}[!htbp]
+    \centering
+    \includegraphics[width=0.4\linewidth]{schema_geometrie.jpg}
+    \caption{Schéma chodu paprsků pro~určení úhlu $\theta$ z~geometrie.}
+    \label{sch:geometrie}
+\end{schema}
 
+% =========== kalibrace z projekce ---------- asi hotovo
+Při umístění mikrometrického šroubu do~průsečíku paprsků lze postupně zakrývat interferenční proužky (viz. obr. 
+\ref{sch:projekce}) a~určit jejich vzdálenost podle vzorce (upraveno podle \cite{pokyny}):
+\begin{equation}
+    \label{eq:df_projekce}
+    d_F = \frac{x}{N_F} = \frac{|x_2 - x_1|}{N_F} \,,
+\end{equation}
+kde $x$ je vzdálenost mezi krajními pozicemi šroubu $x_1$ a~$x_2$ a~$N_F$ je počet mezer mezi interferenčními proužky, 
+které~šroub zakryje při~posunutí z~$x_1$ do~$x_2$.
 
-% ======================== VÝSLEDKY MĚŘENÍ ===========================
+\begin{schema}[!htbp]
+    \centering
+    \includegraphics[width=0.3\linewidth]{schema_projekce.png}
+    \caption{Ukázka postupného zakrývání interferenčních proužků mikrometrickým šroubem
+    pro~určení vzdálenosti mezi nimi \cite{pokyny}.}
+    \label{sch:projekce}
+\end{schema}
+
+% =========== měření dopplerovského signálu ----------- asi hotovo
+
+Z~dopplerovského signálu časové délky $\Delta t$ připadající na~celistvý počet pulzů $N$ lze určit jeho frekvenci 
+$f_D$ podle vztahu \cite{pokyny}
+\begin{equation}
+    \label{eq:frekvence}
+    f_D = \frac{N}{\Delta t} \,.
+\end{equation}
+
+Z~frekvence signálu pak lze určit složku rychlosti částic, která je kolmá na~paprsky, a to podle vztahu \cite{studijni}
+\begin{equation}
+    \label{eq:rychlost}
+    v_x = f_D d_F \,,
+\end{equation}
+kde $d_F$ je vzdálenost interferenčních plošek v~průsečíku paprsků.
+
+% ======================== VÝSLEDKY MĚŘENÍ =========================== ---------- asi hotovo
 \section{Výsledky a zpracování měření}
 
-% ============= podmínky měření
+% ============= podmínky měření ----------- asi hotovo
+\subsection{Podmínky měření}
+Teplota okolí byla změřena jako $T = \qty{22.8(4)}{\degreeCelsius}$.
 
-% ============= přístroje a jejich nejistoty
+% ============= přístroje a jejich nejistoty ------- asi hotovo
 \subsection{Použité měřicí přístroje}
 \begin{enumerate}
-    \item PŘÍSTROJ:
-    
-    POZNÁMKY
+    \item Milimetrový papír - použitý pro určení vzdálenosti obrazů laserových paprsků během kalibrace z~geometrie.
+    Nejistota určení vzdálenosti byla odhadnuta jako polovina nejmenšího dílku, tedy $\sigma_{\Delta d} = \qty{0.05}{cm}$.
+    \item Pásový metr - použitý pro určení vzdálenosti stínítka (milimetrového papíru) od referenční roviny (hrany stolku 
+    s~aparaturou) během kalibrace z~geometrie. Nejistota vzdálenosti byla odhadnuta jako $\sigma_d = \qty{0.2}{cm}$, 
+    tedy více než velikost nejmenšího dílku, jelikož je možné, že nebyla nebyla měřena dokonale kolmo od~stínítka.
+    \item Mikrometrický šroub - použitý pro zakrývání interferenčních proužků He-Ne laseru a~určení jejich vzdálenosti během
+    kalibrace metodou projekce. Nejistota pozice šroubu byla odhadnuta jako polovina nejmenšího dílku, tedy 
+    $\sigma_x = \qty{0.005}{mm}$.
+    \item digitální paměťový osciloskop - použitý pro měření délky dopplerovského signálu a~určení jeho frekvence. Nejistota
+    časové délky signálu byla odhadnuta z~opakovaného umisťování kurzoru do~minima signálu jako $\sigma_{\Delta t} = \qty{0.1}{ms}$.
+    \item Termohygrobarometr Commeter C4130 - použitý pro měření teploty okolí. Nejistota teploty je 
+    ze~specifikací přístroje $\sigma_T = \qty{0.4}{\degreeCelsius}$.
 
 \end{enumerate}
 
-% ============= naměřené hodnoty, vypočtené veličiny, grafy, výsledky
+% ============= naměřené hodnoty, vypočtené veličiny, grafy, výsledky ------ asi hotovo
 \subsection{Naměřené hodnoty a výpočty}
 
-\begin{figure}
+% ======================== kalibrace z geometrie ----------- asi hotovo
+\subsubsection{Kalibrace z geometrie}
+
+Naměřené hodnoty vzdálenosti obrazů dvojice paprsků na~stínítku a~vzdálenosti stínítka od~referenční roviny jsou uvedeny
+v~tabulce~\ref{tab:geometrie}. Nejistoty vzdáleností jsou vzaty jako nejistota příslušného měřidla.
+
+\begin{table}[!hbp]
+\centering
+\caption{Naměřené hodnoty vzdálenosti obrazů dvojice laserových paprsků na~stínítku pro~různé vzdálenosti stínítka od~referenční
+roviny (hrany stolku s~aparaturou).}
+\begin{tabular}{cc}
+ \toprule
+ $d\, (\mathrm{cm})$ & $\Delta d\, (\mathrm{cm})$ \\
+ \midrule
+ $77.6(2)$ & $2.20(5)$ \\
+ $68.4(2)$ & $1.95(5)$ \\
+ $53.1(2)$ & $1.65(5)$ \\
+ $40.5(2)$ & $1.40(5)$ \\
+ $27.5(2)$ & $1.10(5)$ \\
+ $14.3(2)$ & $0.80(5)$ \\
+ $4.3(2)$ & $0.60(5)$ \\
+ \bottomrule
+\end{tabular}
+\label{tab:geometrie}
+\end{table}
+
+Datovými body závislosti vzdálenosti obrazů paprsků na~stínítku na~vzdálenosti stínítka od~referenční roviny byla proložena
+lineární závislost ve~tvaru $\Delta d = a d + b$. Fitováním pomocí funkce \texttt{curve\_fit} knihovny \texttt{scipy.optimize}
+byla získána směrnice $a = 0.0216(7)$. Pomocí (\ref{eq:delta_d_geometrie}) byl vypočten úhel mezi paprsky 
+$\theta = 0.0216(7)$ (tedy skutečně platí $\theta \ll 1$), přičemž jeho nejistota byla určena podle \cite{englich} ze~vztahu
+\begin{equation}
+    \label{eq:sigma_theta}
+    \sigma_\theta = \frac{\sigma_a}{1 + \left(\frac{a}{2}\right)^2} \approx \sigma_a.
+\end{equation} 
+
+Konstantní člen odpovídá podle (\ref{eq:delta_d_geometrie}) součinu $d_0 \cdot 2 \tan \frac{\theta}{2}$ a~není 
+pro~další výpočty důležitý. Ze~vztahu (\ref{eq:df_geometrie}) byla vypočtena vzdálenost interferenčních plošek
+v~průsečíku paprsků $d_{F,g} = \qty{29.3(10)}{\micro \meter}$, přičemž její nejistota byla určena podle \cite{englich} ze~vztahu
+\begin{equation}
+    \label{eq:sigma_df_geometrie}
+    \sigma_{d_{F,g}} = d_{F,g} \frac{\sigma_\theta}{\frac{1}{2} \tan \frac{\theta}{2}} \approx d_{F,g} \relative{\theta} \,.
+\end{equation}
+
+\begin{figure}[!hbp]
     \centering
-    %\includegraphics[width=0.5\linewidth]{graf.png}
-    \caption{NAZEVGRAFU}
-    \label{fig:graf}
+    \includegraphics[width=0.5\linewidth]{geometrie.png}
+    \caption{Závislost vzdálenosti obrazu dvou laserových paprsků na~stínítku na~vzdálenosti stínítka od~referenční roviny.\nohbars}
+    \label{fig:geometrie}
 \end{figure}
 
+% ======================== kalibrace z projekce ---------- asi hotovo
+\subsubsection{Kalibrace metodou projekce}
+
+Mikrometrickým šroubem bylo vždy zakryto několik interferenčních proužků a~byly změřeny krajní pozice $x_1$ a~$x_2$.
+Nejistota vzdálenosti mezi krajními pozicemi byla určena jako
+\begin{equation}
+    \label{eq:sigma_x}
+    \sigma_x = \sqrt{2} \sigma_x \doteq \qty{0.007}{mm} \,.
+\end{equation}
+Vzdálenost mezi interferenčními proužky byla určena podle vztahu (\ref{eq:df_projekce}) a~její nejistota podle \cite{englich}
+ze~vztahu
+\begin{equation}
+    \label{eq:sigma_df_projekce}
+    \sigma_{d_{F,p}} = d_{F,p} \relative{x} \,.
+\end{equation}
+Naměřené hodnoty a~vypočtené vzdálenosti mezi interferenčními proužky jsou uvedeny v~tabulce~\ref{tab:projekce}.
+Z~jednotlivých měření byl vypočten aritmetický průměr $\overline{d}_{F,p} = \qty{29.7(7)}{\micro \meter}$, přičemž jeho
+nejistota je daná \cite{englich} jako nejistota aritmetického průměru zvětšená o~nejistoty jednotlivých měření
+(nejistota jednoho měření je daná jednak rozptylem hodnot, jednak~vlastní nejistotou měřené hodnoty):
+\begin{equation}
+    \label{eq:sigma_mean_df_projekce}
+    \sigma_{\overline{d}_{F,p}} = \sqrt{ \frac{1}{6 \cdot 7} \sum_{i=1}^{7} \left( d_{F,p,i} - \overline{d}_{F,p} \right)^2
+    + \frac{1}{49} \sum_{i=1}^{7} \sigma_{d_{F,p,i}}^2 } \,.
+\end{equation}
+
+Hodnota $d_{F,p}$ z~projekce je přesnější než~hodnota určená z~geometrie, proto budu dále uvažovat 
+$d_F = d_{F,p} = \qty{29.7(7)}{\micro \meter}$.
+
+\begin{table}[!htbp]
+\centering
+\caption{Pozice mikrometrického šroubu zakrývajícího interferenční proužky He-Ne laseru. $N_F$ počet mezer mezi proužky,
+$x_1$ a~$x_2$ krajnní pozice, $x$ posunutí mezi nimi a~$d_{F,p}$ průměrná vzdálenost mezi interferenčními proužky.}
+\begin{tabular}{ccccc}
+ \toprule
+ $N_F$ & $x_1\, (\mathrm{mm})$ & $x_2\, (\mathrm{mm})$ & $x\, (\mathrm{mm})$ & $d_{F,p}\, (\unit{\micro \meter})$ \\
+ \midrule
+ $12$ & $0.880(5)$ & $0.530(5)$ & $0.350(7)$ & $29.2(6)$ \\
+ $13$ & $0.870(5)$ & $0.470(5)$ & $0.400(7)$ & $30.8(5)$ \\
+ $10$ & $0.870(5)$ & $0.560(5)$ & $0.310(7)$ & $31.0(7)$ \\
+ $10$ & $0.800(5)$ & $0.510(5)$ & $0.290(7)$ & $29.0(7)$ \\
+ $5$ & $0.870(5)$ & $0.710(5)$ & $0.160(7)$ & $32.0(1.4)$ \\
+ $5$ & $0.710(5)$ & $0.570(5)$ & $0.140(7)$ & $28.0(1.4)$ \\
+ $10$ & $0.830(5)$ & $0.550(5)$ & $0.280(7)$ & $28.0(7)$ \\
+ \midrule
+ \multicolumn{4}{r}{průměr} & $29.7(7)$ \\
+ \bottomrule
+\end{tabular}
+\label{tab:projekce}
+\end{table}
+
+
+
+% ======================== měření dopplerovského signálu --------- asi hotovo
+\subsubsection{Měření rychlosti částic z~dopplerovského signálu}
+
+Digitálním paměťovým osciloskopem byl zobrazován signál z~fotonásobiče a~měřením časových délek dopplerovských signálů
+pomocí programu \texttt{ANEMOMETRIE} byla podle vztahu (\ref{eq:frekvence}) určována jejich frekvence. 
+Nejistota frekvence je podle \cite{englich} daná vztahem
+\begin{equation}
+    \label{eq:sigma_f}
+    \sigma_{f_D} = f_D \relative{\Delta t} \,,
+\end{equation}
+kde $\sigma_{\Delta t} = \qty{0.1}{\milli \second}$ je nejistota časové délky signálu daná nejistým určením pozice minima pulzu.
+Z~frekvence dopplerovského signálu a~vzdálenosti interferenčních plošek $d_F$ byla podle vztahu (\ref{eq:rychlost})
+vypočtena kolmá složka rychlosti částic k~paprskům, přičemž nejistota rychlosti byla určena podle \cite{englich} ze~vztahu
+\begin{equation}
+    \label{eq:sigma_vx}
+    \sigma_{v_x} = v_x \sqrt{ \relsqr{f_D} + \relsqr{d_F}} \,.
+\end{equation}
+
+Naměřeno bylo celkem 80 dopplerovských signálů (typický signál je na~obr. \ref{sch:ukazka}). Hodnoty časové délky signálu, 
+frekvence a~kolmé složky rychlosti pro~jednotlivé signály jsou uvedeny v~tabulce \ref{tab:castice}.
+
+\begin{schema}[!htbp]
+    \centering
+    \includegraphics[width=0.5\linewidth]{ukazka.png}
+    \caption{Ukázka typického dopplerovského signálu.}
+    \label{sch:ukazka}
+\end{schema}
+
+\begin{table}[!htbp]
+\centering
+\caption{Počet pulzů, časová délka, frekvence a~kolmá složka rychlosti jednotlivých dopplerovských signálů.}
+\begin{tabular}{ccccc|ccccc}
+ \toprule
+ částice & $N$ & $\Delta t\, (\mathrm{ms})$ & $f\, (\mathrm{Hz})$ & $v_x\, (\mathrm{mm/s})$ & částice & $N$ & 
+ $\Delta t\, (\mathrm{ms})$ & $f\, (\mathrm{Hz})$ & $v_x\, (\mathrm{mm/s})$ \\
+ \midrule
+ $1$ & $8$ & $24.95(10)$ & $320.7(1.3)$ & $9.5(2)$ & $41$ & $7$ & $25.06(10)$ & $279.3(1.1)$ & $8.3(2)$ \\
+ $2$ & $7$ & $18.38(10)$ & $381(2)$ & $11.3(3)$ & $42$ & $6$ & $38.13(10)$ & $157.4(4)$ & $4.67(11)$ \\
+ $3$ & $5$ & $14.12(10)$ & $354(3)$ & $10.5(3)$ & $43$ & $5$ & $24.66(10)$ & $202.8(8)$ & $6.02(14)$ \\
+ $4$ & $7$ & $18.39(10)$ & $381(2)$ & $11.3(3)$ & $44$ & $7$ & $34.00(10)$ & $205.9(6)$ & $6.12(14)$ \\
+ $5$ & $5$ & $45.54(10)$ & $109.8(2)$ & $3.26(8)$ & $45$ & $7$ & $35.46(10)$ & $197.4(6)$ & $5.86(14)$ \\
+ $6$ & $5$ & $29.06(10)$ & $172.1(6)$ & $5.11(12)$ & $46$ & $7$ & $41.72(10)$ & $167.8(4)$ & $4.98(12)$ \\
+ $7$ & $8$ & $29.46(10)$ & $271.6(9)$ & $8.07(19)$ & $47$ & $6$ & $33.99(10)$ & $176.5(5)$ & $5.24(12)$ \\
+ $8$ & $6$ & $23.98(10)$ & $250.3(1.0)$ & $7.43(18)$ & $48$ & $6$ & $15.12(10)$ & $397(3)$ & $11.8(3)$ \\
+ $9$ & $7$ & $17.21(10)$ & $407(2)$ & $12.1(3)$ & $49$ & $5$ & $11.34(10)$ & $441(4)$ & $13.1(3)$ \\
+ $10$ & $6$ & $17.21(10)$ & $349(2)$ & $10.4(2)$ & $50$ & $5$ & $11.04(10)$ & $453(4)$ & $13.5(3)$ \\
+ $11$ & $5$ & $17.51(10)$ & $285.5(1.6)$ & $8.5(2)$ & $51$ & $7$ & $24.19(10)$ & $289.4(1.2)$ & $8.6(2)$ \\
+ $12$ & $7$ & $24.58(10)$ & $284.8(1.2)$ & $8.5(2)$ & $52$ & $6$ & $73.86(10)$ & $81.23(11)$ & $2.41(6)$ \\
+ $13$ & $6$ & $15.18(10)$ & $395(3)$ & $11.7(3)$ & $53$ & $6$ & $18.12(10)$ & $331.1(1.8)$ & $9.8(2)$ \\
+ $14$ & $7$ & $22.15(10)$ & $316.0(1.4)$ & $9.4(2)$ & $54$ & $7$ & $22.79(10)$ & $307.2(1.3)$ & $9.1(2)$ \\
+ $15$ & $5$ & $18.82(10)$ & $265.7(1.4)$ & $7.89(19)$ & $55$ & $5$ & $24.23(10)$ & $206.3(9)$ & $6.13(14)$ \\
+ $16$ & $6$ & $24.17(10)$ & $248.3(1.0)$ & $7.37(17)$ & $56$ & $6$ & $17.73(10)$ & $339(2)$ & $10.1(2)$ \\
+ $17$ & $8$ & $26.07(10)$ & $306.8(1.2)$ & $9.1(2)$ & $57$ & $7$ & $23.90(10)$ & $292.9(1.2)$ & $8.7(2)$ \\
+ $18$ & $9$ & $26.64(10)$ & $337.8(1.3)$ & $10.0(2)$ & $58$ & $8$ & $30.02(10)$ & $266.4(9)$ & $7.91(19)$ \\
+ $19$ & $6$ & $20.44(10)$ & $293.5(1.4)$ & $8.7(2)$ & $59$ & $9$ & $31.00(10)$ & $290.3(9)$ & $8.6(2)$ \\
+ $20$ & $7$ & $14.44(10)$ & $485(3)$ & $14.4(3)$ & $60$ & $7$ & $35.03(10)$ & $199.8(6)$ & $5.94(14)$ \\
+ $21$ & $7$ & $15.63(10)$ & $448(3)$ & $13.3(3)$ & $61$ & $5$ & $39.93(10)$ & $125.2(3)$ & $3.72(9)$ \\
+ $22$ & $7$ & $32.28(10)$ & $216.8(7)$ & $6.44(15)$ & $62$ & $6$ & $39.21(10)$ & $153.0(4)$ & $4.55(11)$ \\
+ $23$ & $5$ & $29.65(10)$ & $168.6(6)$ & $5.01(12)$ & $63$ & $6$ & $20.39(10)$ & $294.2(1.4)$ & $8.7(2)$ \\
+ $24$ & $6$ & $21.14(10)$ & $283.8(1.3)$ & $8.4(2)$ & $64$ & $7$ & $23.93(10)$ & $292.5(1.2)$ & $8.7(2)$ \\
+ $25$ & $5$ & $19.59(10)$ & $255.2(1.3)$ & $7.58(18)$ & $65$ & $9$ & $19.80(10)$ & $455(2)$ & $13.5(3)$ \\
+ $26$ & $6$ & $55.34(10)$ & $108.4(2)$ & $3.22(7)$ & $66$ & $5$ & $28.19(10)$ & $177.4(6)$ & $5.27(12)$ \\
+ $27$ & $5$ & $20.90(10)$ & $239.3(1.1)$ & $7.11(17)$ & $67$ & $5$ & $21.80(10)$ & $229.4(1.1)$ & $6.81(16)$ \\
+ $28$ & $7$ & $26.48(10)$ & $264(1)$ & $7.85(18)$ & $68$ & $6$ & $30.73(10)$ & $195.2(6)$ & $5.80(14)$ \\
+ $29$ & $5$ & $14.01(10)$ & $357(3)$ & $10.6(3)$ & $69$ & $6$ & $28.72(10)$ & $208.9(7)$ & $6.21(15)$ \\
+ $30$ & $7$ & $22.43(10)$ & $312.0(1.4)$ & $9.3(2)$ & $70$ & $5$ & $16.55(10)$ & $302.1(1.8)$ & $9.0(2)$ \\
+ $31$ & $5$ & $16.41(10)$ & $304.7(1.9)$ & $9.0(2)$ & $71$ & $5$ & $19.87(10)$ & $251.6(1.3)$ & $7.47(18)$ \\
+ $32$ & $8$ & $31.74(10)$ & $252.1(8)$ & $7.49(18)$ & $72$ & $6$ & $47.98(10)$ & $125.1(3)$ & $3.71(9)$ \\
+ $33$ & $5$ & $31.55(10)$ & $158.5(5)$ & $4.71(11)$ & $73$ & $8$ & $21.04(10)$ & $380.3(1.8)$ & $11.3(3)$ \\
+ $34$ & $9$ & $25.81(10)$ & $348.7(1.4)$ & $10.4(2)$ & $74$ & $5$ & $13.25(10)$ & $377(3)$ & $11.2(3)$ \\
+ $35$ & $6$ & $21.78(10)$ & $275.5(1.3)$ & $8.2(2)$ & $75$ & $5$ & $11.73(10)$ & $426(4)$ & $12.7(3)$ \\
+ $36$ & $6$ & $26.54(10)$ & $226.1(9)$ & $6.72(16)$ & $76$ & $7$ & $17.45(10)$ & $401(2)$ & $11.9(3)$ \\
+ $37$ & $7$ & $63.61(10)$ & $110.05(17)$ & $3.27(8)$ & $77$ & $7$ & $59.71(10)$ & $117.2(2)$ & $3.48(8)$ \\
+ $38$ & $8$ & $29.92(10)$ & $267.4(9)$ & $7.94(19)$ & $78$ & $5$ & $23.24(10)$ & $215.2(9)$ & $6.39(15)$ \\
+ $39$ & $6$ & $37.03(10)$ & $162.0(4)$ & $4.81(11)$ & $79$ & $5$ & $61.09(10)$ & $81.84(13)$ & $2.43(6)$ \\
+ $40$ & $6$ & $20.79(10)$ & $288.6(1.4)$ & $8.6(2)$ & $80$ & $6$ & $25.18(10)$ & $238.3(9)$ & $7.08(17)$ \\
+ \bottomrule
+\end{tabular}
+\label{tab:castice}
+\end{table}
+
+Naměřené hodnoty kolmých složek rychlosti částic byly zpracovány do~dvou histogramů s~různou šířkou binu a~rozsahem.
+První odpovídá přirozenější volbě od~$0$ do~$\qty{15}{mm \per s}$ se~šířkou binu $\qty{1.5}{mm \per s}$ (přičemž v~grafu
+\ref{fig:histogram1} jsou vykresleny pouze sloupce obsahující naměřené hodnoty, tedy od $1.5$ do $\qty{15}{mm \per s}$).
+Rozsah druhého naopak přímo reflektuje rozsah měřených rychlostí, tedy od~$2.4$ do~$\qty{14.4}{mm \per s}$ se~šířkou binu 
+$\qty{1.33}{mm \per s}$. Vykreslen je v~grafu \ref{fig:histogram2}. Na~svislé ose je vynesena relativní četnost částic
+vydělená šířkou binu (označuji \textit{normovaná četnost}), odůvodnění v~Diskuzi. Nejistoty rychlosti nebyly zohledněny.
+
+Výška sloupců histogramu (hustota pravděpodobnosti naměření dané rychlosti) v~závislosti na~pozici středu binu byla fitována 
+normovanou funkcí normálního rozdělení ve~tvaru 
+\begin{equation}
+    \label{eq:gauss}
+    f(v_x) = \frac{1}{\sqrt{2 \pi \sigma^2}} \exp \left( -\frac{(v_x - \mu)^2}{2 \sigma^2} \right) \,,
+\end{equation}
+kde $\mu$ je střední hodnota rozdělení a~$\sigma$ standardní odchylka. 
+
+Fitováním pomocí funkce \texttt{curve\_fit} knihovny
+\texttt{scipy.optimize} byly z~prvního histogramu získány hodnoty $\mu_1 = \qty{7.9(2)}{mm/s}$ a~$\sigma_1 = \qty{2.9(2)}{mm/s}$
+a z~druhého histogramu $\mu_2 = \qty{7.8(5)}{mm/s}$ a~$\sigma_2 = \qty{3.1(4)}{mm/s}$.
+
+\begin{figure}[!htbp]
+    \centering
+    \includegraphics[width=0.7\linewidth]{histogram.png}
+    \caption{Histogram rozdělení kolmých složek rychlosti částic ve vodě: $9$ binů, šířka binu $\qty{1.5}{mm \per s}$, 
+    rozsah $1.5$~až~$\qty{15}{mm \per s}$.}
+    \label{fig:histogram1}
+\end{figure}
+
+\begin{figure}[!htbp]
+    \centering
+    \includegraphics[width=0.7\linewidth]{histogram2.png}
+    \caption{Histogram rozdělení kolmých složek rychlosti částic ve vodě: $9$ binů, šířka binu $\qty{1.33}{mm \per s}$, 
+    rozsah $2.4$~až~$\qty{14.4}{mm \per s}$.}
+    \label{fig:histogram2}
+\end{figure}
 
 % ============================ DISKUZE a ZÁVĚR ================================
 \section{Diskuze výsledků a závěr}
 % ======================== diskuze
+\subsection{Diskuze}
+Vzdálenost stínítka byla měřena od~hrany stolku s~aparaturou jakožto referenční roviny místo přímo od~průsečíku
+paprsků, jelikož tato vzdálenost se~dala měřit jednodušeji a~přesněji. Z~grafu \ref{fig:geometrie} je patrné,
+že závislost vzdálenosti obrazů paprsků na~stínítku na~vzdálenosti stínítka od~referenční roviny je ve~velmi dobrém přiblížení
+lineární. Nejistota určení vzdálenosti obrazů na~stínítku se~dokonce zdá být nadhodnocená, jelikož fitovaná přímka by~procházela
+datovými body, i~kdyby měly daleko menší chybové úsečky. Milimetrový papír však neumožňoval tuto vzdálenost určit přesněji
+než~na~$\qty{0.05}{cm}$. Kvůli tomu také vychází vzdálenost interferenčních plošek v~průsečíku paprsků 
+$d_{F,g} = \qty{29.3(10)}{\micro \meter}$ s~relativní nejistotou $3.4\,\%$, zatímco~hodnota získaná metodou projekce
+($d_{F,p} = \qty{29.7(7)}{\micro \meter}$) má relativní nejistotu pouze $2.4\,\%$. Obě hodnoty se~v~rámci nejistot shodují,
+v~dalším výpočtu jsem však uvažoval přesnější hodnotu z~projekce.
+
+Měření částic ve~vodě (tedy v~jiném prostředí, než~ve~kterém byla prováděna kalibrace) nemá vliv na~výsledné hodnoty.
+Při~přechodu do~opticky hustšího prostředí (do~vody) se~ze~Snellova zákona \cite{franc} sice zmenší sinus úhlu paprsků
+vůči normále k~rozhraní, avšak stejným způsobem ($n$-krát, kde $n$ je index lomu vody) se~zmenší i~vlnová délka laserových paprsků.
+Ze~vztahu (\ref{eq:df_geometrie}) je tedy zřejmé, že~se~vzdálenost interferenčních plošek v~průsečíku paprsků nezmění.
+Zároveň oba paprsky procházejí stejnými prostředími po~stejnou vzdálenost, takže mezi nimi ani~nevznikne žádný dráhový rozdíl.
+
+Během měření dopplerovských signálů byly studovány pouze signály s~počtem pulzů $N \ge 5$, aby výsledná frekvence a~rychlost
+nebyly zatíženy příliš velkou relativní nejistotou, a také jen ty signály, které měly zřetelnou gaussovskou obálku a~dostatečnou
+hloubku modulace. Obojí však mohlo způsobit výběrový efekt a~zvýhodnit takové rychlosti částic, které vytvoří nejzřetelnější
+signály.
+
+Výška sloupců histogramu byla vzata jako relativní četnost částic v~daném rozsahu rychlostí vydělená šířkou binu.
+Díky tomu je celková plocha histogramu rovna $1$, tedy správně normovaná. Výška sloupců tak zhruba odpovídá hustotě
+pravděpodobnosti rozdělení rychlostí částic, a je tedy možné histogram fitovat normovanou funkcí normálního rozdělení 
+(\ref{eq:gauss}). Rozsah a~šířka binů má významný vliv na~průběh histogramu, jak bylo ilustrováno dvěma histogramy
+s~různou šířkou binu a~rozsahem. Rozsah dokonale kopírující rozsah měřených rychlostí (druhý histogram) pravděpodobně není
+vhodnou volbou. Při~opakovaném měření by~maximální i~minimální rychlost nejspíše vyšly jiné, avšak průběh histogramu
+by~ideálně neměl záviset na~jednotlivých extrémních hodnotách, což se~přesně děje u~druhého histogramu. 
+Fitováním normálním rozdělením byly získány
+střední hodnoty rychlostí částic $\mu_1 = \qty{7.9(2)}{mm/s}$ a~$\mu_2 = \qty{7.8(5)}{mm/s}$ s~relativními nejistotami
+$2.5\,\%$ a~$6.4\,\%$ a~standardní odchylky rozdělení
+$\sigma_1 = \qty{2.9(2)}{mm/s}$ (rel. nej. $7\,\%)$ a~$\sigma_2 = \qty{3.1(4)}{mm/s}$ (rel. nej. $13\,\%$). 
+Obě střední hodnoty i~standardní odchylky se~v~rámci nejistot shodují, avšak hodnoty z~prvního histogramu jsou zřejmě přesnějí.
+
+Pohyb částic ve~vodě byl poháněn rotující vrtulkou, která může způsobovat turbulentní proudění. Kvůli tomu rozdělení rychlostí
+částic nemusí být přesně normální. I~vzhledem k~tomu, že průběh histogramu závisí na~umělém výběru rozsahu a~šířky binů,
+by~bylo vhodnější místo hustoty pravděpodobnosti studovat kumulativní distribuční funkci (počet částic s~rychlostí menší 
+než~nebo rovnou dané rychlosti) a~fitovat tuto funkci.
+
+Teplota okolí byla na~konci experimentu změřena jako $T = \qty{22.8(4)}{\degreeCelsius}$. Jelikož však proudění 
+v~tekutinách kvůli viskozitě silně závisí na~teplotě, bylo by lepší ji měřit průběžně během celého experimentu a~kontrolovat,
+že~se~příliš nemění.
 
 % ======================== závěr
+\subsection{Závěr}
+Výpočtem z~geometrie uspořádání byla určena vzdálenost interferenčních plošek v~průsečíku paprsků \\
+$d_{F,g} = \qty{29.3(10)}{\micro \meter}$. Metodou projekce byla získána hodnota $d_{F,p} = \qty{29.7(7)}{\micro \meter}$.
+
+Rozdělení kolmých složek rychlosti částic ve~vodě je přibližně normální. Z~prvního histogramu s~přirozenější volbou
+rozsahu $1.5$-$\qty{15}{mm \per s}$ a~šířky binu $1.5$ vychází střední hodnota rychlosti $\mu_1 = \qty{7.9(2)}{mm/s}$ 
+a~standardní odchylka rozdělení rychlostí $\sigma_1 = \qty{2.9(2)}{mm/s}$. Z~druhého histogramu s~rozsahem
+přímo reflektujícím rozsah měřených rychlostí ($2.4$-$\qty{14.4}{mm \per s}$) a~šířkou binu $1.33$ vychází střední hodnota rychlosti $\mu_2 = \qty{7.8(5)}{mm/s}$
+a~standardní odchylka rozdělení rychlostí $\sigma_2 = \qty{3.1(4)}{mm/s}$.
 
 
 % =========================== LITERATURA =============================
 \begin{thebibliography}{9}
 
-\bibitem{studijni} Kolektiv ZFP KVOF MFF UK: \textit{NÁZEV} [online]. 
-[cit. \today], dostupné z~URL
+\bibitem{studijni} Kolektiv ZFP KVOF MFF UK: \textit{Úloha 18 - studijní text} [online]. 
+[cit. \today], dostupné z~https://physics.mff.cuni.cz/vyuka/zfp/\_media/zadani/texty/txt\_318.pdf
 
-\bibitem{pokyny} Kolektiv ZFP KVOF MFF UK: \textit{NÁZEV} [online]. [cit. \today], dostupné
-z~URL
+\bibitem{pokyny} Kolektiv ZFP KVOF MFF UK: \textit{Úloha 18 - pokyny k~měření} [online]. [cit. \today], dostupné
+z~https://physics.mff.cuni.cz/vyuka/zfp/\_media/zadani/pokyny/mereni\_318.pdf
 
-\bibitem{vlnovedelky} Kolektiv ZFP KVOF MFF UK: \textit{Úloha 16 - studijní text} 
-[online]. [cit. \today], dostupné
-z~https://physics.mff.cuni.cz/vyuka/zfp/\_media/zadani/texty/txt\_316.pdf
+% \bibitem{vlnovedelky} Kolektiv ZFP KVOF MFF UK: \textit{Úloha 16 - studijní text} 
+% [online]. [cit. \today], dostupné
+% z~https://physics.mff.cuni.cz/vyuka/zfp/\_media/zadani/texty/txt\_316.pdf
 
 \bibitem{englich} J. Englich: \textit{Úvod do praktické fyziky I: Zpracování výsledků měření}. 
 1. vyd. Praha: Matfyzpress, 2006
 
-\bibitem{mikulcak} Mikulčák a kolektiv: \textit{Matematické, fyzikální a~chemické tabulky pro~střední 
-školy: NÁZEVTABULKY}, Praha: Státní pedagogické nakladatelství, n. p., 1988
+\bibitem{franc} Franc, J., P. Hlídek. \textit{Optika - podklad k~přednášce NOFY022 - Fyzika III}
+[online]. [cit. \today], dostupné
+z~http://fu.mff.cuni.cz/semicond/media/files/courses/skripta-2025-25-09-2025.pdf
+
+% \bibitem{mikulcak} Mikulčák a kolektiv: \textit{Matematické, fyzikální a~chemické tabulky pro~střední 
+% školy: NÁZEVTABULKY}, Praha: Státní pedagogické nakladatelství, n. p., 1988
 
 \end{thebibliography}
 \end{document}
