@@ -1,0 +1,132 @@
+
+\documentclass{../concepts/titul_protokol_p/prepareprotokol} %všechny balíčky pro protokol + titulní strana
+\usepackage{graphicx}
+\usepackage{newfloat}
+\usepackage{caption}
+\usepackage{booktabs}
+\usepackage{amsmath}
+\usepackage{newfloat}
+\usepackage{caption}
+\usepackage{siunitx}
+\sisetup{inter-unit-product =$\cdot$}
+\sisetup{separate-uncertainty=true}
+
+\praktikum{III} %číslo praktika (I, II nebo III)
+\autor{David Němec} %jméno autora
+\datum{17.\,2.\,2026} %datum měření
+\cislo{3} %číslo úlohy
+\nazev{Mřížkový spektrometr} %název úlohy
+
+\DeclareFloatingEnvironment[fileext=los, placement={htbp}, name=Obrázek]{schema}
+
+\newcommand{\nobars}{
+Chybové úsečky nebyly pro svou malou velikost pro přehlednost vykresleny.}
+
+\newcommand{\relative}[1]{
+\frac{\sigma_{#1}}{#1}
+}
+\newcommand{\squared}[1]{
+\left( #1 \right)^2
+}
+\newcommand{\relsqr}[1]{
+\squared{\relative{#1}}
+%\left( \frac{\sigma_{#1}}{#1} \right)^2
+}
+
+\begin{document}
+\renewcommand{\figurename}{Graf}
+\renewcommand{\refname}{Literatura}
+
+% change graphics path to find ZPF.pdf for title page
+\graphicspath{{../concepts/titul_protokol_p/}}
+\maketitle
+% change it back
+\graphicspath{{./}}
+
+% ========================== PRACOVNÍ ÚKOL ============================
+\section{Pracovní úkol}
+\begin{enumerate}
+    \item Seřiďte spektrometr pro kolmý dopad světla pomocí bočního osvětlení nitkového kříže (rovina optické mřížky je kolmá k ose kolimátoru).
+    \item Stanovte mřížkovou konstantu použité mřížky. K měření užijte čar sodíkového dubletu v 1. a 2. řádu.
+    \item Odhadněte rozlišovací schopnost spektrometru ze zobrazení sodíkového dubletu ve spektru 1. a 2. řádu. Vypočtěte teoreticky maximální dosažitelnou rozlišovací schopnost a oba výsledky porovnejte.
+    \item Proměřte viditelné čáry ve spektru rtuti v 1. řádu. S pomocí vámi stanovené mřížkové konstanty z úkolu 2. spočtěte vlnové délky rtuťového spektra a porovnejte je s tabelovanými hodnotami.
+    \item Vytvořte kalibrační křivku spektrometru jako závislost vlnové délky na úhlu. Vyneste graf reziduí mezi daty a kalibrační křivkou a vyhodnoťte přesnost kalibrace.
+    \item Určete úhlovou disperzi mřížky ve žluté oblasti spektra 1. a 2. řádu. Vypočtěte teoretické hodnoty a porovnejte s experimentálními hodnotami.
+\end{enumerate}
+
+% ============================= TEORIE ================================
+\section{Teorie}
+\subsection{Difrakce na mřížce}
+
+Při průchodu světla rovinnou optickou mřížkou s mřížkovou konstantou $a$
+dochází k ohybu na každé štěrbině a zároveň k interferenci mezi vlnami
+šířícími se od jednotlivých štěrbin. V důsledku toho vznikají na stínítku
+diskrétní maxima, jejichž obálka je určena difrakcí na jedné štěrbině.
+Dopadá-li na mřížku světlo o vlnové délce $\lambda$ kolmo, budou se
+interferenční maxima nacházet na úhlech $\varphi_k$ od původního směru
+šíření, které vyhovují mřížkové rovnici %\cite{pokyny}:
+
+\begin{equation}\label{mrizka}
+    \sin \varphi_k = \frac{k \lambda}{a}
+\end{equation}
+
+
+\subsection{Metoda měření}
+
+\begin{schema}[htbp]
+    \centering
+%    \includegraphics[width=0.5\linewidth]{uloha4/fourpoints.png}
+    \caption{Schema yap}
+    \label{sch:4}
+\end{schema}
+
+\begin{figure}[htbp]
+    \centering
+%    \includegraphics[width=0.5\linewidth]{uloha27/schema.png}
+    \caption{Schéma zapojení [LITERATURA]}
+    \label{fig:schema}
+\end{figure}
+
+
+
+\subsection{Měřicí přístroje a jejich nejistoty}
+\begin{enumerate}
+    \item PŘÍSTROJ:
+    
+    POZNÁMKY
+
+\end{enumerate}
+
+
+% ======================== VÝSLEDKY MĚŘENÍ ===========================
+\section{Výsledky měření}
+
+
+\begin{figure}
+    \centering
+%    \includegraphics[width=0.5\linewidth]{uloha27/GRAF1.png}
+    \caption{Závislost kapacity deskového kondenzátoru na napětí.}
+    \label{fig:osciloskop}
+\end{figure}
+
+
+% ============================ DISKUZE ===============================
+\section{Diskuze}
+
+
+% ============================= ZÁVĚR ================================
+\section{Závěr}
+
+
+% =========================== LITERATURA =============================
+\begin{thebibliography}{9}
+
+\bibitem{pokyny} Kolektiv ZFP KVOF MFF UK: Mřížkový spektrometr [online]. [cit. 19.2.2026], dostupné
+z~https://physics.mff.cuni.cz/vyuka/zfp/\_media/zadani/pokyny/mereni\_303.pdf
+
+\bibitem{englich} J. Englich: Úvod do praktické fyziky I: Zpracování výsledků měření. 1. vyd. Praha: Matfyzpress, 2006
+
+\bibitem{mikulcak} Mikulčák a kolektiv: Matematické, fyzikální a chemické tabulky pro střední školy: relativní permitivita, Praha: Státní pedagogické nakladatelství, n. p., 1988
+
+\end{thebibliography}
+\end{document}
