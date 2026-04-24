@@ -64,7 +64,7 @@ Vertikální chybové úsečky nebyly pro~svou malou velikost pro~přehlednost v
     \item Porovnáním tabelovaného $n_{15,p_0}$ a změřeného $n_{t,p_0}$ stanovte teplotu laboratoře (včetně chyby).
 \end{enumerate}
 
-% ============================= TEORIE ================================
+% ============================= TEORIE ================================ ------- asi hotovo
 \section{Vztahy a veličiny}
 
 % ============= schémata asi nejsou nutná
@@ -75,48 +75,362 @@ Vertikální chybové úsečky nebyly pro~svou malou velikost pro~přehlednost v
 %     \label{sch:pristroj}
 % \end{schema}
 
+Změna indexu lomu vzduchu v~trubici Jaminova interferometru z~$n_0=1$ na~$n$ se~projeví posunem interferenčních proužků 
+o~$k$ řádů, a~to podle vztahu: (upraveno podle \cite{pokyny})
+\begin{equation}
+    \label{eq:index_na_k}
+    n = 1 + \frac{k \lambda_{\mathrm{atm}}}{l} \,,
+\end{equation}
+kde $\lambda_{\mathrm{atm}}$ je vlnová délka paprsků procházejících interferometrem (použita byla sodíková výbojka)
+a~$l$ je délka trubice.
 
+Index lomu vzduchu při~teplotě $t$ a~tlaku $p$ lze přibližně vyjádřit vztahem \cite{pokyny}:
+\begin{equation}
+    \label{eq:index_na_tp}
+    n_{t,p} = 1 + \left( n_{15,p_0} - 1 \right) \frac{1+ 15 \gamma}{1 + t \gamma} \frac{p}{p_0}\,,
+\end{equation}
+kde $n_{15,p_0}$ je index lomu vzduchu za~standardních podmínek ($t=\qty{15}{\degreeCelsius}$, $p_0=\qty{1013.25}{\hecto\pascal}$)
+a~$\gamma = 3670\cdot10^{-6}\,\unit{K}$ je teplotní součinitel objemové roztažnosti vzduchu. Je-li
+teplota během měření konstantně $t=t_0$, lze (\ref{eq:index_na_tp}) přepsat na:
+\begin{equation}
+    \label{eq:index_na_p}
+    n_{t_0,p} = 1 + \left( n_{15,p_0} - 1 \right) \frac{1+ 15 \gamma}{1 + t_0 \gamma} \frac{p}{p_0} = 1 + \tau p\,,
+\end{equation}
+kde $\tau$ je~koeficient u~lineárního členu závislosti $n(p)$. Odtud lze teplotu $t_0$ vyjádřit jako
+\begin{equation}
+    \label{eq:teplota}
+    t_0 = \frac{1}{\gamma} \left(\left( n_{15,p_0} - 1 \right) \frac{1+15\gamma}{\tau p_0} - 1\right) \,.
+\end{equation}
 
+Pro~$n_{15,p_0}$ platí přibližný disperzní vztah \cite{tabulky}:
+\begin{equation}
+    \label{eq:n15p0}
+    n_{15,p_0} = 1 + 10^{-6} \cdot \left( 64.328 + \frac{29498.1}{146-\lambda_0^{-2}} + 
+    \frac{255.4}{41-\lambda_0^{-2}} \right) \,,
+\end{equation}
+kde $\lambda_0$ je vlnová délka ve~vakuu v~\unit{\micro\meter}.
 
-
+Ze znalosti vlnové délky $\lambda_\mathrm{atm}$ ve~vzduchu o~indexu lomu $n_\mathrm{atm}$ lze určit vlnovou délkou
+$\lambda$ ve~vzduchu o~indexu lomu $n$ podle vztahu (upraveno podle \cite{tabulky}):
+\begin{equation}
+    \label{eq:lambda_na_n}
+    \lambda = \frac{n_\mathrm{atm}}{n} \lambda_\mathrm{atm} \,.
+\end{equation}
 
 % ======================== VÝSLEDKY MĚŘENÍ ===========================
 \section{Výsledky a zpracování měření}
 
-% ============= podmínky měření
-
-% ============= přístroje a jejich nejistoty
+% ============= přístroje a jejich nejistoty --------- asi hotovo
 \subsection{Použité měřicí přístroje}
 \begin{enumerate}
-    \item PŘÍSTROJ:
-    
-    POZNÁMKY
+    \item Termohygrobarometr Commeter C4130 - použitý pro zjištění podmínek (teploty, tlaku a vlhkosti) na~začátku a~na~konci měření.
+    Nejistoty zjištěné ze~specifikace přístroje jsou v~tabulce \ref{tab:pristroje}.
+    \item Digitální manometr - použitý pro~měření tlaku v~jedné trubici Jaminova interferometru. Ze~specifikace přístroje
+    je nejistota určení tlaku $\qty{1}{mbar} + 1$ \!číslo, což při~měření v~jednotkách \unit{\hecto\pascal} odpovídá
+    nejistotě $\sigma_p = \qty{2}{\hecto\pascal}$.
 
 \end{enumerate}
+
+\begin{table}[!htbp]
+    \centering
+    \caption{Nejistoty měření termohygrobarometru C4130.}
+    \begin{tabular}{|c|c|}
+        \hline
+        veličina & nejistota \\
+        \hline
+        teplota & $\qty{0.4}{\degreeCelsius}$  \\
+        tlak & $\qty{2}{\hecto\pascal}$ \\
+        vlhkost & $\qty{2.5}{\%}$ \\
+        \hline
+    \end{tabular}
+    \label{tab:pristroje}
+\end{table}
+
+% ============= podmínky měření ---------- asi hotovo
+\subsection{Podmínky měření}
+Podmínky měření byly určeny pomocí termohygrobarometru Commeter C4130 na~začátku a~na~konci měření a~jsou uvedeny 
+v~tabulce \ref{tab:podminky}.
+
+\begin{table}[!htbp]
+    \centering
+    \caption{Podmínky na~začátku a~na~konci měření.}
+    \begin{tabular}{|c|c|c|c|}
+        \hline
+         & teplota (\unit{\degreeCelsius}) & tlak (\unit{\hecto\pascal}) & vlhkost (\%) \\
+        \hline
+        začátek & $22.8(4)$ & $992(2)$ & $33.0(2.5)$ \\
+        konec & $24.2(4)$ & $992(2)$ & $32.6(2.5)$ \\
+        \hline
+    \end{tabular}
+    \label{tab:podminky}
+\end{table}
 
 % ============= naměřené hodnoty, vypočtené veličiny, grafy, výsledky
 \subsection{Naměřené hodnoty a výpočty}
 
+% ============= zavislost n = n(p) ----------- asi hotovo
+\subsubsection{Index lomu v závislosti na tlaku}
+
+Bylo předpokládáno, že~při~úplném vypuštění vzduchu z~trubice je v~trubici tlak $p=0$ a~index lomu $n=1$. Posun interferenčních
+proužků $k$ byl měřen od~tohoto stavu. Index lomu vzduchu pro~příslušný interferenční řád $k$ byl počítán podle vztahu
+(\ref{eq:index_na_k}) a~jeho nejistota byla určena podle \cite{englich} jako:
+\begin{equation}
+    \label{eq:sigma_n_na_k}
+    \sigma_n = \frac{k \lambda_{\mathrm{atm}}}{l^2} \sigma_l \,,
+\end{equation}
+kde bylo uvažováno $\sigma_l=\qty{0.5}{\milli\meter}$ (polovina nejmenšího dílku pásového metru, jímž byla pravděpodobně 
+změřena délka trubice) a~nejistota vlnové délky nebyla zohledněna. Měření bylo prováděno velmi pečlivě, aby nedošlo ke~hrubé 
+chybě přepočítání interferenčního řádu $k$, tedy $\sigma_k=0$.
+
+Měření bylo pětkrát opakováno, hodnoty indexu lomu vzduchu a~tlaku v~závislosti na~interferenčním řádu jsou uvedeny
+v~tabulce \ref{tab:tlaky}.
+
+\begin{table}[!htbp]
+\centering
+\caption{Index lomu vzduchu a naměřené tlaky v~závislosti na~řádu interferenčního maxima.}
+\begin{tabular}{cc|ccccc}
+ \toprule
+ & & měření 1 & měření 2 & měření 3 & měření 4 & měření 5 \\
+ \midrule
+ $k$ & $n$ & $p\, (\mathrm{hPa})$ & $p\, (\mathrm{hPa})$ & $p\, (\mathrm{hPa})$ & $p\, (\mathrm{hPa})$ & $p\, (\mathrm{hPa})$ \\
+ \midrule
+ $0$ & $1.0(0)$ & $0(2)$ & $0(2)$ & $0(2)$ & $0(2)$ & $0(2)$ \\
+ $10$ & $1.000011786(13)$ & $44(2)$ & $43(2)$ & $44(2)$ & $44(2)$ & $44(2)$ \\
+ $20$ & $1.00002357(3)$ & $89(2)$ & $89(2)$ & $88(2)$ & $89(2)$ & $89(2)$ \\
+ $30$ & $1.00003536(4)$ & $133(2)$ & $134(2)$ & $133(2)$ & $133(2)$ & $133(2)$ \\
+ $40$ & $1.00004714(5)$ & $176(2)$ & $176(2)$ & $177(2)$ & $177(2)$ & $177(2)$ \\
+ $50$ & $1.00005893(7)$ & $223(2)$ & $221(2)$ & $223(2)$ & $222(2)$ & $223(2)$ \\
+ $60$ & $1.00007072(8)$ & $267(2)$ & $266(2)$ & $266(2)$ & $267(2)$ & $267(2)$ \\
+ $70$ & $1.00008250(9)$ & $311(2)$ & $311(2)$ & $311(2)$ & $311(2)$ & $311(2)$ \\
+ $80$ & $1.00009429(11)$ & $356(2)$ & $355(2)$ & $355(2)$ & $356(2)$ & $356(2)$ \\
+ $90$ & $1.00010607(12)$ & $400(2)$ & $400(2)$ & $399(2)$ & $400(2)$ & $400(2)$ \\
+ $100$ & $1.00011786(13)$ & $445(2)$ & $445(2)$ & $443(2)$ & $445(2)$ & $445(2)$ \\
+ $110$ & $1.00012965(15)$ & $490(2)$ & $489(2)$ & $488(2)$ & $489(2)$ & $490(2)$ \\
+ $120$ & $1.00014143(16)$ & $533(2)$ & $533(2)$ & $532(2)$ & $534(2)$ & $534(2)$ \\
+ $130$ & $1.00015322(17)$ & $578(2)$ & $578(2)$ & $577(2)$ & $577(2)$ & $578(2)$ \\
+ $140$ & $1.00016500(19)$ & $623(2)$ & $621(2)$ & $621(2)$ & $623(2)$ & $622(2)$ \\
+ $150$ & $1.0001768(2)$ & $667(2)$ & $667(2)$ & $665(2)$ & $667(2)$ & $666(2)$ \\
+ $160$ & $1.0001886(2)$ & $711(2)$ & $709(2)$ & $711(2)$ & $712(2)$ & $711(2)$ \\
+ $170$ & $1.0002004(2)$ & $756(2)$ & $754(2)$ & $759(2)$ & $756(2)$ & $755(2)$ \\
+ $180$ & $1.0002121(2)$ & $800(2)$ & $800(2)$ & $803(2)$ & $800(2)$ & $799(2)$ \\
+ $190$ & $1.0002239(3)$ & $843(2)$ & $845(2)$ & $847(2)$ & $845(2)$ & $844(2)$ \\
+ $200$ & $1.0002357(3)$ & $890(2)$ & $890(2)$ & $892(2)$ & $890(2)$ & $889(2)$ \\
+ $210$ & $1.0002475(3)$ & $934(2)$ & $934(2)$ & $936(2)$ & $934(2)$ & $932(2)$ \\
+ $220$ & $1.0002593(3)$ & $978(2)$ & $979(2)$ & $980(2)$ & $979(2)$ & $977(2)$ \\
+ $223$ & $1.0002628(3)$ & $992(2)$ & $992(2)$ & $992(2)$ & $992(2)$ & $992(2)$ \\
+ \bottomrule
+\end{tabular}
+\label{tab:tlaky}
+\end{table}
+
+Závislosti indexu lomu vzduchu na~tlaku v~trubici pro~jednotlivá měření jsou zobrazeny v~grafu \ref{fig:sixfigures}.
+Nejprve pro~přehlednost jednotlivě (\ref{fig:sub1} až~\ref{fig:sub5}) a~poté všechny závislosti v~jednom grafu \ref{fig:suball}.
+
+
+
+\begin{figure}[!htbp]
+    \centering
+
+    % Row 1
+    \begin{subfigure}{0.45\textwidth}
+        \centering
+        \includegraphics[width=\linewidth]{index_na_tlaku_1.png}
+        \caption{Měření 1}
+        \label{fig:sub1}
+    \end{subfigure}
+    \hfill
+    \begin{subfigure}{0.45\textwidth}
+        \centering
+        \includegraphics[width=\linewidth]{index_na_tlaku_2.png}
+        \caption{Měření 2}
+        \label{fig:sub2}
+    \end{subfigure}
+
+    \vspace{0.5cm}
+
+    % Row 2
+    \begin{subfigure}{0.45\textwidth}
+        \centering
+        \includegraphics[width=\linewidth]{index_na_tlaku_3.png}
+        \caption{Měření 3}
+        \label{fig:sub3}
+    \end{subfigure}
+    \hfill
+    \begin{subfigure}{0.45\textwidth}
+        \centering
+        \includegraphics[width=\linewidth]{index_na_tlaku_4.png}
+        \caption{Měření 4}
+        \label{fig:sub4}
+    \end{subfigure}
+
+    \vspace{0.5cm}
+
+    % Row 3
+    \begin{subfigure}{0.45\textwidth}
+        \centering
+        \includegraphics[width=\linewidth]{index_na_tlaku_5.png}
+        \caption{Měření 5}
+        \label{fig:sub5}
+    \end{subfigure}
+    \hfill
+    \begin{subfigure}{0.45\textwidth}
+        \centering
+        \includegraphics[width=\linewidth]{index_na_tlaku_all.png}
+        \caption{Kombinace všech měření}
+        \label{fig:suball}
+    \end{subfigure}
+
+    \caption{Závislosti indexu lomu vzduchu na~tlaku pro~jednotlivá měření.\nobars}
+    \label{fig:sixfigures}
+\end{figure}
+
+Fitováním lineární funkce ve~tvaru (\ref{eq:index_na_p}) pomocí funkce \texttt{curve\_fit} z~knihovny \texttt{scipy.optimize} 
+byly získány koeficienty $\tau$ (směrnice fitovaných přímek) pro~jednotlivá měření a~jsou uvedeny v~tabulce \ref{tab:tau}. 
+Z~nich byl spočítán
+aritmetický průměr $\overline{\tau}=2.6540(13)\cdot10^{-7}\,\unit{hPa^{-1}}$, přičemž jeho nejistota byla určena jako standardní
+nejistota aritmetického průměru zvětšená o~nejistoty jednotlivých hodnot $\tau_i$ podle \cite{englich}:
+\begin{equation}
+    \label{eq:sigma_tau}
+    \sigma_{\overline{\tau}} = \sqrt{\frac{1}{4\cdot5}\sum_{i=1}^5 (\tau_i - \overline{\tau})^2 + 
+    \frac{1}{25}\sum_{i=1}^5 \sigma_{\tau_i}^2} \,.
+\end{equation}
+
+\begin{table}[!htbp]
+\centering
+\caption{Směrnice lineárních závislostí $n(p)$ pro jednotlivá měření}
+\begin{tabular}{cc}
+ \toprule
+ měření & $10^7\tau\, (\mathrm{hPa^{-1}})$ \\
+ \midrule
+ $1$ & $2.6528(18)$ \\
+ $2$ & $2.657(4)$ \\
+ $3$ & $2.654(2)$ \\
+ $4$ & $2.6524(14)$ \\
+ $5$ & $2.6530(14)$ \\
+ \midrule
+ průměr & $2.6540(13)$ \\
+ \bottomrule
+\end{tabular}
+\label{tab:tau}
+\end{table}
+
+% ==================== zavislost lambda = lambda(n) -------- asi hotovo
+\subsubsection{Vlnová délka sodíkového dubletu v závislosti na indexu lomu}
+
+Vlnová délka sodíkového dubletu $\lambda$ v~závislosti na~indexu lomu $n$ byla určena podle vztahu (\ref{eq:lambda_na_n}),
+kde $\lambda_\mathrm{atm} = \qty{589.3}{nm}$ je vlnová délka ve~vzduchu o~indexu lomu $n_\mathrm{atm}=1.0002628(3)$
+(hodnota z~posledního řádku tabulky \ref{tab:tlaky}). 
+Nejistota vlnové délky byla spočtena podle \cite{englich} jako:
+\begin{equation}
+    \label{eq:sigma_lambda}
+    \sigma_\lambda = \lambda \sqrt{ \relative{n_\mathrm{atm}} + \relative{n}} \,.
+\end{equation}
+
+Závislost vlnové délky sodíkového dubletu na~indexu lomu vzduchu je uvedena v~tabulce \ref{tab:lambda_n} a~vykreslena 
+v~grafu \ref{fig:lambda}. Datovými body byla proložena funkce ve~tvaru $\lambda = \frac{\lambda_0}{n}$, kde
+koeficient $\lambda_0$ je přímo hodnota vlnové délky z~prvního řádku tabulky \ref{tab:lambda_n} (bylo ověřeno fitováním
+funkcí \texttt{curve\_fit}).
+
+\begin{table}[!htbp]
+\centering
+\caption{Závislost vlnové délky sodíkového dubletu na indexu lomu vzduchu.}
+\begin{tabular}{cc}
+ \toprule
+ $n$ & $\lambda\, (\mathrm{nm})$ \\
+ \midrule
+ $1.0(0)$ & $589.45488(17)$ \\
+ $1.000011786(13)$ & $589.44794(17)$ \\
+ $1.00002357(3)$ & $589.44099(17)$ \\
+ $1.00003536(4)$ & $589.43404(18)$ \\
+ $1.00004714(5)$ & $589.42710(18)$ \\
+ $1.00005893(7)$ & $589.42015(18)$ \\
+ $1.00007072(8)$ & $589.41320(18)$ \\
+ $1.00008250(9)$ & $589.40626(18)$ \\
+ $1.00009429(11)$ & $589.39931(18)$ \\
+ $1.00010607(12)$ & $589.39237(19)$ \\
+ $1.00011786(13)$ & $589.3854(2)$ \\
+ $1.00012965(15)$ & $589.3785(2)$ \\
+ $1.00014143(16)$ & $589.3715(2)$ \\
+ $1.00015322(17)$ & $589.3646(2)$ \\
+ $1.00016500(19)$ & $589.3576(2)$ \\
+ $1.0001768(2)$ & $589.3507(2)$ \\
+ $1.0001886(2)$ & $589.3437(2)$ \\
+ $1.0002004(2)$ & $589.3368(2)$ \\
+ $1.0002121(2)$ & $589.3299(2)$ \\
+ $1.0002239(3)$ & $589.3229(2)$ \\
+ $1.0002357(3)$ & $589.3160(2)$ \\
+ $1.0002475(3)$ & $589.3090(2)$ \\
+ $1.0002593(3)$ & $589.3021(2)$ \\
+ $1.0002628(3)$ & $589.3(0)$ \\
+ \bottomrule
+\end{tabular}
+\label{tab:lambda_n}
+\end{table}
+
 \begin{figure}
     \centering
-    %\includegraphics[width=0.5\linewidth]{graf.png}
-    \caption{NAZEVGRAFU}
-    \label{fig:graf}
+    \includegraphics[width=0.5\linewidth]{lambda_na_n.png}
+    \caption{Závislost vlnové délky sodíkového dubletu na indexu lomu vzduchu.\nobars}
+    \label{fig:lambda}
 \end{figure}
+
+% ========================= urceni teploty laboratore
+\subsubsection{Určení teploty laboratoře}
+
+Teplota byla určena ze~směrnice $\overline{\tau} = 2.6540(13)\cdot10^{-7}\,\unit{hPa^{-1}}$ ze~vztahu (\ref{eq:teplota})
+jako $t_0 = \qty{18.95}{\degreeCelsius}$, přičemž nejistota byla vypočtena jako \cite{englich}:
+\begin{equation}
+    \label{eq:sigma_teplota}
+    \sigma_{t_0} = \frac{\sigma_\tau}{\gamma} \left( n_{15,p_0} - 1 \right) \frac{1+15\gamma}{\tau^2 p_0} \,.
+\end{equation}
 
 
 % ============================ DISKUZE a ZÁVĚR ================================
 \section{Diskuze výsledků a závěr}
 % ======================== diskuze
+\subsection{Diskuze}
+Při~měření byla jako zdroj monochromatického světla použita sodíková výbojka o~vlnové délce $\lambda_\mathrm{atm} = \qty{589.3}{nm}$
+ve~vzduchu. Ve~výpočtu indexu lomu podle vztahu (\ref{eq:index_na_k}) byla použita tato hodnota namísto vlnové délky ve~vakuu
+$\lambda_0 = \qty{589.45488(17)}{nm}$, jelikož ta na~začátku nebyla určena. Bylo však zpětně ověřeno že~v~rámci nejistoty indexu 
+lomu (dané nejistotou délky trubice) nezáleží na~použité hodnotě.
 
-% ======================== závěr
+Díky faktu, že délka trubice je oproti vlnové délce sodíkového dubletu velmi velká, byly indexy lomu pro~jednotlivé tlaky v~trubici
+určeny velmi přesně (relativní nejistota je jen $10^{-8}$ až~$10^{-7}$). Systematickou chybu však do~měření mohlo přinést
+nedokonalé vakuum, kdy při~nulovém tlaku (podle údaje na~manometru, jež měl však nejistotu $\sigma_p = \qty{2}{hPa}$) 
+nemusel být index lomu nutně rovný 1.
 
+Z~grafů \ref{fig:sub1} až~\ref{fig:sub5} je zřejmé, že~závislost indexu lomu na~tlaku je ve~velmi dobrém přiblížení lineární.
+Jednotlivá měření dopadla téměř dokonale stejně, přímky v~grafu \ref{fig:suball} jsou téměř totožné. Průměrná směrnice \\
+$\overline{\tau}=2.6540(13)\cdot10^{-7}\,\unit{hPa^{-1}}$ byla taktéž určena velmi přesně, s~relativní nejisotou jen
+$0.05\,\%$. Nejistota směrnice byla získána pomocí funce \texttt{curve\_fit}, jež kromě statistické nejistoty počítá
+i~s~nejistotami y-ových souřadnic datových bodů (zde nejistota indexu lomu). Při~bližším pohledu na~datové body a~jimi 
+proloženou přímku bylo zjištěno,
+že statistická nejistota je větší oproti nejistotě jednotlivých bodů (body byly od~přímky vzdáleny více než byla velikost
+jejich chybových úseček). Proto již nebyla nejistota směrnice dále upravována o~nejistotu x-ových souřadnic (nejistotu tlaku).
+
+Závislost vlnové délky na~indexu lomu je hyperbolická s~koeficientem $n_\mathrm{atm} \lambda_\mathrm{atm} = 
+\lambda_0 = \qty{589.45488(17)}{nm}$, jak bylo ověřeno fitováním pomocí funkce \texttt{curve\_fit}.
+
+Teplota laboratoře byla měřením indexu lomu Jaminovým interferometrem určena jako $t_0=\qty{18.95(15)}{\degreeCelsius}$,
+což se~neshoduje s~teplotami změřenými pomocí termogyhrobarometru $\qty{22.8(4)}{\degreeCelsius}$ a~$\qty{24.2(4)}{\degreeCelsius}$
+na~začátku a~na~konci měření. Tlaky z~digitálního manometru i~termohygrobarometru se~však v~rámci nejistoty shodovaly, měření
+tedy muselo být ovlivněno jinou systematickou chybou. Je možné, že nebyly splněny standardní podmínky (suchý vzduch
+a~$0.03\,\%\,\mathrm{CO_2})$. Pro~vlhkost a~koncentraci $\mathrm{CO_2}$ totiž vztah (\ref{eq:index_na_tp}) neobsahuje žádnou
+korekci.
+
+% ======================== závěr ----------- asi hotovo
+\subsection{Závěr}
+Závislost indexu lomu vzduchu na~tlaku byla změřena jako lineární se~směrnicí 
+$\overline{\tau}=2.6540(13)\cdot10^{-7}\,\unit{hPa^{-1}}$. 
+Vlnová délka sodíkového dubletu je nepřímo úměrná indexu lomu vzduchu s~koeficientem $\lambda_0=\qty{589.45488(17)}{nm}$, 
+který odpovídá vlnové délce ve~vakuu.
+Teplota laboratoře byla určena jako $t_0=\qty{18.95(15)}{\degreeCelsius}$.
 
 % =========================== LITERATURA =============================
 \begin{thebibliography}{9}
 
-\bibitem{studijni} Kolektiv ZFP KVOF MFF UK: \textit{Úloha 19 - studijní text} [online]. 
-[cit. \today], dostupné z~https://physics.mff.cuni.cz/vyuka/zfp/\_media/zadani/texty/txt\_341.pdf
+% \bibitem{studijni} Kolektiv ZFP KVOF MFF UK: \textit{Úloha 19 - studijní text} [online]. 
+% [cit. \today], dostupné z~https://physics.mff.cuni.cz/vyuka/zfp/\_media/zadani/texty/txt\_341.pdf
 
 \bibitem{pokyny} Kolektiv ZFP KVOF MFF UK: \textit{Úloha 19 - pokyny k měření} [online]. [cit. \today], dostupné
 z~https://physics.mff.cuni.cz/vyuka/zfp/\_media/zadani/pokyny/mereni\_319.pdf
@@ -124,15 +438,15 @@ z~https://physics.mff.cuni.cz/vyuka/zfp/\_media/zadani/pokyny/mereni\_319.pdf
 \bibitem{tabulky} Kolektiv ZFP KVOF MFF UK: \textit{Index lomu plynů a kapalin} [online]. [cit. \today], dostupné
 z~https://physics.mff.cuni.cz/vyuka/zfp/\_media/zadani/pokyny/index\_lomu\_vzduchu.pdf
 
-\bibitem{vlnovedelky} Kolektiv ZFP KVOF MFF UK: \textit{Úloha 16 - studijní text} 
-[online]. [cit. \today], dostupné
-z~https://physics.mff.cuni.cz/vyuka/zfp/\_media/zadani/texty/txt\_316.pdf
+% \bibitem{vlnovedelky} Kolektiv ZFP KVOF MFF UK: \textit{Úloha 16 - studijní text} 
+% [online]. [cit. \today], dostupné
+% z~https://physics.mff.cuni.cz/vyuka/zfp/\_media/zadani/texty/txt\_316.pdf
 
 \bibitem{englich} J. Englich: \textit{Úvod do praktické fyziky I: Zpracování výsledků měření}. 
 1. vyd. Praha: Matfyzpress, 2006
 
-\bibitem{mikulcak} Mikulčák a kolektiv: \textit{Matematické, fyzikální a~chemické tabulky pro~střední 
-školy: NÁZEVTABULKY}, Praha: Státní pedagogické nakladatelství, n. p., 1988
+% \bibitem{mikulcak} Mikulčák a kolektiv: \textit{Matematické, fyzikální a~chemické tabulky pro~střední 
+% školy: NÁZEVTABULKY}, Praha: Státní pedagogické nakladatelství, n. p., 1988
 
 \end{thebibliography}
 \end{document}

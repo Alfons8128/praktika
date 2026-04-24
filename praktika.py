@@ -302,7 +302,16 @@ class F:
     
     def elliptic_degrees(x, a, b, phi0):
         return np.sqrt(a**2 * np.cos(np.radians(x - phi0))**2 + b**2 * np.sin(np.radians(x - phi0))**2)
+    
+    def index(p, tau):
+        return 1 + tau * p
 
+    def index2(p, tau):
+        return tau * p
+    def index_inv(n, tau):
+        return (n - 1) / tau
+    def hyperbolic(x, a):
+        return a / x
 ############### Relation class #########################
 class Rel:
     '''This class provides a relation between two variables (from class Var):
@@ -448,7 +457,7 @@ class Rel:
         self.handles.append(self.fit_curve)
 
 
-    def show_equation(self, ax, format: str | list[str] = '.3f', combined = False, newline=True):
+    def show_equation(self, ax, format: str | list[str] = '.3f', combined = False, newline=True, eq_string: str = None):
         '''Displays the fitted equation in the legend.
         
         format to specify wished decimal digits of coefficients (e.g. '.3f' for 3 decimal digits)'''
@@ -488,13 +497,21 @@ class Rel:
                     \\cos^2({xname} - {phi0}) \
                     + {b}^2 \\cdot \
                 \\sin^2({xname} - {phi0}) }}$'
+            case F.index:
+                if eq_string:
+                    eq_string = eq_string
+                #eq_string = f'${self.y.short_name} = 1 + ({self.coeffs[0].val[0]:{format[0]}}) \\cdot {self.x.short_name}$'
+            case F.index2:
+                eq_string = f'${self.y.short_name} = {self.coeffs[0].val[0]:{format[0]}} \\cdot {self.x.short_name}$'
+            case F.hyperbolic:
+                eq_string = f'${self.y.short_name} = \\frac{{{self.coeffs[0].val[0]:{format[0]}}}}{{{self.x.short_name}}}$'
             case _:
                 eq_string = f'Fitted function: {self.func.__name__} with coefficients: ' + \
                 ', '.join(f'{c.short_name}={c.val[0]:{format[i]}}' for i, c in enumerate(self.coeffs))
         
         # display combined handle but also self.label to datapoints
         combined_handle = Line2D([], [], color=self.color, marker=self.shape, linestyle=':', 
-                                 label=f'{self.data_curve.get_label()}, {eq_string}')
+                                 label=f'{self.data_curve.get_label()}: {eq_string}')
         eq_handle = Line2D([], [], color=self.color, marker='', linestyle='', label=eq_string)
 
         #handles, _ = ax.get_legend_handles_labels()
@@ -509,7 +526,7 @@ class Rel:
                 self.handles = [self.data_curve, self.fit_curve, eq_handle]
             else:
                 self.fit_curve.set_label(f'{self.fit_curve.get_label()}: {eq_string}')
-                self.hadles = [self.data_curve, self.fit_curve]
+                self.handles = [self.data_curve, self.fit_curve]
             #handles.append(self.data_curve)
             #handles.append(self.fit_curve)
             #handles.append(eq_handle)
